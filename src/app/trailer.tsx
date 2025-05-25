@@ -1,6 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-
+interface Video {
+  type: string;
+  site: string;
+  key: string;
+}
 export default function Trailer({
   id,
   mediaType,
@@ -19,7 +23,7 @@ export default function Trailer({
         );
         const data = await res.json();
         const trailer = data.results.find(
-          (vid: any) => vid.type === "Trailer" && vid.site === "YouTube"
+          (vid: Video) => vid.type === "Trailer" && vid.site === "YouTube"
         );
         if (trailer) {
           setVideoKey(trailer.key);
