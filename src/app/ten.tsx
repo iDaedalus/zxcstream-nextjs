@@ -1,0 +1,191 @@
+"use client";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation } from "swiper/modules";
+import Link from "next/link";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  AlignStartVertical,
+  Film,
+  Tv,
+  LibraryBig,
+  Bookmark,
+  Play,
+  Star,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import Trailer from "./trailer";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+interface weeklyTypes {
+  id: number;
+  title?: string;
+  tagline: string;
+  name?: string;
+  vote_average: number;
+  poster_path: string;
+  backdrop_path: string;
+  overview: string;
+  media_type: string;
+  profile_path: string;
+}
+
+export default function Ten() {
+  const [weekly, setWeekly] = useState<weeklyTypes[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
+  const [media, setMedia] = useState<string>("all");
+  const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+  const mediaOptions = [
+    { label: "All", value: "all", icon: <LibraryBig /> },
+    { label: "Movie", value: "movie", icon: <Film /> },
+    { label: "TV", value: "tv", icon: <Tv /> },
+  ];
+  useEffect(() => {
+    async function fetchWeekly() {
+      try {
+        setLoading(true);
+        const res = await fetch(
+          `https://api.themoviedb.org/3/trending/${media}/week?api_key=${apiKey}`
+        );
+        const data = await res.json();
+        setWeekly(data.results);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchWeekly();
+  }, [media]);
+  return (
+    <div className="w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
+      <div className="w-full flex items-center justify-between">
+        <p className="text-white relative zxczxc text-xl lg:text-2xl tracking-[-3px] lg:border-l-4 lg:border-blue-800 lg:pl-6 flex items-center gap-2">
+          {/* <AlignStartVertical className="w-4 h-4  lg:w-6 lg:h-6 text-yellow-500" /> */}
+          TOP 20
+        </p>
+
+        <div className="relative zxc">
+          {mediaOptions.map(({ label, value, icon }) => (
+            <Button
+              key={value}
+              onClick={() => setMedia(value)}
+              className={`bg-transparent border-b border-white/50 rounded-[unset] ${
+                media === value ? `border-amber-400` : ""
+              }`}
+            >
+              {icon}
+              <p className="hidden lg:block">{label}</p>
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <Swiper
+        modules={[Navigation, Pagination]}
+        slidesPerView="auto"
+        spaceBetween={45}
+        className=" !pb-5"
+        navigation={{
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        }}
+        breakpoints={{
+          320: {
+            spaceBetween: 28,
+          },
+
+          1280: {
+            spaceBetween: 45,
+          },
+        }}
+      >
+        {loading ? (
+          <SwiperSlide className="relative w-full">
+            <div className="flex w-full justify-evenly">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Skeleton
+                  key={index}
+                  className={`ten rounded-sm bg-zinc-500 ${
+                    index >= 3 ? "hidden lg:block" : ""
+                  }`}
+                />
+              ))}
+            </div>
+          </SwiperSlide>
+        ) : (
+          weekly.map((meow, index) => (
+            <SwiperSlide key={meow.id} className="relative ten">
+              {/* first:ml-3 lg:first:ml-10 */}
+              <motion.div
+                className="h-full w-full"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={loaded ? { opacity: 1, scale: 1 } : false}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+              >
+                <HoverCard>
+                  <Link
+                    href={`/drawer/${meow.media_type}/${meow.id}`}
+                    scroll={false}
+                  >
+                    <HoverCardTrigger asChild>
+                      <div className="cursor-pointer h-full w-full">
+                        <p className="numbering">{index + 1}</p>
+                        <img
+                          loading="lazy"
+                          className="h-full w-full object-cover rounded-sm"
+                          src={`https://image.tmdb.org/t/p/w500/${meow.poster_path}`}
+                          alt={meow.title || meow.name}
+                          onLoad={() => setLoaded(true)}
+                          onError={(e) => {
+                            e.currentTarget.src = "/fallback.jpg";
+                          }}
+                        />
+                      </div>
+                    </HoverCardTrigger>
+                  </Link>
+                  <HoverCardContent className="w-[400px]">
+                    <div className="aspect-video">
+                      <Trailer id={meow.id} mediaType={meow.media_type} />
+                    </div>
+                    <div className="p-4">
+                      <div className="flex w-full justify-between items-center mb-1">
+                        <p className="font-semibold text-base">
+                          {index + 1}. {meow.title || meow.name}
+                        </p>
+                        <p className="font-semibold text-yellow-500 mb-1 flex items-center gap-1.5">
+                          <Star className="" size={15} />
+                          {meow.vote_average?.toFixed(1)}
+                        </p>
+                      </div>
+                      <p className="text-sm line-clamp-3">{meow.overview}</p>
+                      <div className="mt-5 flex justify-center items-center w-full gap-2">
+                        <Button className="flex-1">
+                          <Play />
+                          Play now
+                        </Button>
+                        <Button variant="outline" className=" text-black">
+                          <Bookmark />
+                        </Button>
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+              </motion.div>
+            </SwiperSlide>
+          ))
+        )}
+        <div className="swiper-button-prev"></div>
+        <div className="swiper-button-next"></div>
+      </Swiper>
+    </div>
+  );
+}
