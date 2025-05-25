@@ -3,7 +3,7 @@ import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFetchTmdb from "./fetchMovie";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -26,7 +26,6 @@ showlist = showlist.sort(() => Math.random() - 0.5);
 
 export default function SwiperBackdrops() {
   const { movies, loading } = useFetchTmdb(showlist);
-  const router = useRouter();
 
   return (
     <Swiper
@@ -62,11 +61,10 @@ export default function SwiperBackdrops() {
                 </span>
               </span>
 
-              <span
-                className="bg-blue-800/30 border-1 border-blue-800 text-blue-100 mt-3  cursor-pointer"
-                onClick={() => router.push(`/${meow.media_type}/${meow.id}`)}
-              >
-                <ChevronRight className="h-4 w-4 lg:h-6 lg:w-6" />
+              <span className="bg-blue-800/30 border-1 border-blue-800 text-blue-100 mt-3  cursor-pointer">
+                <Link href={`/${meow.media_type}/${meow.id}`}>
+                  <ChevronRight className="h-4 w-4 lg:h-6 lg:w-6" />
+                </Link>
               </span>
             </div>
 

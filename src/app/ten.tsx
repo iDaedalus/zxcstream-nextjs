@@ -123,7 +123,7 @@ export default function Ten() {
               >
                 <HoverCard>
                   <Link
-                    href={`/drawer/${meow.media_type}/${meow.id}`}
+                    href={`/${meow.media_type}/${meow.id}`}
                     scroll={false}
                   >
                     <HoverCardTrigger asChild>

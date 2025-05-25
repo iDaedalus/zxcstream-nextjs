@@ -19,8 +19,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -29,6 +31,7 @@ export default function RootLayout({
       >
         <div className="fixed z-[-1] inset-0 bg-[#000000] bg-[radial-gradient(ellipse_at_top,_rgba(30,64,175,0.3)_0%,_transparent_70%)] p-10"></div>
         {children}
+        {modal}
       </body>
     </html>
   );

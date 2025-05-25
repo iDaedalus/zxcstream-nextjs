@@ -24,7 +24,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@/components/ui/nav-drawer";
 
 import logo from "../assets/zxzx.png";
 import { useRouter } from "next/navigation";
