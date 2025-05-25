@@ -25,8 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={` ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className="fixed z-[-1] inset-0 bg-[#000000] bg-[radial-gradient(ellipse_at_top,_rgba(30,64,175,0.3)_0%,_transparent_70%)] p-10"></div>
         {children}
       </body>
     </html>
