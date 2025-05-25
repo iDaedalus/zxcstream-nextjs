@@ -7,14 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  Film,
-  Tv,
-  LibraryBig,
-  Bookmark,
-  Play,
-  Star,
-} from "lucide-react";
+import { Film, Tv, LibraryBig, Bookmark, Play, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Trailer from "./trailer";
@@ -67,7 +60,7 @@ export default function Ten() {
   return (
     <div className="w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
       <div className="w-full flex items-center justify-between">
-        <p className="text-white relative zxczxc text-xl lg:text-2xl tracking-[-3px] lg:border-l-4 lg:border-blue-800 lg:pl-6 flex items-center gap-2">
+        <p className="text-foreground relative zxczxc text-xl lg:text-2xl tracking-[-3px] lg:border-l-4 lg:border-blue-800 lg:pl-6 flex items-center gap-2">
           TOP 20
         </p>
 
@@ -76,7 +69,7 @@ export default function Ten() {
             <Button
               key={value}
               onClick={() => setMedia(value)}
-              className={`bg-transparent border-b border-white/50 rounded-[unset] ${
+              className={`bg-transparent border-b border-white/50 rounded-[unset] text-foreground ${
                 media === value ? `border-amber-400` : ""
               }`}
             >
@@ -169,7 +162,7 @@ export default function Ten() {
                           <Play />
                           Play now
                         </Button>
-                        <Button variant="outline" className=" text-black">
+                        <Button variant="outline">
                           <Bookmark />
                         </Button>
                       </div>
