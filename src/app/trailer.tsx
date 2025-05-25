@@ -8,9 +8,11 @@ interface Video {
 export default function Trailer({
   id,
   mediaType,
+  type = "default",
 }: {
-  id: number;
+  id: string;
   mediaType: string;
+  type: string;
 }) {
   const [videoKey, setVideoKey] = useState<string | null>(null);
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
@@ -22,6 +24,7 @@ export default function Trailer({
           `https://api.themoviedb.org/3/${mediaType}/${id}/videos?api_key=${apiKey}&language=en-US`
         );
         const data = await res.json();
+
         const trailer = data.results.find(
           (vid: Video) => vid.type === "Trailer" && vid.site === "YouTube"
         );
@@ -38,7 +41,7 @@ export default function Trailer({
   return (
     <iframe
       width="100%"
-      height="100%"
+      height={type === "default" ? "100%" : "140%"}
       src={
         videoKey
           ? `https://www.youtube.com/embed/${videoKey}?autoplay=1&loop=1&playlist=${videoKey}`

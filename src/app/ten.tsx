@@ -10,14 +10,13 @@ import { motion } from "framer-motion";
 import { Film, Tv, LibraryBig, Bookmark, Play, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import Trailer from "./trailer";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 interface weeklyTypes {
-  id: number;
+  id: string;
   title?: string;
   tagline: string;
   name?: string;
@@ -122,10 +121,7 @@ export default function Ten() {
                 transition={{ duration: 0.4, delay: index * 0.05 }}
               >
                 <HoverCard>
-                  <Link
-                    href={`/${meow.media_type}/${meow.id}`}
-                    scroll={false}
-                  >
+                  <Link href={`/${meow.media_type}/${meow.id}`} scroll={false}>
                     <HoverCardTrigger asChild>
                       <div className="cursor-pointer h-full w-full">
                         <p className="numbering">{index + 1}</p>
@@ -143,8 +139,13 @@ export default function Ten() {
                     </HoverCardTrigger>
                   </Link>
                   <HoverCardContent className="w-[400px]">
-                    <div className="aspect-video">
-                      <Trailer id={meow.id} mediaType={meow.media_type} />
+                    <div className="aspect-[16/8] mask-gradient">
+                      <img
+                        loading="lazy"
+                        className="h-full w-full object-cover "
+                        src={`https://image.tmdb.org/t/p/w500/${meow.backdrop_path}`}
+                        alt={meow.title || meow.name}
+                      />
                     </div>
                     <div className="p-4">
                       <div className="flex w-full justify-between items-center mb-1">
