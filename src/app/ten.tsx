@@ -8,7 +8,6 @@ import "swiper/css/pagination";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  AlignStartVertical,
   Film,
   Tv,
   LibraryBig,
@@ -69,7 +68,6 @@ export default function Ten() {
     <div className="w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
       <div className="w-full flex items-center justify-between">
         <p className="text-white relative zxczxc text-xl lg:text-2xl tracking-[-3px] lg:border-l-4 lg:border-blue-800 lg:pl-6 flex items-center gap-2">
-          {/* <AlignStartVertical className="w-4 h-4  lg:w-6 lg:h-6 text-yellow-500" /> */}
           TOP 20
         </p>
 
@@ -124,7 +122,6 @@ export default function Ten() {
         ) : (
           weekly.map((meow, index) => (
             <SwiperSlide key={meow.id} className="relative ten">
-              {/* first:ml-3 lg:first:ml-10 */}
               <motion.div
                 className="h-full w-full"
                 initial={{ opacity: 0, scale: 0.95 }}

@@ -1,25 +1,13 @@
 "use client";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFetchTmdb from "./fetchMovie";
 import { useRouter } from "next/navigation";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { ArrowRight, ChevronRight } from "lucide-react";
-import { useState } from "react";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
+import { ChevronRight } from "lucide-react";
 
 let showlist = [
   { id: "1396", media_type: "tv" },
@@ -38,7 +26,6 @@ showlist = showlist.sort(() => Math.random() - 0.5);
 
 export default function SwiperBackdrops() {
   const { movies, loading } = useFetchTmdb(showlist);
-  const [loaded, setLoaded] = useState(false);
   const router = useRouter();
 
   return (
@@ -74,9 +61,7 @@ export default function SwiperBackdrops() {
                   {(meow.title || meow.name)?.split(" ").pop()}
                 </span>
               </span>
-              {/* <p className=" text-xs lg:text-base text-right line-clamp-2">
-                {meow.overview}
-              </p> */}
+
               <span
                 className="bg-blue-800/30 border-1 border-blue-800 text-blue-100 mt-3  cursor-pointer"
                 onClick={() => router.push(`/${meow.media_type}/${meow.id}`)}
@@ -98,24 +83,4 @@ export default function SwiperBackdrops() {
       <div className="swiper-button-next"></div>
     </Swiper>
   );
-}
-
-{
-  /* <div className="absolute top-1/2  transform  -translate-y-1/2 z-[999] text-white w-full lg:w-1/2  lg:left-20  space-y-3 zxc">
-  <p>{meow.tagline}</p>
-  <span className="lg:text-6xl lg:tracking-[-11px] font-bold zxczxc ">
-    {(meow.title || meow.name)?.split(" ").slice(0, -1).join(" ")}{" "}
-    <span className="text-yellow-500">
-      {(meow.title || meow.name)?.split(" ").pop()}
-    </span>
-  </span>
-
-  <p className="mt-2 text-xs lg:text-base">{meow.overview}</p>
-  <Button
-    className="bg-blue-800/30 border-1 border-blue-800 text-blue-100 mt-3"
-    onClick={() => router.push(`/${meow.media_type}/${meow.id}`)}
-  >
-    Details <ArrowRight />
-  </Button>
-</div>; */
 }
