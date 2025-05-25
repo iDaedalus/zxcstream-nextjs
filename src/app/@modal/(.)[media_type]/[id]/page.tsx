@@ -2,16 +2,12 @@
 
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import Trailer from "@/app/trailer";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
 
@@ -25,11 +21,10 @@ export default function InterceptModal({ params }: PageProps) {
   const [open, setOpen] = useState(true);
   console.log(media_type, id);
   useEffect(() => {
-    // When `open` becomes false, wait for animation to finish, then go back
     if (!open) {
       const timeout = setTimeout(() => {
         router.back();
-      }, 300); // Adjust duration to match drawer animation speed
+      }, 300);
       return () => clearTimeout(timeout);
     }
   }, [open, router]);
