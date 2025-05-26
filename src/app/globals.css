@@ -89,7 +89,8 @@
   filter: blur(0);
 }
 
-body::-webkit-scrollbar {
+body::-webkit-scrollbar,
+.meow::-webkit-scrollbar {
   display: none;
 }
 .numbering {

@@ -128,7 +128,7 @@ export default function InterceptModal({ params }: PageProps) {
           </div>
         ) : (
           <>
-            <div className="relative aspect-[16/8] overflow-hidden mask-gradient">
+            <div className="relative aspect-video overflow-hidden mask-gradient">
               <div className="h-full w-full pointer-events-none  flex justify-center items-center ">
                 <Trailer id={id} mediaType={media_type} type="modal" />
               </div>
