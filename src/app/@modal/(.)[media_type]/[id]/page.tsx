@@ -10,7 +10,7 @@ import Trailer from "@/app/trailer";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
 import { Star } from "lucide-react";
-
+import { Skeleton } from "@/components/ui/skeleton";
 interface PageProps {
   params: Promise<{ media_type: string; id: string }>;
 }
@@ -97,47 +97,66 @@ export default function InterceptModal({ params }: PageProps) {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerContent>
-        <div className="relative aspect-[16/8] overflow-hidden flex justify-center items-center overlay">
-          {/* <Trailer id={id} mediaType={media_type} type="modal" /> */}
-          <img
-            className="absolute h-full w-full object-cover object-[center_40%] mask-gradient backdrop"
-            src={`https://image.tmdb.org/t/p/original/${show?.backdrop_path}`}
-            alt=""
-          />
-        </div>
+      <DrawerContent className="outline-none focus-visible:outline-none">
         <DrawerHeader className="sr-only">
           <DrawerTitle>{show?.title || show?.name}</DrawerTitle>
         </DrawerHeader>
-        {show && (
-          <div className=" w-full px-10 py-5 flex gap-10">
-            <span className="  w-[65%]">
-              <div className="flex items-center gap-3">
-                <span>
-                  {new Date(show.release_date).getFullYear() ||
-                    new Date(show.first_air_date).getFullYear()}
+        {loading ? (
+          <div className="h-full w-full">
+            <div className="relative aspect-[16/8] flex justify-center items-center overlay">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-transparent border-blue-800"></div>
+            </div>
+            <div className="h-full w-full px-10 py-5 flex gap-10">
+              <span className="w-[65%] space-y-1">
+                <Skeleton className="h-16 w-full" />
+                <Skeleton className="h-21 w-full" />
+              </span>
+              <span className="w-[35%]  space-y-2">
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+              </span>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="relative aspect-[16/8] overflow-hidden flex justify-center items-center overlay">
+              <Trailer id={id} mediaType={media_type} type="modal" />
+            </div>
+            {show && (
+              <div className=" w-full px-10 py-5 flex gap-10">
+                <span className="  w-[65%]">
+                  <div className="flex items-center gap-3">
+                    <span>
+                      {new Date(show.release_date).getFullYear() ||
+                        new Date(show.first_air_date).getFullYear()}
+                    </span>
+                    ·
+                    <span>
+                      {show.runtime
+                        ? `${Math.floor(show.runtime / 60)}h ${
+                            show.runtime % 60
+                          }m`
+                        : `S${show.number_of_seasons} E${show.number_of_episodes}`}
+                    </span>
+                    ·
+                    <span className="flex items-center text-yellow-300 gap-1">
+                      <Star className="h-4 w-4 flex items-center" />
+                      {String(show.vote_average)[0]}/10
+                    </span>
+                  </div>
+                  <p className="mt-5">{show.overview}</p>
                 </span>
-                ·
-                <span>
-                  {show.runtime
-                    ? `${Math.floor(show.runtime / 60)}h ${show.runtime % 60}m`
-                    : `S${show.number_of_seasons} E${show.number_of_episodes}`}
-                </span>
-                ·
-                <span className="flex items-center text-yellow-300 gap-1">
-                  <Star className="h-4 w-4 flex items-center" />
-                  {String(show.vote_average)[0]}/10
+                <span className=" w-[35%]">
+                  <span className="flex gap-2">
+                    <p className="text-muted-foreground">Genres:</p>
+                    <p>{show.genres.map((g) => g.name).join(", ")}</p>
+                  </span>
                 </span>
               </div>
-              <p className="mt-5">{show.overview}</p>
-            </span>
-            <span className=" w-[35%]">
-              <span className="flex gap-2">
-                <p className="text-muted-foreground">Genres:</p>
-                <p>{show.genres.map((g) => g.name).join(", ")}</p>
-              </span>
-            </span>
-          </div>
+            )}
+          </>
         )}
       </DrawerContent>
     </Drawer>

@@ -28,9 +28,8 @@ export default function Trailer({
         const trailer = data.results.find(
           (vid: Video) => vid.type === "Trailer" && vid.site === "YouTube"
         );
-        if (trailer) {
-          setVideoKey(trailer.key);
-        }
+
+        setVideoKey(trailer.key);
       } catch (error) {
         console.error("Failed to fetch trailer:", error);
       }
@@ -42,6 +41,7 @@ export default function Trailer({
     <iframe
       width="100%"
       height={type === "default" ? "100%" : "140%"}
+      className="fade-in transition-opacity duration-300 opacity-100"
       src={
         videoKey
           ? `https://www.youtube.com/embed/${videoKey}?autoplay=1&loop=1&playlist=${videoKey}`
@@ -50,6 +50,7 @@ export default function Trailer({
       title="Trailer"
       allow="autoplay; encrypted-media"
       allowFullScreen
+      key={videoKey}
     ></iframe>
   );
 }
