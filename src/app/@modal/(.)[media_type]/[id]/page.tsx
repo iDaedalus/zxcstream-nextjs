@@ -9,8 +9,10 @@ import {
 import Trailer from "@/app/trailer";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
-import { Star } from "lucide-react";
+import { Bookmark, Play, Star } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import TmdbImages from "@/app/fetchImage";
+import { Button } from "@/components/ui/button";
 interface PageProps {
   params: Promise<{ media_type: string; id: string }>;
 }
@@ -69,17 +71,22 @@ export default function InterceptModal({ params }: PageProps) {
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     async function fetchData() {
-      try {
+      if (!open) {
+        setShow(null);
         setLoading(true);
-        const res = await fetch(
-          `https://api.themoviedb.org/3/${media_type}/${id}?api_key=${apiKey}&language=en-US`
-        );
-        const data = await res.json();
-        setShow(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+      } else {
+        try {
+          setLoading(true);
+          const res = await fetch(
+            `https://api.themoviedb.org/3/${media_type}/${id}?api_key=${apiKey}&language=en-US`
+          );
+          const data = await res.json();
+          setShow(data);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
       }
     }
     fetchData();
@@ -121,12 +128,35 @@ export default function InterceptModal({ params }: PageProps) {
           </div>
         ) : (
           <>
-            <div className="relative aspect-[16/8] overflow-hidden flex justify-center items-center overlay">
-              <Trailer id={id} mediaType={media_type} type="modal" />
+            <div className="relative aspect-[16/8] overflow-hidden mask-gradient">
+              <div className="h-full w-full pointer-events-none  flex justify-center items-center ">
+                <Trailer id={id} mediaType={media_type} type="modal" />
+              </div>
+              <div className="absolute lg:left-8 lg:bottom-12 left-3 bottom-8 lg:w-[35%] w-[50%] z-50">
+                <TmdbImages id={id} mediaType={media_type} />
+                <div className="space-x-3 hidden lg:block">
+                  <Button variant="outline" className="mt-8">
+                    <Play />
+                    Play Now
+                  </Button>
+                  <Button>
+                    <Bookmark />
+                  </Button>
+                </div>
+              </div>
             </div>
             {show && (
-              <div className=" w-full px-10 py-5 flex gap-10">
-                <span className="  w-[65%]">
+              <div className="w-full lg:px-10 flex px-3 py-5 flex-col lg:flex-row lg:gap-10 gap-5">
+                <span className="lg:w-[65%] w-full">
+                  <div className="flex gap-3 items-center mb-5 lg:hidden">
+                    <Button variant="outline" className="flex-1">
+                      <Play />
+                      Play Now
+                    </Button>
+                    <Button>
+                      <Bookmark />
+                    </Button>
+                  </div>
                   <div className="flex items-center gap-3">
                     <span>
                       {new Date(show.release_date).getFullYear() ||
@@ -148,7 +178,7 @@ export default function InterceptModal({ params }: PageProps) {
                   </div>
                   <p className="mt-5">{show.overview}</p>
                 </span>
-                <span className=" w-[35%]">
+                <span className="lg:w-[35%] w-full">
                   <span className="flex gap-2">
                     <p className="text-muted-foreground">Genres:</p>
                     <p>{show.genres.map((g) => g.name).join(", ")}</p>
