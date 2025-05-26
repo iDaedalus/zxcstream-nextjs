@@ -1,7 +1,6 @@
 "use client";
 
 import { SpotLightItem, Spotlight } from "@/components/ui/main-spotlight";
-import { useRouter } from "next/navigation";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -25,7 +24,6 @@ interface MovieTypes {
 const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const OSCAR_ID = 1064213;
 export default function Oscar() {
-  const router = useRouter();
   const [movie, setMovie] = useState<MovieTypes | null>(null);
   const [loading, setLoading] = useState(true);
   console.log(movie);
