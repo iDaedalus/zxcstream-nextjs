@@ -10,10 +10,11 @@ import {
 import Trailer from "@/app/trailer";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
-import { Bookmark, Play, Star, X } from "lucide-react";
+import { Bookmark, LibraryBig, Play, Star, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import TmdbImages from "@/app/fetchImage";
 import { Button } from "@/components/ui/button";
+import useCollection from "@/app/collectionFetch";
 interface PageProps {
   params: Promise<{ media_type: string; id: string }>;
 }
@@ -33,6 +34,12 @@ interface LanguagesType {
   name: string;
 }
 interface CollectionType {
+  id: string;
+  name: string;
+  parts: CollectionPartsType[];
+}
+interface CollectionPartsType {
+  id: string;
   name: string;
 }
 interface SeasonsType {
@@ -70,6 +77,8 @@ export default function InterceptModal({ params }: PageProps) {
   const [open, setOpen] = useState(true);
   const [show, setShow] = useState<MovieType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const collection = useCollection(show?.belongs_to_collection?.id);
+  console.log(collection);
   useEffect(() => {
     async function fetchData() {
       if (!open) {
@@ -133,10 +142,9 @@ export default function InterceptModal({ params }: PageProps) {
             </div>
           ) : (
             <>
-              <div className="relative aspect-video overflow-hidden mask-gradient">
-                <div className="h-full w-full pointer-events-none  flex justify-center items-center ">
-                  <Trailer id={id} mediaType={media_type} type="modal" />
-                </div>
+              <div className="relative aspect-video overflow-hidden">
+                <Trailer id={id} mediaType={media_type} type="modal" />
+
                 <div className="absolute lg:left-8 lg:bottom-12 left-3 bottom-8 lg:w-[35%] w-[50%] z-50">
                   <TmdbImages id={id} mediaType={media_type} />
                   <div className="space-x-3 hidden lg:block">
@@ -151,249 +159,87 @@ export default function InterceptModal({ params }: PageProps) {
                 </div>
               </div>
               {show && (
-                <div className="w-full lg:px-10 flex px-3 py-5 flex-col lg:flex-row lg:gap-10 gap-5">
-                  <span className="lg:w-[65%] w-full">
-                    <div className="flex gap-3 items-center mb-5 lg:hidden">
-                      <Button variant="outline" className="flex-1">
-                        <Play />
-                        Play Now
-                      </Button>
-                      <Button>
-                        <Bookmark />
-                      </Button>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span>
-                        {new Date(show.release_date).getFullYear() ||
-                          new Date(show.first_air_date).getFullYear()}
-                      </span>
-                      ·
-                      <span>
-                        {show.runtime
-                          ? `${Math.floor(show.runtime / 60)}h ${
-                              show.runtime % 60
-                            }m`
-                          : `S${show.number_of_seasons} E${show.number_of_episodes}`}
-                      </span>
-                      ·
-                      <span className="flex items-center text-yellow-300 gap-1">
-                        <Star className="h-4 w-4 flex items-center" />
-                        {String(show.vote_average)[0]}/10
-                      </span>
-                    </div>
-                    <p className="mt-5">{show.overview}</p>
-                  </span>
-                  <span className="lg:w-[35%] w-full">
-                    <span className="flex gap-2">
-                      <p className="text-muted-foreground">Genres:</p>
-                      <p>{show.genres.map((g) => g.name).join(", ")}</p>
+                <div className="px-3 py-5 lg:px-10 flex flex-col gap-5">
+                  <div className="w-full flex flex-col lg:flex-row lg:gap-10 gap-5">
+                    <span className="lg:w-[65%] w-full">
+                      <div className="flex gap-3 items-center mb-5 lg:hidden">
+                        <Button variant="outline" className="flex-1">
+                          <Play />
+                          Play Now
+                        </Button>
+                        <Button>
+                          <Bookmark />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span>
+                          {new Date(show.release_date).getFullYear() ||
+                            new Date(show.first_air_date).getFullYear()}
+                        </span>
+                        ·
+                        <span>
+                          {show.runtime
+                            ? `${Math.floor(show.runtime / 60)}h ${
+                                show.runtime % 60
+                              }m`
+                            : `S${show.number_of_seasons} E${show.number_of_episodes}`}
+                        </span>
+                        ·
+                        <span className="flex items-center text-yellow-300 gap-1">
+                          <Star className="h-4 w-4 flex items-center" />
+                          {String(show.vote_average)[0]}/10
+                        </span>
+                      </div>
+                      <p className="mt-5">{show.overview}</p>
                     </span>
-                  </span>
-                </div>
-              )}
-              {show && (
-                <div className="w-full lg:px-10 flex px-3 py-5 flex-col lg:flex-row lg:gap-10 gap-5">
-                  <span className="lg:w-[65%] w-full">
-                    <div className="flex gap-3 items-center mb-5 lg:hidden">
-                      <Button variant="outline" className="flex-1">
-                        <Play />
-                        Play Now
-                      </Button>
-                      <Button>
-                        <Bookmark />
-                      </Button>
-                    </div>
-                    <div className="flex items-center gap-3">
+                    <span className="lg:w-[35%] w-full flex flex-col gap-5">
                       <span>
-                        {new Date(show.release_date).getFullYear() ||
-                          new Date(show.first_air_date).getFullYear()}
+                        <span className="text-muted-foreground">Genres:</span>
+                        <span>
+                          {" "}
+                          {show.genres.map((g) => g.name).join(", ")}
+                        </span>
                       </span>
-                      ·
+
                       <span>
-                        {show.runtime
-                          ? `${Math.floor(show.runtime / 60)}h ${
-                              show.runtime % 60
-                            }m`
-                          : `S${show.number_of_seasons} E${show.number_of_episodes}`}
+                        <span className="text-muted-foreground">
+                          Production:{" "}
+                        </span>
+                        {show.production_companies
+                          .map((g) => g.name)
+                          .join(", ")}
                       </span>
-                      ·
-                      <span className="flex items-center text-yellow-300 gap-1">
-                        <Star className="h-4 w-4 flex items-center" />
-                        {String(show.vote_average)[0]}/10
+
+                      <span className="flex gap-2">
+                        <span className="text-muted-foreground">Status:</span>
+                        <span>{show.status}</span>
                       </span>
-                    </div>
-                    <p className="mt-5">{show.overview}</p>
-                  </span>
-                  <span className="lg:w-[35%] w-full">
-                    <span className="flex gap-2">
-                      <p className="text-muted-foreground">Genres:</p>
-                      <p>{show.genres.map((g) => g.name).join(", ")}</p>
                     </span>
-                  </span>
-                </div>
-              )}
-              {show && (
-                <div className="w-full lg:px-10 flex px-3 py-5 flex-col lg:flex-row lg:gap-10 gap-5">
-                  <span className="lg:w-[65%] w-full">
-                    <div className="flex gap-3 items-center mb-5 lg:hidden">
-                      <Button variant="outline" className="flex-1">
-                        <Play />
-                        Play Now
-                      </Button>
-                      <Button>
-                        <Bookmark />
-                      </Button>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span>
-                        {new Date(show.release_date).getFullYear() ||
-                          new Date(show.first_air_date).getFullYear()}
-                      </span>
-                      ·
-                      <span>
-                        {show.runtime
-                          ? `${Math.floor(show.runtime / 60)}h ${
-                              show.runtime % 60
-                            }m`
-                          : `S${show.number_of_seasons} E${show.number_of_episodes}`}
-                      </span>
-                      ·
-                      <span className="flex items-center text-yellow-300 gap-1">
-                        <Star className="h-4 w-4 flex items-center" />
-                        {String(show.vote_average)[0]}/10
-                      </span>
-                    </div>
-                    <p className="mt-5">{show.overview}</p>
-                  </span>
-                  <span className="lg:w-[35%] w-full">
-                    <span className="flex gap-2">
-                      <p className="text-muted-foreground">Genres:</p>
-                      <p>{show.genres.map((g) => g.name).join(", ")}</p>
-                    </span>
-                  </span>
-                </div>
-              )}
-              {show && (
-                <div className="w-full lg:px-10 flex px-3 py-5 flex-col lg:flex-row lg:gap-10 gap-5">
-                  <span className="lg:w-[65%] w-full">
-                    <div className="flex gap-3 items-center mb-5 lg:hidden">
-                      <Button variant="outline" className="flex-1">
-                        <Play />
-                        Play Now
-                      </Button>
-                      <Button>
-                        <Bookmark />
-                      </Button>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span>
-                        {new Date(show.release_date).getFullYear() ||
-                          new Date(show.first_air_date).getFullYear()}
-                      </span>
-                      ·
-                      <span>
-                        {show.runtime
-                          ? `${Math.floor(show.runtime / 60)}h ${
-                              show.runtime % 60
-                            }m`
-                          : `S${show.number_of_seasons} E${show.number_of_episodes}`}
-                      </span>
-                      ·
-                      <span className="flex items-center text-yellow-300 gap-1">
-                        <Star className="h-4 w-4 flex items-center" />
-                        {String(show.vote_average)[0]}/10
-                      </span>
-                    </div>
-                    <p className="mt-5">{show.overview}</p>
-                  </span>
-                  <span className="lg:w-[35%] w-full">
-                    <span className="flex gap-2">
-                      <p className="text-muted-foreground">Genres:</p>
-                      <p>{show.genres.map((g) => g.name).join(", ")}</p>
-                    </span>
-                  </span>
-                </div>
-              )}
-              {show && (
-                <div className="w-full lg:px-10 flex px-3 py-5 flex-col lg:flex-row lg:gap-10 gap-5">
-                  <span className="lg:w-[65%] w-full">
-                    <div className="flex gap-3 items-center mb-5 lg:hidden">
-                      <Button variant="outline" className="flex-1">
-                        <Play />
-                        Play Now
-                      </Button>
-                      <Button>
-                        <Bookmark />
-                      </Button>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span>
-                        {new Date(show.release_date).getFullYear() ||
-                          new Date(show.first_air_date).getFullYear()}
-                      </span>
-                      ·
-                      <span>
-                        {show.runtime
-                          ? `${Math.floor(show.runtime / 60)}h ${
-                              show.runtime % 60
-                            }m`
-                          : `S${show.number_of_seasons} E${show.number_of_episodes}`}
-                      </span>
-                      ·
-                      <span className="flex items-center text-yellow-300 gap-1">
-                        <Star className="h-4 w-4 flex items-center" />
-                        {String(show.vote_average)[0]}/10
-                      </span>
-                    </div>
-                    <p className="mt-5">{show.overview}</p>
-                  </span>
-                  <span className="lg:w-[35%] w-full">
-                    <span className="flex gap-2">
-                      <p className="text-muted-foreground">Genres:</p>
-                      <p>{show.genres.map((g) => g.name).join(", ")}</p>
-                    </span>
-                  </span>
-                </div>
-              )}
-              {show && (
-                <div className="w-full lg:px-10 flex px-3 py-5 flex-col lg:flex-row lg:gap-10 gap-5">
-                  <span className="lg:w-[65%] w-full">
-                    <div className="flex gap-3 items-center mb-5 lg:hidden">
-                      <Button variant="outline" className="flex-1">
-                        <Play />
-                        Play Now
-                      </Button>
-                      <Button>
-                        <Bookmark />
-                      </Button>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span>
-                        {new Date(show.release_date).getFullYear() ||
-                          new Date(show.first_air_date).getFullYear()}
-                      </span>
-                      ·
-                      <span>
-                        {show.runtime
-                          ? `${Math.floor(show.runtime / 60)}h ${
-                              show.runtime % 60
-                            }m`
-                          : `S${show.number_of_seasons} E${show.number_of_episodes}`}
-                      </span>
-                      ·
-                      <span className="flex items-center text-yellow-300 gap-1">
-                        <Star className="h-4 w-4 flex items-center" />
-                        {String(show.vote_average)[0]}/10
-                      </span>
-                    </div>
-                    <p className="mt-5">{show.overview}</p>
-                  </span>
-                  <span className="lg:w-[35%] w-full">
-                    <span className="flex gap-2">
-                      <p className="text-muted-foreground">Genres:</p>
-                      <p>{show.genres.map((g) => g.name).join(", ")}</p>
-                    </span>
-                  </span>
+                  </div>
+                  <div className="w-full ">
+                    {media_type === "movie" &&
+                      show.belongs_to_collection !== null && (
+                        <div className="space-y-3">
+                          <h1 className="flex gap-2 items-center text-xl font-semibold">
+                            <LibraryBig />
+                            {show.belongs_to_collection.name}
+                          </h1>
+                          <div className="grid lg:grid-cols-4 grid-cols-3 lg:gap-5 gap-3">
+                            {collection?.parts.map((meow) => (
+                              <div
+                                key={meow.id}
+                                className="overflow-hidden rounded-lg"
+                              >
+                                <img
+                                  src={`https://image.tmdb.org/t/p/w500/${meow.poster_path}`}
+                                  alt=""
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                  </div>
                 </div>
               )}
             </>

@@ -1,14 +1,17 @@
 "use client";
+import { Video, VideoOff, Volume, Volume2, VolumeOff } from "lucide-react";
 import { useState, useEffect } from "react";
 interface Video {
   type: string;
   site: string;
   key: string;
 }
+import { Button } from "@/components/ui/button";
+import TmdbBackdrop from "./fetchBackdrop";
 export default function Trailer({
   id,
   mediaType,
-  type = "default",
+  type = "modal",
 }: {
   id: string;
   mediaType: string;
@@ -16,6 +19,7 @@ export default function Trailer({
 }) {
   const [videoKey, setVideoKey] = useState<string | null>(null);
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     async function fetchTrailer() {
@@ -38,19 +42,36 @@ export default function Trailer({
   }, [id, mediaType, apiKey]);
 
   return (
-    <iframe
-      width="100%"
-      height={type === "default" ? "100%" : "140%"}
-      className="fade-in transition-opacity duration-300 opacity-100"
-      src={
-        videoKey
-          ? `https://www.youtube.com/embed/${videoKey}?autoplay=1&loop=1&playlist=${videoKey}`
-          : `https://www.youtube.com/embed/xvFZjo5PgG0`
-      }
-      title="Trailer"
-      allow="autoplay; encrypted-media"
-      allowFullScreen
-      key={videoKey}
-    ></iframe>
+    <div className="relative h-full w-full flex justify-center items-center mask-gradient">
+      <span
+        className="absolute z-50 lg:bottom-12 bottom-5 right-3 lg:right-8"
+        onClick={() => setShow(!show)}
+      >
+        {show ? (
+          <Video className="lg:h-6 lg:w-6 h-5 w-5" />
+        ) : (
+          <VideoOff className="lg:h-6 lg:w-6 h-5 w-5" />
+        )}
+      </span>
+
+      {!show ? (
+        <TmdbBackdrop id={id} mediaType={mediaType} />
+      ) : (
+        <iframe
+          width="100%"
+          height={type === "modal" ? "150%" : "100%"}
+          className="fade-in transition-opacity duration-300 opacity-100 aspect-video mask-gradient pointer-events-none"
+          src={
+            videoKey
+              ? `https://www.youtube.com/embed/${videoKey}?autoplay=1&loop=1&playlist=${videoKey}`
+              : `https://www.youtube.com/embed/xvFZjo5PgG0`
+          }
+          title="Trailer"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+          key={videoKey}
+        ></iframe>
+      )}
+    </div>
   );
 }
