@@ -77,6 +77,9 @@
 * {
   /* border: 1px solid red; */
 }
+[data-vaul-drawer][data-vaul-drawer-direction="bottom"]::after {
+  display: none !important;
+}
 .landing-data {
   opacity: 0;
   filter: blur(5px);
