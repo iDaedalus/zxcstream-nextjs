@@ -1,12 +1,12 @@
 "use client";
-import { Video, VideoOff, Volume, Volume2, VolumeOff } from "lucide-react";
+import { Video, VideoOff } from "lucide-react";
 import { useState, useEffect } from "react";
 interface Video {
   type: string;
   site: string;
   key: string;
 }
-import { Button } from "@/components/ui/button";
+
 import TmdbBackdrop from "./fetchBackdrop";
 export default function Trailer({
   id,
