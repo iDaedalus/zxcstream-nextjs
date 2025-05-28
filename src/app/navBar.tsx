@@ -209,7 +209,10 @@ export default function NavBar() {
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <NavigationMenuLink
+                href="/search"
+                className={navigationMenuTriggerStyle()}
+              >
                 <span className="flex items-center gap-3">
                   <Search size={16} /> Search
                 </span>
