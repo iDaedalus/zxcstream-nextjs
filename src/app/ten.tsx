@@ -81,6 +81,7 @@ export default function Ten() {
 
       <Swiper
         modules={[Navigation, Pagination]}
+        freeMode={true}
         slidesPerView="auto"
         spaceBetween={45}
         className=" !pb-5"

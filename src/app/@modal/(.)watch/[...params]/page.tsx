@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 export default function WatchPage() {
   const { params } = useParams() as { params?: string[] };
 
-  const mediaType = params?.[0]; 
+  const mediaType = params?.[0];
   const id = params?.[1];
   const season = params?.[2];
   const episode = params?.[3];
@@ -59,44 +59,42 @@ export default function WatchPage() {
       : "";
   console.log(src);
   return (
-    <div className="h-screen w-full flex flex-col">
-      <>
-        <div className="relative flex-1">
-          <div
-            onClick={() => {
-              router.back();
-            }}
-            className="absolute z-10 top-10 text-white transform  left-5 zxczxc tracking-[-1px] text-md flex items-center cursor-pointer"
+    <div className="fixed z-[999] inset-0 w-full flex flex-col bg-black overflow-auto meow">
+      <div className="relative flex-1 min-h-[90vh]">
+        <div
+          onClick={() => {
+            router.back();
+          }}
+          className="absolute z-10 top-10 text-white transform  left-5 zxczxc tracking-[-1px] text-md flex items-center cursor-pointer"
+        >
+          <ArrowLeft strokeWidth={3} className="h-5 w-5" />
+          BACK
+        </div>
+        <iframe
+          src={src}
+          title="Video Player"
+          className="w-full h-full"
+          allowFullScreen
+          frameBorder={0}
+          sandbox="allow-scripts allow-same-origin allow-forms"
+        />
+      </div>
+      <div className="flex flex-col lg:flex-row gap-2 p-3">
+        {servers.map((meow) => (
+          <Button
+            variant="ghost"
+            onClick={() => setSelected(meow.name)}
+            className={`flex-1 bg-transparent hover:bg-[unset] hover:border-white border-b-2 border-gray-500 rounded-[unset] ${
+              meow.name === selected
+                ? "border-blue-800 hover:border-blue-900"
+                : ""
+            }`}
+            key={meow.name}
           >
-            <ArrowLeft strokeWidth={3} className="h-5 w-5" />
-            BACK
-          </div>
-          <iframe
-            src={src}
-            title="Video Player"
-            className="w-full h-full"
-            allowFullScreen
-            frameBorder={0}
-            sandbox="allow-scripts allow-same-origin allow-forms"
-          />
-        </div>
-        <div className="flex gap-2 p-3">
-          {servers.map((meow) => (
-            <Button
-              variant="ghost"
-              onClick={() => setSelected(meow.name)}
-              className={`flex-1 bg-transparent hover:bg-[unset] hover:border-white border-b-2 border-gray-500 rounded-[unset] ${
-                meow.name === selected
-                  ? "border-blue-800 hover:border-blue-900"
-                  : ""
-              }`}
-              key={meow.name}
-            >
-              {meow.name}
-            </Button>
-          ))}
-        </div>
-      </>
+            {meow.name}
+          </Button>
+        ))}
+      </div>
     </div>
   );
 }
