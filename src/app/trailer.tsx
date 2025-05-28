@@ -33,7 +33,12 @@ export default function Trailer({
           (vid: Video) => vid.type === "Trailer" && vid.site === "YouTube"
         );
 
-        setVideoKey(trailer.key);
+        if (trailer && trailer.key) {
+          setVideoKey(trailer.key);
+        } else {
+          console.warn("No trailer found");
+          setVideoKey("xvFZjo5PgG0");
+        }
       } catch (error) {
         console.error("Failed to fetch trailer:", error);
       }
@@ -62,11 +67,7 @@ export default function Trailer({
             width="100%"
             height={type === "modal" ? "150%" : "100%"}
             className="fade-in transition-opacity duration-300 opacity-100 aspect-video  pointer-events-none"
-            src={
-              videoKey
-                ? `https://www.youtube.com/embed/${videoKey}?autoplay=1&loop=1&playlist=${videoKey}`
-                : `https://www.youtube.com/embed/xvFZjo5PgG0`
-            }
+            src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&loop=1&playlist=${videoKey}`}
             title="Trailer"
             allow="autoplay; encrypted-media"
             allowFullScreen

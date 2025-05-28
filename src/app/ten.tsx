@@ -1,10 +1,11 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import LazyImage from "./observer";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Film, Tv, LibraryBig, Bookmark, Play, Star } from "lucide-react";
@@ -31,8 +32,9 @@ interface weeklyTypes {
 export default function Ten() {
   const [weekly, setWeekly] = useState<weeklyTypes[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loaded, setLoaded] = useState(false);
+
   const [media, setMedia] = useState<string>("all");
+  const router = useRouter();
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   const mediaOptions = [
     { label: "All", value: "all", icon: <LibraryBig /> },
@@ -118,34 +120,34 @@ export default function Ten() {
               <motion.div
                 className="h-full w-full"
                 initial={{ opacity: 0, scale: 0.95 }}
-                animate={loaded ? { opacity: 1, scale: 1 } : false}
+                animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
               >
                 <HoverCard>
-                  <Link href={`/${meow.media_type}/${meow.id}`} scroll={false}>
-                    <HoverCardTrigger asChild>
-                      <div className="cursor-pointer h-full w-full">
-                        <p className="numbering">{index + 1}</p>
-                        <img
-                          loading="lazy"
-                          className="h-full w-full object-cover rounded-sm"
-                          src={`https://image.tmdb.org/t/p/w500/${meow.poster_path}`}
-                          alt={meow.title || meow.name}
-                          onLoad={() => setLoaded(true)}
-                          onError={(e) => {
-                            e.currentTarget.src = "/fallback.jpg";
-                          }}
-                        />
-                      </div>
-                    </HoverCardTrigger>
-                  </Link>
+                  <HoverCardTrigger
+                    asChild
+                    onClick={() =>
+                      router.push(`/${meow.media_type}/${meow.id}`)
+                    }
+                  >
+                    <div className="cursor-pointer h-full w-full">
+                      <p className="numbering">{index + 1}</p>
+                      <LazyImage
+                        className="h-full w-full object-cover rounded-sm"
+                        src={`https://image.tmdb.org/t/p/w500/${meow.poster_path}`}
+                        alt="Lazy loaded"
+                        placeholder="/images/blur.jpg"
+                      />
+                    </div>
+                  </HoverCardTrigger>
+
                   <HoverCardContent className="w-[400px]">
                     <div className="aspect-[16/8] mask-gradient">
-                      <img
-                        loading="lazy"
+                      <LazyImage
                         className="h-full w-full object-cover "
                         src={`https://image.tmdb.org/t/p/w500/${meow.backdrop_path}`}
-                        alt={meow.title || meow.name}
+                        alt="Lazy loaded"
+                        placeholder="/images/blur.jpg"
                       />
                     </div>
                     <div className="p-4">

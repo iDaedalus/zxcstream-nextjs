@@ -7,6 +7,7 @@ import Link from "next/link";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import LazyImage from "./observer";
 import { ChevronRight } from "lucide-react";
 
 let showlist = [
@@ -68,10 +69,11 @@ export default function SwiperBackdrops() {
               </span>
             </div>
 
-            <img
+            <LazyImage
               className="absolute h-full w-full object-cover object-[center_40%] mask-gradient backdrop"
               src={`https://image.tmdb.org/t/p/original/${meow.backdrop_path}`}
-              alt=""
+              alt="Lazy loaded"
+              placeholder="/images/blur.jpg"
             />
           </SwiperSlide>
         ))

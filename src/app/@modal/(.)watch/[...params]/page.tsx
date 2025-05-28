@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function WatchPage() {
   const { params } = useParams() as { params?: string[] };
@@ -59,7 +60,12 @@ export default function WatchPage() {
       : "";
   console.log(src);
   return (
-    <div className="fixed z-[999] inset-0 w-full flex flex-col bg-black overflow-auto meow">
+    <motion.div
+      initial={{ opacity: 0, y: -100 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="fixed z-[999] inset-0 w-full flex flex-col bg-black overflow-auto meow"
+    >
       <div className="relative flex-1 min-h-[90vh]">
         <div
           onClick={() => {
@@ -95,6 +101,6 @@ export default function WatchPage() {
           </Button>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

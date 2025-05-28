@@ -23,7 +23,9 @@
 .zxczxc {
   font-family: "CustomFont";
 }
-
+/* body{
+  transform: scale(1.1);
+} */
 .swiper-pagination.swiper-pagination-progressbar.swiper-pagination-horizontal {
   height: 1px;
 }

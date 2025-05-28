@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+interface ImageTypes {
+  iso_639_1: string;
+  file_path: string;
+}
 export default function TmdbBackdrop({
   id,
   mediaType,
@@ -15,10 +19,13 @@ export default function TmdbBackdrop({
         `https://api.themoviedb.org/3/${mediaType}/${id}/images?api_key=${apiKey}`
       );
       const data = await res.json();
-      const backdrop = data.backdrops?.[0];
+      console.log(data);
+      const normal = data.backdrops.find(
+        (meow: ImageTypes) => meow.iso_639_1 === null
+      );
 
-      const imageUrl = backdrop
-        ? `https://image.tmdb.org/t/p/w1280${backdrop.file_path}`
+      const imageUrl = normal
+        ? `https://image.tmdb.org/t/p/w1280${normal.file_path}`
         : null;
 
       setImage(imageUrl);
