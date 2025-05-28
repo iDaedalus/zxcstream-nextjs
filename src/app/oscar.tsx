@@ -26,7 +26,6 @@ const OSCAR_ID = 1064213;
 export default function Oscar() {
   const [movie, setMovie] = useState<MovieTypes | null>(null);
   const [loading, setLoading] = useState(true);
-  console.log(movie);
   useEffect(() => {
     async function fetchOscar() {
       try {

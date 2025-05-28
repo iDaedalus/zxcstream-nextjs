@@ -28,7 +28,7 @@ export default function TmdbBackdrop({
 
   return image ? (
     <img
-      className=" pointer-events-none"
+      className="mask-gradient pointer-events-none"
       src={image}
       alt="TMDB Logo"
     />

@@ -4,17 +4,40 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
 import Trailer from "@/app/trailer";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
-import { Bookmark, LibraryBig, Play, Star, X } from "lucide-react";
+import EpisodeList from "@/app/fetchEpisode";
+import {
+  Bookmark,
+  ChevronsUpDown,
+  LayoutGrid,
+  LibraryBig,
+  Play,
+  Star,
+  X,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import TmdbImages from "@/app/fetchImage";
 import { Button } from "@/components/ui/button";
 import useCollection from "@/app/collectionFetch";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 interface PageProps {
   params: Promise<{ media_type: string; id: string }>;
 }
@@ -44,8 +67,9 @@ interface CollectionPartsType {
 }
 interface SeasonsType {
   id: number;
-  episode_count: number;
-  season_number: number;
+  episode_count: string;
+  season_number: string;
+  name: string;
 }
 interface MovieType {
   id: number;
@@ -77,8 +101,12 @@ export default function InterceptModal({ params }: PageProps) {
   const [open, setOpen] = useState(true);
   const [show, setShow] = useState<MovieType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [seasonOpen, setSeasonOpen] = useState(false);
+  const [seasonValue, setSeasonValue] = useState("1");
+  const [navigating, setNavigating] = useState(false);
+
   const collection = useCollection(show?.belongs_to_collection?.id);
-  console.log(collection);
+
   useEffect(() => {
     async function fetchData() {
       if (!open) {
@@ -101,22 +129,22 @@ export default function InterceptModal({ params }: PageProps) {
     }
     fetchData();
   }, []);
-  console.log(show);
 
   useEffect(() => {
-    if (!open) {
+    if (!open && !navigating) {
       const timeout = setTimeout(() => {
         router.back();
       }, 100);
       return () => clearTimeout(timeout);
     }
-  }, [open, router]);
+  }, [open, router, navigating]);
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerContent className=" outline-none focus-visible:outline-none">
         <DrawerHeader className="sr-only">
           <DrawerTitle>{show?.title || show?.name}</DrawerTitle>
+          <DrawerDescription>{show?.overview}</DrawerDescription>
         </DrawerHeader>
         <DrawerClose className="absolute right-4 top-4 z-10 cursor-pointer bg-blue-800/20 rounded-full p-1">
           <X className="h-5 w-5 text-blue-800 " />
@@ -148,7 +176,19 @@ export default function InterceptModal({ params }: PageProps) {
                 <div className="absolute lg:left-8 lg:bottom-12 left-3 bottom-8 lg:w-[35%] w-[50%] z-50">
                   <TmdbImages id={id} mediaType={media_type} />
                   <div className="space-x-3 hidden lg:block">
-                    <Button variant="outline" className="mt-8">
+                    <Button
+                      onClick={() => {
+                        router.push(
+                          `/watch/${media_type}/${id}${
+                            media_type === "tv" ? "/1/1" : ""
+                          }`
+                        );
+                        setNavigating(true);
+                        setOpen(false);
+                      }}
+                      variant="outline"
+                      className="mt-8"
+                    >
                       <Play />
                       Play Now
                     </Button>
@@ -239,6 +279,59 @@ export default function InterceptModal({ params }: PageProps) {
                           </div>
                         </div>
                       )}
+
+                    {media_type === "tv" && (
+                      <div className="w-full mt-5">
+                        <div className="flex justify-between items-center">
+                          <h1 className="text-xl font-semibold flex items-center gap-3">
+                            <LayoutGrid />
+                            Episodes
+                          </h1>
+                          <Popover
+                            open={seasonOpen}
+                            onOpenChange={setSeasonOpen}
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={seasonOpen}
+                                className="w-[260px] justify-between"
+                              >
+                                {seasonValue
+                                  ? `Season ${seasonValue}`
+                                  : "Select Season"}
+
+                                <ChevronsUpDown className="opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[260px] p-0">
+                              <Command>
+                                <CommandInput placeholder="Search season..." />
+                                <CommandList>
+                                  <CommandEmpty>No season found.</CommandEmpty>
+                                  <CommandGroup>
+                                    {show.seasons.map((season: SeasonsType) => (
+                                      <CommandItem
+                                        key={season.id}
+                                        value={season.season_number}
+                                        onSelect={() => {
+                                          setSeasonValue(season.season_number);
+                                          setSeasonOpen(false);
+                                        }}
+                                      >
+                                        {season.name}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                        <EpisodeList id={id} season={seasonValue} />
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

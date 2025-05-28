@@ -42,7 +42,7 @@ export default function Trailer({
   }, [id, mediaType, apiKey]);
 
   return (
-    <div className="relative h-full w-full flex justify-center items-center mask-gradient">
+    <div className="relative h-full w-full flex justify-center items-center ">
       <span
         className="absolute z-50 lg:bottom-12 bottom-5 right-3 lg:right-8"
         onClick={() => setShow(!show)}
@@ -57,20 +57,22 @@ export default function Trailer({
       {!show ? (
         <TmdbBackdrop id={id} mediaType={mediaType} />
       ) : (
-        <iframe
-          width="100%"
-          height={type === "modal" ? "150%" : "100%"}
-          className="fade-in transition-opacity duration-300 opacity-100 aspect-video mask-gradient pointer-events-none"
-          src={
-            videoKey
-              ? `https://www.youtube.com/embed/${videoKey}?autoplay=1&loop=1&playlist=${videoKey}`
-              : `https://www.youtube.com/embed/xvFZjo5PgG0`
-          }
-          title="Trailer"
-          allow="autoplay; encrypted-media"
-          allowFullScreen
-          key={videoKey}
-        ></iframe>
+        <div className="h-full w-full flex justify-center items-center mask-gradient">
+          <iframe
+            width="100%"
+            height={type === "modal" ? "150%" : "100%"}
+            className="fade-in transition-opacity duration-300 opacity-100 aspect-video  pointer-events-none"
+            src={
+              videoKey
+                ? `https://www.youtube.com/embed/${videoKey}?autoplay=1&loop=1&playlist=${videoKey}`
+                : `https://www.youtube.com/embed/xvFZjo5PgG0`
+            }
+            title="Trailer"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            key={videoKey}
+          ></iframe>
+        </div>
       )}
     </div>
   );
