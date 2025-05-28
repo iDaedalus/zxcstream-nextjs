@@ -203,7 +203,19 @@ export default function InterceptModal({ params }: PageProps) {
                   <div className="w-full flex flex-col lg:flex-row lg:gap-10 gap-5">
                     <span className="lg:w-[65%] w-full">
                       <div className="flex gap-3 items-center mb-5 lg:hidden">
-                        <Button variant="outline" className="flex-1">
+                        <Button
+                          onClick={() => {
+                            router.push(
+                              `/watch/${media_type}/${id}${
+                                media_type === "tv" ? "/1/1" : ""
+                              }`
+                            );
+                            setNavigating(true);
+                            setOpen(false);
+                          }}
+                          variant="outline"
+                          className="flex-1"
+                        >
                           <Play />
                           Play Now
                         </Button>
