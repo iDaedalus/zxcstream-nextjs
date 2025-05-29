@@ -1,4 +1,3 @@
-import TmdbImages from "@/app/fetchImage";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import useCollection from "@/app/collectionFetch";
