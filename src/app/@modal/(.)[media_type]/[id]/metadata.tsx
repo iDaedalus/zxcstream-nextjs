@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import useCollection from "@/app/collectionFetch";
-import getEpisodes from "@/app/fetchEpisode";
+import useEpisodes from "@/app/fetchEpisode";
 import {
   Bookmark,
   ChevronsUpDown,
@@ -51,7 +51,7 @@ export default function DrawerMetadata({
 
   const { episode, episodeLoading } =
     media_type === "tv"
-      ? getEpisodes({ id, season })
+      ? useEpisodes({ id, season })
       : { episode: [], episodeLoading: false };
 
   console.log(collection);

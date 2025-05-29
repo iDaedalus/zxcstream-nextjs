@@ -19,7 +19,7 @@ interface EpisodeListProps {
   season?: string;
 }
 
-export default function getEpisodes({ id, season }: EpisodeListProps) {
+export default function useEpisodes({ id, season }: EpisodeListProps) {
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   const [episode, setEpisode] = useState<MovieType[]>([]);
   const [episodeLoading, setEpisodeLoading] = useState<boolean>(true);
@@ -44,5 +44,3 @@ export default function getEpisodes({ id, season }: EpisodeListProps) {
 
   return { episode, episodeLoading };
 }
-
-
