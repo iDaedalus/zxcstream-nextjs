@@ -9,7 +9,7 @@ import {
   LibraryBig,
   Play,
   Star,
-  Timer,
+
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import GetMovieData from "@/lib/getMovieData";
@@ -27,7 +27,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
 export default function DrawerMetadata({
   id,
   media_type,
