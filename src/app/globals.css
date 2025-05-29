@@ -78,6 +78,7 @@
 }
 * {
   /* border: 1px solid red; */
+  user-select: none;
 }
 /* [data-vaul-drawer][data-vaul-drawer-direction="bottom"]::after {
   display: none !important;

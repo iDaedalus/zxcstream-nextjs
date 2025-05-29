@@ -11,11 +11,7 @@ import { motion } from "framer-motion";
 import { Film, Tv, LibraryBig, Bookmark, Play, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+
 interface weeklyTypes {
   id: string;
   title?: string;
@@ -116,63 +112,26 @@ export default function Ten() {
           </SwiperSlide>
         ) : (
           weekly.map((meow, index) => (
-            <SwiperSlide key={meow.id} className="relative ten">
+            <SwiperSlide
+              onClick={() => router.push(`/${meow.media_type}/${meow.id}`)}
+              key={meow.id}
+              className="relative ten first:ml-7"
+            >
               <motion.div
                 className="h-full w-full"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
               >
-                <HoverCard>
-                  <HoverCardTrigger
-                    asChild
-                    onClick={() =>
-                      router.push(`/${meow.media_type}/${meow.id}`)
-                    }
-                  >
-                    <div className="cursor-pointer h-full w-full">
-                      <p className="numbering">{index + 1}</p>
-                      <LazyImage
-                        className="h-full w-full object-cover rounded-sm"
-                        src={`https://image.tmdb.org/t/p/w500/${meow.poster_path}`}
-                        alt="Lazy loaded"
-                        placeholder="/images/blur.jpg"
-                      />
-                    </div>
-                  </HoverCardTrigger>
-
-                  <HoverCardContent className="w-[400px]">
-                    <div className="aspect-[16/8] mask-gradient">
-                      <LazyImage
-                        className="h-full w-full object-cover "
-                        src={`https://image.tmdb.org/t/p/w500/${meow.backdrop_path}`}
-                        alt="Lazy loaded"
-                        placeholder="/images/blur.jpg"
-                      />
-                    </div>
-                    <div className="p-4">
-                      <div className="flex w-full justify-between items-center mb-1">
-                        <p className="font-semibold text-base">
-                          {index + 1}. {meow.title || meow.name}
-                        </p>
-                        <p className="font-semibold text-yellow-500 mb-1 flex items-center gap-1.5">
-                          <Star className="" size={15} />
-                          {meow.vote_average?.toFixed(1)}
-                        </p>
-                      </div>
-                      <p className="text-sm line-clamp-3">{meow.overview}</p>
-                      <div className="mt-5 flex justify-center items-center w-full gap-2">
-                        <Button className="flex-1">
-                          <Play />
-                          Play now
-                        </Button>
-                        <Button variant="outline">
-                          <Bookmark />
-                        </Button>
-                      </div>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
+                <div className="cursor-pointer h-full w-full">
+                  <p className="numbering">{index + 1}</p>
+                  <LazyImage
+                    className="h-full w-full object-cover rounded-sm"
+                    src={`https://image.tmdb.org/t/p/w500/${meow.poster_path}`}
+                    alt="Lazy loaded"
+                    placeholder="/images/blur.jpg"
+                  />
+                </div>
               </motion.div>
             </SwiperSlide>
           ))

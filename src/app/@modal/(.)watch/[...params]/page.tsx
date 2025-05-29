@@ -64,7 +64,7 @@ export default function WatchPage() {
       initial={{ opacity: 0, y: -100 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed z-[999] inset-0 w-full flex flex-col bg-black overflow-auto meow"
+      className="fixed z-[999] inset-0 w-full flex flex-col bg-black  meow"
     >
       <div className="relative flex-1 min-h-[90vh]">
         <div

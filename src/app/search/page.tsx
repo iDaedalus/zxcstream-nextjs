@@ -157,13 +157,13 @@ export default function Dash() {
             transition={{ ease: "easeInOut", delay: 0.8, duration: 1 }}
             className="relative z-50 text-center px-4 flex flex-col justify-end h-[350px] lg:h-[330px] w-full lg:w-1/2 space-y-5"
           >
-            <div className="text-gray-300 mt-4 font-bold text-sm lg:text-5xl zxc">
+            <div className="text-gray-300 mt-4 font-bold text-base lg:text-5xl zxc">
               <span>
                 {" "}
                 Dive into endless hours of free streaming{" "}
                 <span className="hidden lg:inline">with</span>
               </span>
-              <span className="lg:text-5xl text-4xl zxczxc ml-2 tracking-[-5px] lg:tracking-[-8px]">
+              <span className="lg:text-5xl text-[2.6rem] zxczxc ml-2 tracking-[-5px] lg:tracking-[-8px]">
                 ZXC
                 <motion.span
                   className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text font-bold text-blue-800/70 pr-2 drop-shadow-md text-shadow"
