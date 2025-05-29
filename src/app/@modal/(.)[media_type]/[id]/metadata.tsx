@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import useCollection from "@/app/collectionFetch";
-import useEpisodes from "@/app/fetchEpisode";
+import EpisodeList from "@/app/fetchEpisode";
 import {
   Bookmark,
   ChevronsUpDown,
@@ -49,12 +49,6 @@ export default function DrawerMetadata({
   const logoImage = show?.images?.logos[0].file_path;
   const collection = useCollection(show?.belongs_to_collection?.id);
 
-  const { episode, episodeLoading } =
-    media_type === "tv"
-      ? useEpisodes({ id, season })
-      : { episode: [], episodeLoading: false };
-
-  console.log(collection);
   const router = useRouter();
   return (
     <div className="overflow-y-auto meow">
@@ -249,39 +243,7 @@ export default function DrawerMetadata({
                         </PopoverContent>
                       </Popover>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 py-8">
-                      {episodeLoading
-                        ? Array.from({ length: 6 }).map((_, index) => (
-                            <div className="flex flex-col gap-2" key={index}>
-                              <Skeleton className="aspect" />
-                              <Skeleton className="h-5 w-full" />
-                            </div>
-                          ))
-                        : episode.map((meow) => (
-                            <div key={meow.id}>
-                              <div className="relative aspect rounded-md overflow-hidden">
-                                <img
-                                  className="h-full w-full object-cover"
-                                  src={
-                                    meow.still_path
-                                      ? `https://image.tmdb.org/t/p/w500${meow.still_path}`
-                                      : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOxgXTO4Kc4XORUFvZembSzymC7B6RYupJLQ&s"
-                                  }
-                                  alt={meow.name}
-                                />
-                                <Badge className="absolute bottom-2 right-1 bg-blue-800 text-foreground">
-                                  <Timer /> {meow.runtime}m
-                                </Badge>
-                              </div>
-                              <h1 className="py-1 line-clamp-1 w-full">
-                                E{meow.episode_number}. {meow.name}
-                              </h1>
-                              {/* <p className="text-muted-foreground text-sm line-clamp-3">
-                {meow.overview}
-              </p> */}
-                            </div>
-                          ))}
-                    </div>
+                    <EpisodeList id={id} season={season} />
                   </div>
                 )}
               </div>
