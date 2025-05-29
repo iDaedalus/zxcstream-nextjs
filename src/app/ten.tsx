@@ -8,7 +8,7 @@ import "swiper/css/pagination";
 import LazyImage from "./observer";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Film, Tv, LibraryBig, Bookmark, Play, Star } from "lucide-react";
+import { Film, Tv, LibraryBig} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
