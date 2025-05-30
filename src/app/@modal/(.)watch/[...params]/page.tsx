@@ -90,7 +90,7 @@ export default function WatchPage() {
           <Button
             variant="ghost"
             onClick={() => setSelected(meow.name)}
-            className={`flex-1 bg-transparent hover:bg-[unset] hover:border-white border-b-2 border-gray-500 rounded-[unset] ${
+            className={`text-white flex-1 bg-transparent hover:bg-[unset] hover:border-white border-b-2 border-gray-500 rounded-[unset] ${
               meow.name === selected
                 ? "border-blue-800 hover:border-blue-900"
                 : ""

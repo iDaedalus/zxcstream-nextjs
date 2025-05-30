@@ -14,6 +14,16 @@ interface ResultsType {
   iso_639_1: string;
   type: string;
 }
+interface RecommendationTypes {
+  results: RecommendationShowTypes[];
+}
+interface RecommendationShowTypes {
+  id: string;
+  title?: string;
+  name?: string;
+  poster_path: string;
+  media_type: string;
+}
 interface TrailerTypes {
   results: ResultsType[];
 }
@@ -35,15 +45,30 @@ interface CollectionPartsType {
 }
 interface SeasonsType {
   id: number;
-  episode_count: string;
+  episode_count: number;
   season_number: string;
   name: string;
+  air_date: string;
 }
 interface LogoTypes {
   logos: ImageTypes[];
 }
 interface ImageTypes {
   file_path: string;
+}
+interface CreditsTypes {
+  cast: CastsTypes[];
+}
+interface CastsTypes {
+  id: string;
+  name: string;
+}
+interface ContentRatingsTypes {
+  results: ContentRatingsResultTypes[];
+}
+interface ContentRatingsResultTypes {
+  iso_3166_1: string;
+  rating: string;
 }
 interface MovieType {
   id: number;
@@ -65,10 +90,14 @@ interface MovieType {
   genres: GenreType[];
   seasons: SeasonsType[];
   production_companies: CompanyTypes[];
+  credits: CreditsTypes;
   created_by: CreatedByTypes[];
   spoken_languages: LanguagesType[];
   videos: TrailerTypes;
   images: LogoTypes;
+  content_ratings: ContentRatingsTypes;
+  recommendations: RecommendationTypes;
+  similar: RecommendationTypes;
 }
 const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 export default function GetMovieData({

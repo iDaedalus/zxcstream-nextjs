@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 
 interface PartsType {
@@ -5,6 +6,7 @@ interface PartsType {
   title: string;
   poster_path: string;
   backdrop_path: string;
+  media_type: string;
 }
 
 interface CollectionType {
@@ -22,20 +24,19 @@ export default function useCollection(id?: string) {
     async function fetchCollection() {
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3/collection/${id}?api_key=${apiKey}&language=en-US`
+          `https://api.themoviedb.org/3/collection/${id}?api_key=${apiKey}&language=en-US&append_to_response=images&include_image_language=en,null`
         );
-        if (!res.ok) throw new Error("Failed to fetch collection");
+
         const data = await res.json();
+        console.log(id);
         setCollection(data);
       } catch (error) {
         console.error(error);
       }
     }
 
-    if (id) {
-      fetchCollection();
-    }
+    if (id) fetchCollection();
   }, [id]);
 
-  return collection;
+  return { collection };
 }

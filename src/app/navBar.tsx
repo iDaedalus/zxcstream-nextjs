@@ -38,6 +38,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { ModeToggle } from "./darkmode-toggle";
 
 export default function NavBar() {
   const router = useRouter();
@@ -116,7 +117,7 @@ export default function NavBar() {
 
       <Drawer>
         <DrawerTrigger className="absolute cursor-pointer left-4  text-white lg:hidden">
-          <Menu size={30} />
+          <Menu size={30} className="text-foreground" />
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
@@ -165,7 +166,7 @@ export default function NavBar() {
 
       <nav className="hidden lg:flex items-center text-gray-300">
         <Link href="/" className="px-5 hover:bg-blue-800">
-          <HomeIcon size={16} />
+          <HomeIcon size={16} className="text-foreground" />
         </Link>
 
         <div className="border-l border-gray-500/50 h-5"></div>
@@ -174,7 +175,7 @@ export default function NavBar() {
           <NavigationMenuList>
             {items.map((item) => (
               <NavigationMenuItem key={item.name}>
-                <NavigationMenuTrigger className="flex items-center gap-3 ">
+                <NavigationMenuTrigger className="flex items-center gap-3 text-foreground">
                   <item.logo size={16} />
                   {item.name}
                 </NavigationMenuTrigger>
@@ -223,9 +224,13 @@ export default function NavBar() {
 
         <div className="border-l border-gray-500/50 h-5"></div>
         <div className="px-5">
-          <Settings size={16} />
+          <Settings size={16} className="text-foreground" />
         </div>
       </nav>
+
+      <div className=" absolute lg:right-30 right-5 h-8.5 ">
+        <ModeToggle />
+      </div>
     </header>
   );
 }

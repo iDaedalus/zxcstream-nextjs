@@ -70,7 +70,7 @@ export default function SwiperBackdrops() {
             </div>
 
             <LazyImage
-              className="absolute h-full w-full object-cover object-[center_40%] mask-gradient backdrop"
+              className="absolute h-full w-full object-cover object-[center_40%] mask-gradient backdrop opacity-backrop"
               src={`https://image.tmdb.org/t/p/original/${meow.backdrop_path}`}
               alt="Lazy loaded"
               placeholder="/images/blur.jpg"
