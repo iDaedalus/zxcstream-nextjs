@@ -18,8 +18,16 @@ export default function EpisodeMetaData({
       {loading
         ? Array.from({ length: 6 }).map((_, index) => (
             <div className="flex flex-col gap-2" key={index}>
-              <Skeleton className="aspect" />
-              <Skeleton className="h-5 w-full" />
+              <div className="border-2 p-3 rounded-sm flex gap-3 cursor-pointer">
+                <div className="relative w-[35%] flex justify-center items-center">
+                  <Skeleton className="w-full h-full" />
+                </div>
+
+                <div className="w-[65%] space-y-2">
+                  <Skeleton className="w-full h-8" />
+                  <Skeleton className="w-full h-20" />
+                </div>
+              </div>
             </div>
           ))
         : episode
