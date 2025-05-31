@@ -312,7 +312,11 @@ export default function DrawerMetadata({
                           className="reco overflow-hidden rounded-sm cursor-pointer"
                         >
                           <img
-                            src={`https://image.tmdb.org/t/p/w500/${reco.poster_path}`}
+                            src={
+                              reco.poster_path
+                                ? `https://image.tmdb.org/t/p/w500/${reco.poster_path}`
+                                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOxgXTO4Kc4XORUFvZembSzymC7B6RYupJLQ&s"
+                            }
                             alt={reco.name || reco.title}
                           />
                         </SwiperSlide>

@@ -137,6 +137,7 @@ body::-webkit-scrollbar,
   width: 100%;
   background: linear-gradient(0deg, #0d0d0d,#0d0d0d);
 } */
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -182,6 +183,7 @@ body::-webkit-scrollbar,
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
+  --custom-bg: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
@@ -216,6 +218,7 @@ body::-webkit-scrollbar,
 
 .dark {
   --background: oklch(0.141 0.005 285.823);
+  --custom-bg: #000000;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
