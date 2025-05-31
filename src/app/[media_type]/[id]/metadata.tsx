@@ -51,9 +51,6 @@ export default function DrawerMetadata({
   const [seasonOpen, setSeasonOpen] = useState(false);
   const { show, loading } = GetMovieData({ id, media_type });
   const [season, setSeason] = useState("1");
-  const trailerKey = show?.videos?.results?.find(
-    (v) => v.type === "Trailer" && v.site === "YouTube"
-  );
 
   const logoImage = show?.images?.logos[0]?.file_path;
   const { collection } = useCollection(show?.belongs_to_collection?.id);
