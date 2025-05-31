@@ -84,7 +84,7 @@ export const SpotLightItem: React.FC<SpotLightItemProps> = ({
       onMouseLeave={() => setIsHovered(false)}
       className={cn(
         className,
-        "relative flex justify-center items-center lg:p-[1.5px] p-[1px] lg:rounded-lg rounded-md overflow-hidden"
+        "relative flex justify-center items-center lg:p-[1.5px] p-[1px] lg:rounded-md rounded-sm overflow-hidden"
       )}
     >
       {isHovered && (

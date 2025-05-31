@@ -47,20 +47,20 @@ export default function Dash() {
 
   return (
     <div className="bg-[var(--custom-bg)] ">
-      <main className="min-h-screen w-full bg-gradient-to-b from-[var(--custom-bg)] to-blue-500/10">
-        <div className="absolute top-20 isolate z-0 flex w-screen flex-1 items-start justify-center transform lg:scale-100 scale-60">
+      <div className="absolute overflow-hidden z-10 w-full h-screen">
+        <div className="relative top-20 isolate z-0 flex w-full  items-start justify-center lg:scale-100 scale-60 ">
           {/* Optional Blur Layer */}
           <div className="absolute top-0 z-50 h-48 w-screen bg-transparent opacity-10 backdrop-blur-md" />
 
           {/* Main glow */}
-          <div className="absolute inset-auto z-50 h-40 w-[28rem] -translate-y-[-30%] rounded-full bg-blue-500/60 opacity-80 blur-3xl" />
+          <div className="absolute inset-auto z-50 h-40 w-[28rem] -translate-y-[-30%] rounded-full bg-blue-500/60 opacity-80 blur-3xl " />
 
           {/* Lamp effect pulse */}
           <motion.div
             initial={{ width: "8rem" }}
             whileInView={{ width: "16rem" }}
             transition={{ ease: "easeInOut", delay: 0.8, duration: 1.2 }}
-            className="absolute top-0 z-30 h-36 -translate-y-[20%] rounded-full bg-blue-500/60 blur-2xl"
+            className="absolute top-10 z-30 h-36 -translate-y-[20%] rounded-full bg-blue-500/60 blur-2xl "
           />
 
           {/* Top line */}
@@ -68,7 +68,7 @@ export default function Dash() {
             initial={{ width: "15rem" }}
             whileInView={{ width: "30rem" }}
             transition={{ ease: "easeInOut", delay: 0.8, duration: 1.2 }}
-            className="absolute inset-auto z-50 h-0.5 -translate-y-[-10%] bg-blue-500/60"
+            className="absolute inset-auto z-50 h-0.5 -translate-y-[-10%] bg-blue-500/60 "
           />
 
           {/* Left conic gradient */}
@@ -93,7 +93,7 @@ export default function Dash() {
             transition={{ delay: 0.8, duration: 1.2, ease: "easeInOut" }}
             style={{
               backgroundImage:
-                "conic-gradient(from 280deg at center top, transparent, transparent, rgba(37, 99, 235, 0.6))",
+                "conic-gradient(from 280deg at center top, transparent, transparent, rgba(37, 99, 235, 0.6)) ",
             }}
             className="absolute inset-auto left-1/2 h-56 w-[30rem]"
           >
@@ -101,7 +101,8 @@ export default function Dash() {
             <div className="absolute w-full right-0 bg-[var(--custom-bg)] h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
           </motion.div>
         </div>
-
+      </div>
+      <main className="min-h-screen w-full bg-gradient-to-b from-[var(--custom-bg)] to-blue-500/10">
         <NavBar />
 
         <motion.div
@@ -279,7 +280,7 @@ export default function Dash() {
                         <SpotLightItem key={meow.id}>
                           <div
                             onClick={() => router.push(`/${value}/${meow.id}`)}
-                            className="relative z-10 w-full h-full overflow-hidden rounded-lg  shadow-md cursor-pointer bg-black"
+                            className="relative z-10 w-full h-full overflow-hidden rounded-sm  shadow-md cursor-pointer bg-black"
                           >
                             <motion.img
                               whileHover={{
