@@ -29,6 +29,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
+import { MovieCard } from "../card";
 
 export default function Dash() {
   const [open, setOpen] = useState(false);
@@ -154,11 +155,7 @@ export default function Dash() {
             <div className="absolute right-[1px]">
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
-                  <Button
-                    role="combobox"
-                    aria-expanded={open}
-                    className=" justify-between text-gray-300 bg-transparent text-xs lg:text-[0.9rem]"
-                  >
+                  <Button variant="ghost" role="combobox" aria-expanded={open}>
                     {value === "movie" ? (
                       <>
                         <Film />
@@ -186,9 +183,7 @@ export default function Dash() {
                         >
                           <span
                             className={` ${
-                              value === "movie"
-                                ? "bg-black text-white"
-                                : "bg-white"
+                              value === "movie" ? "bg-blue-800" : ""
                             } flex items-center gap-2  w-full px-2 py-1 rounded-sm font-semibold`}
                           >
                             <Film /> Movie
@@ -203,9 +198,7 @@ export default function Dash() {
                         >
                           <span
                             className={` ${
-                              value === "tv"
-                                ? "bg-black text-white"
-                                : "bg-white"
+                              value === "tv" ? "bg-blue-800" : ""
                             } flex items-center gap-2  w-full px-2 py-1 rounded-sm
                               font-semibold`}
                           >
@@ -280,25 +273,9 @@ export default function Dash() {
                         <SpotLightItem key={meow.id}>
                           <div
                             onClick={() => router.push(`/${value}/${meow.id}`)}
-                            className="relative z-10 w-full h-full overflow-hidden rounded-sm  shadow-md cursor-pointer bg-black"
+                            className=" z-10 w-full h-full   bg-black"
                           >
-                            <motion.img
-                              whileHover={{
-                                scale: 1.05,
-                                transition: {
-                                  duration: 0.2,
-                                  ease: "easeInOut",
-                                },
-                              }}
-                              className="h-full w-full object-cover"
-                              src={
-                                meow.poster_path
-                                  ? `https://image.tmdb.org/t/p/w500/${meow.poster_path}`
-                                  : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOxgXTO4Kc4XORUFvZembSzymC7B6RYupJLQ&s"
-                              }
-                              alt={meow.name}
-                              loading="lazy"
-                            />
+                            <MovieCard movie={meow} />
                           </div>
                         </SpotLightItem>
                       ))}

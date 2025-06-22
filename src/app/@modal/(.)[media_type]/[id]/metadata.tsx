@@ -21,6 +21,7 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import GetMovieData from "@/lib/getMovieData";
 import {
   Command,
@@ -37,6 +38,7 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { MovieCard } from "@/app/card";
 export default function DrawerMetadata({
   id,
   media_type,
@@ -121,20 +123,20 @@ export default function DrawerMetadata({
               <div className="w-full flex flex-col lg:flex-row lg:gap-10 gap-5">
                 <span className="lg:w-[65%] w-full">
                   <div className="flex gap-2 items-center justify-center">
-                    <Button
+                    <Link
+                      className="flex-1"
+                      href={`/watch/${media_type}/${id}${
+                        media_type === "tv" ? "/1/1" : ""
+                      }`}
+                      prefetch={true}
+                      scroll={false}
                       onClick={() => {
-                        router.push(
-                          `/watch/${media_type}/${id}${
-                            media_type === "tv" ? "/1/1" : ""
-                          }`
-                        );
-
                         setOpen(false);
                         setNavigate(true);
 
                         toast("Now Playing", {
                           description: (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 w-full">
                               <PlayCircle className="w-4 h-4 text-green-500" />
                               <span>{show.name || show.title}</span>
                             </div>
@@ -145,12 +147,12 @@ export default function DrawerMetadata({
                           },
                         });
                       }}
-                      variant="outline"
-                      className="flex-1"
                     >
-                      <Play />
-                      Play Now
-                    </Button>
+                      <Button variant="outline" className="w-full">
+                        <Play />
+                        Play Now
+                      </Button>
+                    </Link>
                     <Button>
                       <Download />
                     </Button>
@@ -231,7 +233,7 @@ export default function DrawerMetadata({
                 {media_type === "tv" && (
                   <div className="w-full mt-8">
                     <div className="flex justify-between items-center">
-                      <h1 className="text-lg font-semibold flex items-center gap-2">
+                      <h1 className="text-lg font-semibold items-center gap-2 hidden lg:flex">
                         <LayoutGrid className="h-5 w-5" />
                         Episodes
                       </h1>
@@ -241,14 +243,14 @@ export default function DrawerMetadata({
                             variant="outline"
                             role="combobox"
                             aria-expanded={seasonOpen}
-                            className="w-[260px] justify-between"
+                            className="lg:w-[260px] w-full justify-between"
                           >
                             {season ? `Season ${season}` : "Select Season"}
 
                             <ChevronsUpDown className="opacity-50" />
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-[260px] p-0">
+                        <PopoverContent className="lg:w-[260px] w-full p-0">
                           <Command>
                             <CommandInput placeholder="Search season..." />
                             <CommandList>
@@ -311,14 +313,7 @@ export default function DrawerMetadata({
                           key={reco.id}
                           className="reco overflow-hidden rounded-sm cursor-pointer"
                         >
-                          <img
-                            src={
-                              reco.poster_path
-                                ? `https://image.tmdb.org/t/p/w500/${reco.poster_path}`
-                                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOxgXTO4Kc4XORUFvZembSzymC7B6RYupJLQ&s"
-                            }
-                            alt={reco.name || reco.title}
-                          />
+                          <MovieCard movie={reco} />
                         </SwiperSlide>
                       ))}
                       <div className="swiper-button-prev"></div>

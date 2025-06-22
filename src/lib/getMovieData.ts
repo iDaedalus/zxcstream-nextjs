@@ -21,8 +21,30 @@ interface RecommendationShowTypes {
   id: string;
   title?: string;
   name?: string;
+  tagline: string;
   poster_path: string;
   media_type: string;
+  vote_average: number;
+  release_date: string;
+  first_air_date: string;
+  belongs_to_collection: CollectionType;
+  backdrop_path: string;
+  overview: string;
+  status: string;
+  runtime: number;
+  number_of_seasons: string;
+  number_of_episodes: string;
+  genres: GenreType[];
+  seasons: SeasonsType[];
+  production_companies: CompanyTypes[];
+  credits: CreditsTypes;
+  created_by: CreatedByTypes[];
+  spoken_languages: LanguagesType[];
+  videos: TrailerTypes;
+  images: LogoTypes;
+  content_ratings: ContentRatingsTypes;
+  recommendations: RecommendationTypes;
+  similar: RecommendationTypes;
 }
 interface TrailerTypes {
   results: ResultsType[];
@@ -70,8 +92,8 @@ interface ContentRatingsResultTypes {
   iso_3166_1: string;
   rating: string;
 }
-interface MovieType {
-  id: number;
+export interface MovieType {
+  id: string;
   title?: string;
   tagline: string;
   name?: string;

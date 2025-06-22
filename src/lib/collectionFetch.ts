@@ -7,6 +7,8 @@ interface PartsType {
   poster_path: string;
   backdrop_path: string;
   media_type: string;
+  release_date: string;
+  vote_average: number;
 }
 
 interface CollectionType {

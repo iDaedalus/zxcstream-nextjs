@@ -7,54 +7,63 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Film, Tv, LibraryBig } from "lucide-react";
+import { Zap, Heart, Laugh, Skull } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MovieCard } from "./card";
-import { MovieType } from "@/lib/getMovieData";
+import type { MovieType } from "@/lib/getMovieData";
 
-export default function Ten() {
-  const [weekly, setWeekly] = useState<MovieType[]>([]);
+export default function GenreMovies() {
+  const [movies, setMovies] = useState<MovieType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [genre, setGenre] = useState<string>("28");
 
-  const [media, setMedia] = useState<string>("all");
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  const mediaOptions = [
-    { label: "All", value: "all", icon: <LibraryBig /> },
-    { label: "Movie", value: "movie", icon: <Film /> },
-    { label: "TV", value: "tv", icon: <Tv /> },
+
+  const genreOptions = [
+    { label: "Action", value: "28", icon: <Zap /> },
+    { label: "Romance", value: "10749", icon: <Heart /> },
+    { label: "Comedy", value: "35", icon: <Laugh /> },
+    { label: "Horror", value: "27", icon: <Skull /> },
   ];
+
   useEffect(() => {
-    async function fetchWeekly() {
+    async function fetchGenreMovies() {
       try {
         setLoading(true);
         const res = await fetch(
-          `https://api.themoviedb.org/3/trending/${media}/week?api_key=${apiKey}`
+          `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${genre}&sort_by=popularity.desc`
         );
         const data = await res.json();
-        setWeekly(data.results);
+        setMovies(data.results);
       } catch (error) {
         console.error(error);
       } finally {
         setLoading(false);
       }
     }
-    fetchWeekly();
-  }, [media]);
+    fetchGenreMovies();
+  }, [genre, apiKey]);
+
+  const getGenreLabel = () => {
+    const selectedGenre = genreOptions.find((g) => g.value === genre);
+    return selectedGenre ? selectedGenre.label.toUpperCase() : "GENRE";
+  };
+
   return (
     <div className="w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
       <div className="w-full flex items-center justify-between">
-        <p className="text-foreground relative zxczxc text-xl lg:text-2xl tracking-[-3px] lg:border-l-4 lg:border-blue-800 lg:pl-6 flex items-center gap-2">
-          TOP 20
+        <p className="text-foreground text-xl lg:text-2xl tracking-[-3px] lg:border-l-4 lg:border-cyan-600 lg:pl-6 flex items-center gap-2 zxczxc">
+          {getGenreLabel()} MOVIES
         </p>
 
-        <div className="relative zxc">
-          {mediaOptions.map(({ label, value, icon }) => (
+        <div className="relative">
+          {genreOptions.map(({ label, value, icon }) => (
             <Button
               key={value}
-              onClick={() => setMedia(value)}
+              onClick={() => setGenre(value)}
               className={`bg-transparent border-b border-white/50 rounded-[unset] text-foreground ${
-                media === value ? `border-amber-400` : ""
+                genre === value ? `border-cyan-400` : ""
               }`}
             >
               {icon}
@@ -69,23 +78,18 @@ export default function Ten() {
         freeMode={true}
         slidesPerView="auto"
         spaceBetween={45}
-        className=" !pb-13 "
+        className="!pb-13"
         navigation={{
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
+          nextEl: ".genre-button-next",
+          prevEl: ".genre-button-prev",
         }}
         breakpoints={{
-          320: {
-            spaceBetween: 28,
-          },
-
-          1280: {
-            spaceBetween: 45,
-          },
+          320: { spaceBetween: 28 },
+          1280: { spaceBetween: 45 },
         }}
       >
         {loading ? (
-          <SwiperSlide className="relative w-full ">
+          <SwiperSlide className="relative w-full">
             <div className="flex w-full justify-evenly">
               {Array.from({ length: 6 }).map((_, index) => (
                 <Skeleton
@@ -98,13 +102,9 @@ export default function Ten() {
             </div>
           </SwiperSlide>
         ) : (
-          weekly.map((meow, index) => (
-            <SwiperSlide key={meow.id} className="relative ten">
-              <Link
-                href={`/${meow.media_type}/${meow.id}`}
-                prefetch={true}
-                scroll={false}
-              >
+          movies.map((movie, index) => (
+            <SwiperSlide key={movie.id} className="relative ten">
+              <Link href={`/movie/${movie.id}`} prefetch={true} scroll={false}>
                 <motion.div
                   className="h-full w-full"
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -112,16 +112,15 @@ export default function Ten() {
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                 >
                   <div className="cursor-pointer h-full w-full">
-                    <p className="numbering">{index + 1}</p>
-                    <MovieCard movie={meow} />
+                    <MovieCard movie={movie} />
                   </div>
                 </motion.div>
               </Link>
             </SwiperSlide>
           ))
         )}
-        <div className="swiper-button-prev"></div>
-        <div className="swiper-button-next"></div>
+        <div className="genre-button-prev swiper-button-prev"></div>
+        <div className="genre-button-next swiper-button-next"></div>
       </Swiper>
     </div>
   );

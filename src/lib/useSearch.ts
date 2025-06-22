@@ -1,30 +1,16 @@
 import { useEffect, useState } from "react";
-
+import { MovieType } from "./getMovieData";
 interface SearchTypes {
   query: string;
   value: string;
   page: number;
 }
 
-interface weeklyTypes {
-  id: string;
-  title?: string;
-  tagline: string;
-  name?: string;
-  vote_average: number;
-  vote_count: number;
-  poster_path: string;
-  backdrop_path: string;
-  overview: string;
-  media_type: string;
-  profile_path: string;
-}
-
 const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
 export default function useSearch({ query, value, page }: SearchTypes) {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<weeklyTypes[]>([]);
+  const [result, setResult] = useState<MovieType[]>([]);
 
   useEffect(() => {
     if (query.trim() === "") {

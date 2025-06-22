@@ -1,235 +1,178 @@
 "use client";
+
 import {
   Film,
-  HomeIcon,
+  Home,
   Settings,
   Tv,
   Search,
-  LayoutGrid,
-  Layers,
-  TrendingUp,
-  LayoutDashboard,
-  Menu,
-  Home,
-  ChevronDown,
+  Bookmark,
+  MenuIcon,
 } from "lucide-react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/nav-drawer";
-
 import logo from "../assets/zxzx.png";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { ModeToggle } from "./darkmode-toggle";
+import { Button } from "@/components/ui/button";
 
 export default function NavBar() {
   const router = useRouter();
-  const items = [
-    {
-      name: "Movie",
-      logo: Film,
-      tags: [
-        {
-          title: "Popular",
-          link: "movie",
-          icon: Film,
-          details: "Most watched movies right now",
-        },
-        {
-          title: "Trending",
-          link: "#",
-          icon: TrendingUp,
-          details: "Movies gaining popularity today",
-        },
-        {
-          title: "Top Rated",
-          link: "#",
-          icon: Layers,
-          details: "Highest rated movies by viewers",
-        },
-        {
-          title: "Collections",
-          link: "#",
-          icon: LayoutDashboard,
-          details: "Curated sets of related movies",
-        },
-      ],
-    },
-    {
-      name: "TV Show",
-      logo: Tv,
-      tags: [
-        {
-          title: "Popular",
-          link: "#",
-          icon: Film,
-          details: "Most watched TV shows currently",
-        },
-        {
-          title: "Trending",
-          link: "#",
-          icon: TrendingUp,
-          details: "TV shows getting attention now",
-        },
-        {
-          title: "Top Rated",
-          link: "#",
-          icon: Layers,
-          details: "Top rated shows by audiences",
-        },
-        {
-          title: "Collections",
-          link: "#",
-          icon: LayoutDashboard,
-          details: "Themed TV show bundles",
-        },
-      ],
-    },
-  ];
 
   return (
-    <header className="absolute z-20   w-full flex justify-center items-center py-5">
-      <div className=" lg:absolute lg:left-30 h-8.5 ">
-        <img
-          className="h-full w-full object-contain z-10"
-          src={logo.src}
-          alt=""
-        />
-      </div>
+    <header className="absolute top-10 left-0 right-0 z-50    ">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between lg:justify-center h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center">
+            <div className=" lg:absolute lg:left-30 h-8.5 ">
+              <img
+                className="h-full w-full object-contain z-10"
+                src={logo.src || "/placeholder.svg"}
+                alt=""
+              />
+            </div>
+          </Link>
 
-      <Drawer>
-        <DrawerTrigger className="absolute cursor-pointer left-4  text-white lg:hidden">
-          <Menu size={30} className="text-foreground" />
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle className="flex flex-col text-white gap-5 mt-5">
-              <div className="flex gap-2 items-center">
-                <Home size={20} /> Home
+          {/* Mobile Menu */}
+          <Sheet>
+            <SheetTrigger asChild className="lg:hidden">
+              <div>
+                <MenuIcon className="h-7 w-7" />
+                <span className="sr-only">Toggle navigation menu</span>
               </div>
-              <div className="flex gap-2 items-center">
-                <Search size={20} /> Search
-              </div>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-80">
+              <SheetHeader>
+                <SheetTitle className="text-left">Navigation</SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col space-y-4 mt-6">
+                <Link
+                  href="/"
+                  className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors"
+                >
+                  <Home className="w-5 h-5" />
+                  <span>Home</span>
+                </Link>
 
-              {items.map((meow) => (
-                <Collapsible key={meow.name}>
-                  <CollapsibleTrigger className="flex justify-between w-full items-center">
-                    <div className="flex items-center gap-2">
-                      <meow.logo size={20} />
-                      {meow.name}
-                    </div>
-                    <ChevronDown size={20} />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="flex flex-col gap-3 mt-3 ">
-                    {meow.tags.map((arf) => (
-                      <span
-                        key={arf.title}
-                        className="flex gap-2 items-center text-sm ml-5 font-light"
-                      >
-                        <arf.icon size={15} />
-                        {arf.title}
-                      </span>
-                    ))}
-                  </CollapsibleContent>
-                </Collapsible>
-              ))}
+                <Link
+                  href="/search"
+                  className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors"
+                >
+                  <Search className="w-5 h-5" />
+                  <span>Search</span>
+                </Link>
 
-              <div className="flex gap-2 items-center">
-                <LayoutGrid size={20} /> Watchlist
-              </div>
+                <Link
+                  href="/movies"
+                  className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors"
+                >
+                  <Film className="w-5 h-5" />
+                  <span>Movies</span>
+                </Link>
 
-              <div className="flex gap-2 items-center">
-                <Settings size={20} /> Settings
-              </div>
-            </DrawerTitle>
-          </DrawerHeader>
-        </DrawerContent>
-      </Drawer>
+                <Link
+                  href="/tv"
+                  className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors"
+                >
+                  <Tv className="w-5 h-5" />
+                  <span>TV Shows</span>
+                </Link>
 
-      <nav className="hidden lg:flex items-center text-gray-300">
-        <Link href="/" className="px-5 hover:bg-blue-800">
-          <HomeIcon size={16} className="text-foreground" />
-        </Link>
+                <Link
+                  href="/watchlist"
+                  className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors"
+                >
+                  <Bookmark className="w-5 h-5" />
+                  <span>Watchlist</span>
+                </Link>
 
-        <div className="border-l border-gray-500/50 h-5"></div>
+                <Link
+                  href="/settings"
+                  className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors"
+                >
+                  <Settings className="w-5 h-5" />
+                  <span>Settings</span>
+                </Link>
+              </nav>
+            </SheetContent>
+          </Sheet>
 
-        <NavigationMenu className="px-3">
-          <NavigationMenuList>
-            {items.map((item) => (
-              <NavigationMenuItem key={item.name}>
-                <NavigationMenuTrigger className="flex items-center gap-3 text-foreground">
-                  <item.logo size={16} />
-                  {item.name}
-                </NavigationMenuTrigger>
-
-                {item.tags && (
-                  <NavigationMenuContent>
-                    <div className="grid grid-cols-2 grid-rows-3 w-[480px] h-[200px] gap-1">
-                      {item.tags.map((tag, index) => (
-                        <NavigationMenuLink
-                          key={tag.title}
-                          className={`relative bg-blue-100 rounded-sm ${
-                            index === 0 ? "row-span-3" : ""
-                          }`}
-                          onClick={() => router.push(`/${tag.link}`)}
-                        >
-                          <p className="absolute bottom-3 left-3 flex gap-2 text-sm zxc font-bold">
-                            <tag.icon /> {tag.title}
-                          </p>
-                        </NavigationMenuLink>
-                      ))}
-                    </div>
-                  </NavigationMenuContent>
-                )}
-              </NavigationMenuItem>
-            ))}
-
-            <NavigationMenuItem>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                <span className="flex items-center gap-3">
-                  <LayoutGrid size={16} /> Watchlist
-                </span>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                href="/search"
-                className={navigationMenuTriggerStyle()}
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-1">
+            <Button variant="ghost" size="sm" asChild>
+              <Link
+                prefetch={true}
+                href="/"
+                className="flex items-center space-x-2"
               >
-                <span className="flex items-center gap-3">
-                  <Search size={16} /> Search
-                </span>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+                <Home className="w-4 h-4" />
+                <span className="font-light tracking-wide">Home</span>
+              </Link>
+            </Button>
 
-        <div className="border-l border-gray-500/50 h-5"></div>
-        <div className="px-5">
-          <Settings size={16} className="text-foreground" />
+            {/* Replace the NavigationMenu section with simple buttons */}
+            <Button variant="ghost" size="sm" asChild>
+              <Link
+                prefetch={true}
+                href="/movies"
+                className="flex items-center space-x-2"
+              >
+                <Film className="w-4 h-4" />
+                <span className="font-light tracking-wide">Movies</span>
+              </Link>
+            </Button>
+
+            <Button variant="ghost" size="sm" asChild>
+              <Link
+                prefetch={true}
+                href="/tv"
+                className="flex items-center space-x-2"
+              >
+                <Tv className="w-4 h-4" />
+                <span className="font-light tracking-wide">TV Shows</span>
+              </Link>
+            </Button>
+
+            <Button variant="ghost" size="sm" asChild>
+              <Link
+                prefetch={true}
+                href="/watchlist"
+                className="flex items-center space-x-2"
+              >
+                <Bookmark className="w-4 h-4 mr-2" />
+                <span className="font-light tracking-wide">Watchlist</span>
+              </Link>
+            </Button>
+
+            <Button variant="ghost" size="sm" asChild>
+              <Link
+                prefetch={true}
+                href="/search"
+                className="flex items-center space-x-2"
+              >
+                <Search className="w-4 h-4 mr-2" />
+                <span className="font-light tracking-wide">Search</span>
+              </Link>
+            </Button>
+
+            <Button variant="ghost" size="sm" asChild>
+              <Link
+                prefetch={true}
+                href="/settings"
+                className="flex items-center space-x-2"
+              >
+                <Settings className="w-4 h-4" />
+                <span className="font-light tracking-wide">Settings</span>
+              </Link>
+            </Button>
+          </nav>
         </div>
-      </nav>
-
-      <div className=" absolute lg:right-30 right-5 h-8.5 ">
-        <ModeToggle />
       </div>
     </header>
   );

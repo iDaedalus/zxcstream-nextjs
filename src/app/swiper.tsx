@@ -63,7 +63,11 @@ export default function SwiperBackdrops() {
               </span>
 
               <span className="bg-blue-800/30 border-1 border-blue-800 text-blue-100 mt-3  cursor-pointer">
-                <Link href={`/${meow.media_type}/${meow.id}`}>
+                <Link
+                  href={`/${meow.media_type}/${meow.id}`}
+                  prefetch={true}
+                  scroll={false}
+                >
                   <ChevronRight className="h-4 w-4 lg:h-6 lg:w-6" />
                 </Link>
               </span>
