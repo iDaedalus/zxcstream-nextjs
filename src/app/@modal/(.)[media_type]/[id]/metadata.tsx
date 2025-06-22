@@ -2,8 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import useCollection from "@/lib/collectionFetch";
 import EpisodeList from "@/app/@modal/(.)[media_type]/[id]/episode-metadata";
-import { SwiperSlide, Swiper } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+
 import EnglishBackdropMeta from "./english-backdrop-meta";
 import { toast } from "sonner";
 import "swiper/css";
@@ -18,7 +17,6 @@ import {
   Play,
   PlayCircle,
   Star,
-  ThumbsUp,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -38,7 +36,7 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { MovieCard } from "@/app/card";
+
 export default function DrawerMetadata({
   id,
   media_type,
@@ -284,7 +282,7 @@ export default function DrawerMetadata({
                   </div>
                 )}
 
-                {(show?.recommendations?.results?.length > 0 ||
+                {/* {(show?.recommendations?.results?.length > 0 ||
                   show?.similar?.results?.length > 0) && (
                   <div className="mt-8 space-y-3">
                     <h1 className="text-lg font-semibold flex items-center gap-2">
@@ -320,7 +318,7 @@ export default function DrawerMetadata({
                       <div className="swiper-button-next"></div>
                     </Swiper>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           )}
