@@ -6,7 +6,6 @@ import ClassicMovies from "./classic";
 import GenreMovies from "./genre";
 import RuntimeMovies from "./hidden-gems";
 import Footer from "./footer";
-import { ArrowRightIcon, Construction } from "lucide-react";
 export default function Home() {
   return (
     <main>

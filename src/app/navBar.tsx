@@ -22,7 +22,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function NavBar() {
-  const router = useRouter();
+
 
   return (
     <header className="absolute top-10 left-0 right-0 z-50    ">

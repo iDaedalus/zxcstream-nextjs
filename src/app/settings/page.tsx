@@ -2,13 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Twitter, Instagram, Facebook, Linkedin, Rocket } from "lucide-react";
+import Footer from "../footer";
 
 export default function ComingSoonPage() {
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Background with gradient */}
-      <div className="absolute inset-0 bg-background"></div>
-
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
         <div className="text-center max-w-4xl mx-auto">
@@ -32,44 +30,10 @@ export default function ComingSoonPage() {
           </div>
 
           {/* Social Links */}
-          <div className="flex justify-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-foreground hover:bg-white/10"
-            >
-              <Twitter className="w-5 h-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-foreground hover:bg-white/10"
-            >
-              <Instagram className="w-5 h-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-foreground hover:bg-white/10"
-            >
-              <Facebook className="w-5 h-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-foreground hover:bg-white/10"
-            >
-              <Linkedin className="w-5 h-5" />
-            </Button>
-          </div>
         </div>
 
         {/* Footer */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-          <p className="text-muted-foreground text-sm">
-            © 2024 zxcstream. All rights reserved.
-          </p>
-        </div>
+        <Footer />
       </div>
     </div>
   );

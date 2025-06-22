@@ -47,8 +47,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-const API_KEY = "47a1a7df542d3d483227f758a7317dff";
-const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
 import type { MovieType } from "@/lib/getMovieData";
 
@@ -253,7 +252,7 @@ export default function TVShowWebsite() {
     }
 
     try {
-      let url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&sort_by=vote_average.desc&vote_count.gte=100&page=${page}`;
+      let url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&sort_by=vote_average.desc&vote_count.gte=100&page=${page}`;
 
       if (selectedYear) {
         url += `&first_air_date_year=${selectedYear}`;

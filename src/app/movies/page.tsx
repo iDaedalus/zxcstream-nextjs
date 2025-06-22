@@ -50,8 +50,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-const API_KEY = "47a1a7df542d3d483227f758a7317dff";
-const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
 const movieGenres = [
   {
@@ -272,7 +271,7 @@ export default function MovieWebsite() {
     }
 
     try {
-      let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc&page=${page}`;
+      let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&sort_by=popularity.desc&page=${page}`;
 
       if (selectedYear) {
         url += `&primary_release_year=${selectedYear}`;
@@ -343,21 +342,9 @@ export default function MovieWebsite() {
     }
   };
 
-  // Get selected genre names for display
-  const getSelectedGenreNames = () => {
-    return selectedGenres
-      .map((id) => movieGenres.find((g) => g.id === id)?.name)
-      .filter(Boolean)
-      .join(", ");
-  };
 
-  // Get selected company names for display
-  const getSelectedCompanyNames = () => {
-    return selectedCompanies
-      .map((id) => productionCompanies.find((c) => c.id === id)?.name)
-      .filter(Boolean)
-      .join(", ");
-  };
+
+
 
   return (
     <div className="min-h-screen w-[95%] lg:w-[90%] mx-auto">

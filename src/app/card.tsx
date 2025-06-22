@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Play, Star } from "lucide-react";
+import { Play } from "lucide-react";
 import SpotlightBorderWrapper from "@/components/border";
 import type { MovieType } from "@/lib/getMovieData";
 import { useState } from "react";
