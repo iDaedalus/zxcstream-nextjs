@@ -1,7 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Twitter, Instagram, Facebook, Linkedin, Rocket } from "lucide-react";
+import { Rocket } from "lucide-react";
 import Footer from "../footer";
 
 export default function ComingSoonPage() {

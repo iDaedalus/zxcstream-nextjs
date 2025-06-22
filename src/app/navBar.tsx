@@ -17,13 +17,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function NavBar() {
-
-
   return (
     <header className="absolute top-10 left-0 right-0 z-50    ">
       <div className="container mx-auto px-4">
