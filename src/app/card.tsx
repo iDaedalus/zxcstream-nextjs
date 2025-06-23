@@ -1,6 +1,5 @@
 "use client";
 import type { MovieType } from "@/lib/getMovieData";
-import { useState } from "react";
 import { Play } from "lucide-react";
 interface CircularProgressProps {
   value: number;
