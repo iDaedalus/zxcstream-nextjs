@@ -63,9 +63,6 @@ function CircularProgress({
 }
 
 export function MovieCard({ movie }: { movie: MovieType }) {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
-
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
     : null;
@@ -86,11 +83,6 @@ export function MovieCard({ movie }: { movie: MovieType }) {
             src={posterUrl || fallbackUrl}
             alt={movie.name || movie.title}
             className="w-full h-full object-cover"
-            onLoad={() => setImageLoaded(true)}
-            onError={() => {
-              setImageError(true);
-              setImageLoaded(true);
-            }}
           />
 
           {/* Play icon overlay */}
