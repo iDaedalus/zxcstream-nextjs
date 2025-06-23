@@ -103,10 +103,9 @@ export function MovieCard({ movie }: { movie: MovieType }) {
 
       {/* Title and Year */}
       <div className="space-y-1">
-        <h3 className="font-medium text-sm line-clamp-1 text-gray-500">
+        <h3 className="font-medium text-base truncate text-gray-500">
           {movie.name || movie.title}
         </h3>
-        {releaseYear && <p className="text-xs text-gray-500">{releaseYear}</p>}
       </div>
     </div>
   );

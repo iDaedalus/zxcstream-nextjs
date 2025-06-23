@@ -1,11 +1,17 @@
 "use client";
-
-import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Calendar,
-  Filter,
-  X,
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import {
   Zap,
   Compass,
   Palette,
@@ -25,30 +31,13 @@ import {
   GhostIcon as Thriller,
   Swords,
   Mountain,
-  Check,
+  Funnel,
   ChevronsUpDown,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { MovieType } from "@/lib/getMovieData";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { MovieCard } from "../card";
 import NavBar from "../navBar";
-import Link from "next/link";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 
 const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
@@ -58,114 +47,152 @@ const movieGenres = [
     id: 28,
     icon: Zap,
     description: "High-energy films with intense sequences",
+    color: "text-red-700 border-red-950",
+    iconColor: "text-red-600",
   },
   {
     name: "Adventure",
     id: 12,
     icon: Compass,
     description: "Exciting journeys and exploration",
+    color: "text-orange-700 border-orange-950",
+    iconColor: "text-orange-600",
   },
   {
     name: "Animation",
     id: 16,
     icon: Palette,
     description: "Animated films for all ages",
+    color: "text-purple-700 border-purple-950",
+    iconColor: "text-purple-600",
   },
   {
     name: "Comedy",
     id: 35,
     icon: Laugh,
     description: "Funny and entertaining movies",
+    color: "text-yellow-700 border-yellow-950",
+    iconColor: "text-yellow-600",
   },
   {
     name: "Crime",
     id: 80,
     icon: Shield,
     description: "Criminal activities and investigations",
+    color: "text-gray-700 border-gray-950",
+    iconColor: "text-gray-600",
   },
   {
     name: "Documentary",
     id: 99,
     icon: FileText,
     description: "Real-life stories and facts",
+    color: "text-blue-700 border-blue-950",
+    iconColor: "text-blue-600",
   },
   {
     name: "Drama",
     id: 18,
     icon: Drama,
     description: "Emotional and character-driven stories",
+    color: "text-indigo-700 border-indigo-950",
+    iconColor: "text-indigo-600",
   },
   {
     name: "Family",
     id: 10751,
     icon: Users,
     description: "Perfect for family movie nights",
+    color: "text-green-700 border-green-950",
+    iconColor: "text-green-600",
   },
   {
     name: "Fantasy",
     id: 14,
     icon: Wand2,
     description: "Magical worlds and creatures",
+    color: "text-violet-700 border-violet-950",
+    iconColor: "text-violet-600",
   },
   {
     name: "History",
     id: 36,
     icon: Clock,
     description: "Stories from the past",
+    color: "text-amber-700 border-amber-950",
+    iconColor: "text-amber-600",
   },
   {
     name: "Horror",
     id: 27,
     icon: Skull,
     description: "Scary and suspenseful films",
+    color: "text-red-700 border-red-950",
+    iconColor: "text-red-600",
   },
   {
     name: "Music",
     id: 10402,
     icon: Music,
     description: "Musical performances and stories",
+    color: "text-pink-700 border-pink-950",
+    iconColor: "text-pink-600",
   },
   {
     name: "Mystery",
     id: 9648,
     icon: HelpCircle,
     description: "Puzzles and unsolved cases",
+    color: "text-slate-700 border-slate-950",
+    iconColor: "text-slate-600",
   },
   {
     name: "Romance",
     id: 10749,
     icon: Heart,
     description: "Love stories and relationships",
+    color: "text-rose-700 border-rose-950",
+    iconColor: "text-rose-600",
   },
   {
     name: "Science Fiction",
     id: 878,
     icon: Rocket,
     description: "Futuristic and sci-fi themes",
+    color: "text-cyan-700 border-cyan-950",
+    iconColor: "text-cyan-600",
   },
   {
     name: "TV Movie",
     id: 10770,
     icon: Tv,
     description: "Made-for-television films",
+    color: "text-teal-700 border-teal-950",
+    iconColor: "text-teal-600",
   },
   {
     name: "Thriller",
     id: 53,
     icon: Thriller,
     description: "Suspenseful and edge-of-seat films",
+    color: "text-red-700 border-red-950",
+    iconColor: "text-red-600",
   },
   {
     name: "War",
     id: 10752,
     icon: Swords,
     description: "Military conflicts and battles",
+    color: "text-stone-700 border-stone-950",
+    iconColor: "text-stone-600",
   },
   {
     name: "Western",
     id: 37,
     icon: Mountain,
     description: "Wild west and frontier stories",
+    color: "text-orange-700 border-orange-950",
+    iconColor: "text-orange-600",
   },
 ];
 
@@ -175,570 +202,260 @@ const productionCompanies = [
     id: 420,
     icon: Shield,
     description: "Superhero and action films",
+    color: "text-red-700 border-red-950",
+    iconColor: "text-red-600",
   },
   {
     name: "Warner Bros.",
     id: 174,
     icon: Drama,
     description: "Major Hollywood studio",
+    color: "text-blue-700 border-blue-950",
+    iconColor: "text-blue-600",
   },
   {
     name: "Universal Pictures",
     id: 33,
     icon: Rocket,
     description: "Global entertainment company",
+    color: "text-purple-700 border-purple-950",
+    iconColor: "text-purple-600",
   },
   {
     name: "Disney",
     id: 2,
     icon: Wand2,
     description: "Family and animated films",
+    color: "text-pink-700 border-pink-950",
+    iconColor: "text-pink-600",
   },
   {
     name: "Sony Pictures",
     id: 5,
     icon: Tv,
     description: "Entertainment and media",
+    color: "text-yellow-700 border-yellow-950",
+    iconColor: "text-yellow-600",
   },
   {
     name: "Paramount Pictures",
     id: 4,
     icon: Mountain,
     description: "Classic Hollywood studio",
+    color: "text-indigo-700 border-indigo-950",
+    iconColor: "text-indigo-600",
   },
   {
     name: "20th Century Studios",
     id: 25,
     icon: Clock,
     description: "Major film studio",
+    color: "text-orange-700 border-orange-950",
+    iconColor: "text-orange-600",
   },
   {
     name: "Netflix",
     id: 178464,
     icon: Tv,
     description: "Streaming platform originals",
+    color: "text-red-700 border-red-950",
+    iconColor: "text-red-600",
   },
   {
     name: "A24",
     id: 41077,
     icon: Palette,
     description: "Independent film company",
+    color: "text-green-700 border-green-950",
+    iconColor: "text-green-600",
   },
   {
     name: "Blumhouse Productions",
     id: 3172,
     icon: Skull,
     description: "Horror and thriller films",
+    color: "text-gray-700 border-gray-950",
+    iconColor: "text-gray-600",
   },
   {
     name: "Pixar",
     id: 3,
     icon: Palette,
     description: "Computer animation studio",
+    color: "text-cyan-700 border-cyan-950",
+    iconColor: "text-cyan-600",
   },
   {
     name: "Lucasfilm",
     id: 1,
     icon: Rocket,
     description: "Star Wars and adventure films",
+    color: "text-amber-700 border-amber-950",
+    iconColor: "text-amber-600",
   },
 ];
 
+import { useEffect, useState } from "react";
+import { MovieType } from "@/lib/getMovieData";
+import { MovieCard } from "../card";
+import Link from "next/link";
 export default function MovieWebsite() {
-  const [movies, setMovies] = useState<MovieType[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedYear, setSelectedYear] = useState("");
-  const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
-  const [showGenres, setShowGenres] = useState(false);
-  const [selectedCompanies, setSelectedCompanies] = useState<number[]>([]);
-  const [showCompanies, setShowCompanies] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [yearOpen, setYearOpen] = useState(false);
-  const [genreOpen, setGenreOpen] = useState(false);
-  const [companyOpen, setCompanyOpen] = useState(false);
+  const [movie, setMovie] = useState<MovieType[]>();
+  const randomNumber = Math.floor(Math.random() * 5) + 1;
 
-  // Simple year list
-  const years = Array.from({ length: 30 }, (_, i) => 2025 - i);
-
-  // Fetch movies function - with pagination
-  const fetchMovies = async (page = 1, append = false) => {
-    if (page === 1) {
-      setLoading(true);
-    } else {
-      setLoadingMore(true);
-    }
-
-    try {
-      let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&sort_by=popularity.desc&page=${page}`;
-
-      if (selectedYear) {
-        url += `&primary_release_year=${selectedYear}`;
-      }
-
-      if (selectedGenres.length > 0) {
-        url += `&with_genres=${selectedGenres.join(",")}`;
-      }
-
-      if (selectedCompanies.length > 0) {
-        url += `&with_companies=${selectedCompanies.join(",")}`;
-      }
-
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (append) {
-        setMovies((prev) => [...prev, ...(data.results || [])]);
-      } else {
-        setMovies(data.results || []);
-      }
-
-      setCurrentPage(page);
-      setTotalPages(data.total_pages || 1);
-    } catch (error) {
-      console.error("Error:", error);
-      if (!append) setMovies([]);
-    }
-
-    setLoading(false);
-    setLoadingMore(false);
-  };
-
-  // Fetch movies when filters change - reset to page 1
   useEffect(() => {
-    setCurrentPage(1);
-    fetchMovies(1, false);
-  }, [selectedYear, selectedGenres, selectedCompanies]);
+    async function fetchPopularMovies() {
+      const url = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${apiKey}`;
 
-  // Handle genre selection
-  const toggleGenre = (genreId: number) => {
-    if (selectedGenres.includes(genreId)) {
-      setSelectedGenres(selectedGenres.filter((id) => id !== genreId));
-    } else {
-      setSelectedGenres([...selectedGenres, genreId]);
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        setMovie(data.results);
+      } catch (error) {
+        console.error("Failed to fetch popular movies:", error);
+        return [];
+      }
     }
-  };
 
-  const toggleCompany = (companyId: number) => {
-    if (selectedCompanies.includes(companyId)) {
-      setSelectedCompanies(selectedCompanies.filter((id) => id !== companyId));
-    } else {
-      setSelectedCompanies([...selectedCompanies, companyId]);
-    }
-  };
-
-  // Clear all filters
-  const clearFilters = () => {
-    setSelectedYear("");
-    setSelectedGenres([]);
-    setSelectedCompanies([]);
-  };
-
-  // Load more movies
-  const loadMore = () => {
-    if (currentPage < totalPages) {
-      fetchMovies(currentPage + 1, true);
-    }
-  };
+    fetchPopularMovies();
+  }, []);
 
   return (
-    <div className="min-h-screen w-[95%] lg:w-[90%] mx-auto">
+    <main>
       <NavBar />
-      {/* Header Section */}
 
-      <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-10  lg:mt-25 mt-20">
-        <div className="">
-          <h1 className="text-4xl  font-bold mb-2 ">Movies</h1>
-          <p className="lg:text-lg text-sm text-muted-foreground">
-            Discover and explore thousands of movies
-          </p>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2">
-          {/* Year Filter */}
-          <Popover open={yearOpen} onOpenChange={setYearOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={yearOpen}
-                className="w-full justify-between"
-              >
-                <Calendar className="h-4 w-4 mr-2" />
-                {selectedYear ? selectedYear : "Year"}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-32 p-0">
-              <Command>
-                <CommandInput placeholder="Search year..." />
-                <CommandList>
-                  <CommandEmpty>No year found.</CommandEmpty>
-                  <CommandGroup>
-                    <CommandItem
-                      value="all"
-                      onSelect={() => {
-                        setSelectedYear("");
-                        setYearOpen(false);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          selectedYear === "" ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                      All Years
-                    </CommandItem>
-                    {years.map((year) => (
-                      <CommandItem
-                        key={year}
-                        value={year.toString()}
-                        onSelect={(currentValue) => {
-                          setSelectedYear(
-                            currentValue === selectedYear ? "" : currentValue
-                          );
-                          setYearOpen(false);
-                        }}
-                      >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            selectedYear === year.toString()
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                        {year}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-
-          {/* Genre Filter - Combobox on small screens, Button on large screens */}
-          <div className="lg:hidden">
-            <Popover open={genreOpen} onOpenChange={setGenreOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={genreOpen}
-                  className="w-full justify-between"
-                >
-                  <Filter className="h-4 w-4 mr-2 hidden lg:block" />
-                  {selectedGenres.length > 0
-                    ? `${selectedGenres.length} Genre${
-                        selectedGenres.length > 1 ? "s" : ""
-                      }`
-                    : "Genres"}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="flex-1 p-0">
-                <Command>
-                  <CommandInput placeholder="Search genres..." />
-                  <CommandList>
-                    <CommandEmpty>No genre found.</CommandEmpty>
-                    <CommandGroup>
-                      {movieGenres.map((genre) => (
-                        <CommandItem
-                          key={genre.id}
-                          value={genre.name}
-                          onSelect={() => {
-                            toggleGenre(genre.id);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              selectedGenres.includes(genre.id)
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          {genre.name}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          <div className="hidden lg:block">
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => setShowGenres(!showGenres)}
-            >
-              <Filter className="h-4 w-4 mr-2 hidden lg:block" />
-              Genres ({selectedGenres.length})
-            </Button>
-          </div>
-
-          {/* Production Companies Filter - Combobox on small screens, Button on large screens */}
-          <div className="lg:hidden">
-            <Popover open={companyOpen} onOpenChange={setCompanyOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={companyOpen}
-                  className="w-full justify-between"
-                >
-                  <Filter className="h-4 w-4 mr-2 hidden lg:block" />
-                  {selectedCompanies.length > 0
-                    ? `${selectedCompanies.length} Studio${
-                        selectedCompanies.length > 1 ? "s" : ""
-                      }`
-                    : "Studios"}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-full p-0">
-                <Command>
-                  <CommandInput placeholder="Search studios..." />
-                  <CommandList>
-                    <CommandEmpty>No studio found.</CommandEmpty>
-                    <CommandGroup>
-                      {productionCompanies.map((company) => (
-                        <CommandItem
-                          key={company.id}
-                          value={company.name}
-                          onSelect={() => {
-                            toggleCompany(company.id);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              selectedCompanies.includes(company.id)
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          {company.name}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          <div className="hidden lg:block">
-            <Button
-              variant="outline"
-              onClick={() => setShowCompanies(!showCompanies)}
-              className="w-full"
-            >
-              <Filter className="h-4 w-4 mr-2 hidden lg:block" />
-              Companies ({selectedCompanies.length})
-            </Button>
-          </div>
-
-          {/* Clear Button */}
-          {(selectedYear ||
-            selectedGenres.length > 0 ||
-            selectedCompanies.length > 0) && (
-            <Button
-              variant="outline"
-              onClick={clearFilters}
-              className="col-span-3"
-            >
-              <X className="h-4 w-4 mr-2" />
-              Clear All
-            </Button>
-          )}
-        </div>
-      </div>
-
-      <div className="mx-auto">
-        {/* Genre Selection - Only show on large screens */}
-        {showGenres && (
-          <div className="hidden lg:block rounded-lg mt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {movieGenres.map((genre) => {
-                const IconComponent = genre.icon;
-                const id = `genre-${genre.id}`;
-                return (
-                  <div
-                    key={genre.id}
-                    className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none"
-                  >
-                    <Checkbox
-                      id={id}
-                      className="order-1 after:absolute after:inset-0"
-                      aria-describedby={`${id}-description`}
-                      checked={selectedGenres.includes(genre.id)}
-                      onCheckedChange={() => toggleGenre(genre.id)}
-                    />
-                    <div className="flex grow items-center gap-3">
-                      <div className="shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        <IconComponent className="w-4 h-4 text-primary" />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor={id}>
-                          {genre.name}{" "}
-                          <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
-                            (Genre)
-                          </span>
-                        </Label>
-                        <p
-                          id={`${id}-description`}
-                          className="text-muted-foreground text-xs"
-                        >
-                          {genre.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Production Companies Selection - Only show on large screens */}
-        {showCompanies && (
-          <div className="hidden lg:block rounded-lg mt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {productionCompanies.map((company) => {
-                const IconComponent = company.icon;
-                const id = `company-${company.id}`;
-                return (
-                  <div
-                    key={company.id}
-                    className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none"
-                  >
-                    <Checkbox
-                      id={id}
-                      className="order-1 after:absolute after:inset-0"
-                      aria-describedby={`${id}-description`}
-                      checked={selectedCompanies.includes(company.id)}
-                      onCheckedChange={() => toggleCompany(company.id)}
-                    />
-                    <div className="flex grow items-center gap-3">
-                      <div className="shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        <IconComponent className="w-4 h-4 text-primary" />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor={id}>
-                          {company.name}{" "}
-                          <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
-                            (Studio)
-                          </span>
-                        </Label>
-                        <p
-                          id={`${id}-description`}
-                          className="text-muted-foreground text-xs"
-                        >
-                          {company.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Movies Grid */}
-      <div className="mx-auto mt-8">
-        <div>
-          {/* Active Filters */}
-          {(selectedYear ||
-            selectedGenres.length > 0 ||
-            selectedCompanies.length > 0) && (
-            <div className="flex gap-2 mb-4 flex-wrap">
-              {selectedYear && (
-                <Badge variant="secondary">
-                  Year: {selectedYear}
-                  <X
-                    className="h-3 w-3 ml-1 cursor-pointer"
-                    onClick={() => setSelectedYear("")}
-                  />
-                </Badge>
-              )}
-              {selectedGenres.map((genreId) => {
-                const genre = movieGenres.find((g) => g.id === genreId);
-                return (
-                  <Badge key={genreId} variant="secondary">
-                    {genre?.name}
-                    <X
-                      className="h-3 w-3 ml-1 cursor-pointer"
-                      onClick={() => toggleGenre(genreId)}
-                    />
-                  </Badge>
-                );
-              })}
-              {selectedCompanies.map((companyId) => {
-                const company = productionCompanies.find(
-                  (c) => c.id === companyId
-                );
-                return (
-                  <Badge key={companyId} variant="secondary">
-                    {company?.name}
-                    <X
-                      className="h-3 w-3 ml-1 cursor-pointer"
-                      onClick={() => toggleCompany(companyId)}
-                    />
-                  </Badge>
-                );
-              })}
-            </div>
-          )}
-        </div>
-        {loading ? (
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {Array.from({ length: 18 }).map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-gray-300 rounded-lg aspect-[2/3] mb-3"></div>
-                <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                <div className="h-3 bg-gray-300 rounded w-2/3"></div>
-              </div>
-            ))}
-          </div>
-        ) : movies.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No movies found</p>
-            <p className="text-gray-400">Try different filters</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 lg:gap-6 gap-2">
-            {movies.map((movie) => (
-              <Link href={`/movie/${movie.id}`} key={movie.id} prefetch={true}>
-                <MovieCard movie={movie} />
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {/* Load More Button */}
-        {!loading && movies.length > 0 && currentPage < totalPages && (
-          <div className="text-center mt-8">
-            <Button
-              onClick={loadMore}
-              disabled={loadingMore}
-              size="lg"
-              className="px-8"
-            >
-              {loadingMore ? "Loading..." : "Load More Movies"}
-            </Button>
-            <p className="text-sm text-gray-500 mt-2">
-              Page {currentPage} of {totalPages}
+      {movie?.[randomNumber] && (
+        <div
+          key={movie[randomNumber].id}
+          className="relative h-[75vh] overflow-hidden "
+        >
+          <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25  z-20 text-white zxc flex flex-col items-end  ">
+            <p className="text-right text-sm lg:text-base">
+              {movie?.[randomNumber].tagline}
             </p>
+            <span className="lg:text-6xl  text-3xl tracking-[-5px] lg:tracking-[-11px] font-bold zxczxc text-right mt-1 mb-2 lg:mt-2 lg:mb-4">
+              {(movie?.[randomNumber].title || movie?.[randomNumber].name)
+                ?.split(" ")
+                .slice(0, -1)
+                .join(" ")}{" "}
+              <span className="text-yellow-500">
+                {(movie?.[randomNumber].title || movie?.[randomNumber].name)
+                  ?.split(" ")
+                  .pop()}
+              </span>
+            </span>
+
+            <span className="bg-blue-800/30 border-1 border-blue-800 text-blue-100 mt-3  cursor-pointer">
+              <Link
+                href={`/movie/${movie?.[randomNumber].id}`}
+                prefetch={true}
+                scroll={false}
+              >
+                <ChevronRight className="h-4 w-4 lg:h-6 lg:w-6" />
+              </Link>
+            </span>
           </div>
-        )}
+          <img
+            className="abslute h-full w-full object-cover object-[center_40%] mask-gradient backdrop opacity-backrop"
+            src={`https://image.tmdb.org/t/p/original/${movie[randomNumber].backdrop_path}`}
+            alt="Lazy loaded"
+          />
+        </div>
+      )}
+
+      {/* The rest of the movies - inside a centered, narrower container */}
+      <div className="lg:w-[90%] w-full mx-auto grid lg:grid-cols-6 grid-cols-3 lg:gap-5 gap-3 lg:p-4 p-2">
+        <h1 className="col-start-1 lg:text-2xl text-xl font-semibold whitespace-nowrap">
+          Popular Movies
+        </h1>
+        <div className="lg:col-start-6 col-start-3">
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button className="gap-5 w-full" variant="outline">
+                <Funnel/> Filter{" "}
+                <ChevronsUpDown />
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <div className="sr-only">
+                <DrawerHeader>
+                  <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                  <DrawerDescription>
+                    This action cannot be undone.
+                  </DrawerDescription>
+                </DrawerHeader>
+              </div>
+
+              <Tabs defaultValue="genre" className="w-full p-3 overflow-auto">
+                <TabsList className="w-full">
+                  <TabsTrigger value="genre">Genres</TabsTrigger>
+                  <TabsTrigger value="production">
+                    Production Companies
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="genre" className="mt-3 ">
+                  <div className="grid lg:grid-cols-3 grid-cols-1 gap-2 ">
+                    {movieGenres.map((genre) => {
+                      const GenreIcon = genre.icon;
+                      return (
+                        <div
+                          key={genre.id}
+                          className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${genre.color}`}
+                        >
+                          <Checkbox className="order-1 after:absolute after:inset-0" />
+                          <div className="flex grow items-center gap-3">
+                            <GenreIcon className={`${genre.iconColor}`} />
+                            <div className="grid gap-2">
+                              <Label className="">{genre.name}</Label>
+                              <p className="text-muted-foreground text-xs truncate">
+                                {genre.description}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </TabsContent>
+                <TabsContent value="production" className="mt-3">
+                  <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
+                    {productionCompanies.map((company) => {
+                      const GenreIcon = company.icon;
+                      return (
+                        <div
+                          key={company.id}
+                          className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${company.color}`}
+                        >
+                          <Checkbox className="order-1 after:absolute after:inset-0" />
+                          <div className="flex grow items-center gap-3">
+                            <GenreIcon className={`${company.iconColor}`} />
+                            <div className="grid gap-2">
+                              <Label className="">{company.name}</Label>
+                              <p className="text-muted-foreground text-xs truncate">
+                                {company.description}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </TabsContent>
+              </Tabs>
+              <DrawerFooter>
+                <DrawerClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        </div>
+        {movie
+          ?.filter((_, index) => index !== randomNumber)
+          .map((data) => (
+            <MovieCard key={data.id} movie={data} />
+          ))}
       </div>
-    </div>
+    </main>
   );
 }
