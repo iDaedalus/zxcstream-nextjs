@@ -68,11 +68,6 @@ export function MovieCard({ movie }: { movie: MovieType }) {
   const fallbackUrl =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOxgXTO4Kc4XORUFvZembSzymC7B6RYupJLQ&s";
 
-  const releaseYear =
-    movie.release_date || movie.first_air_date
-      ? new Date(movie.release_date || movie.first_air_date).getFullYear()
-      : null;
-
   return (
     <div className="group cursor-pointer">
       {/* Image Container */}
