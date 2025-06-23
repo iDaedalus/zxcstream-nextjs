@@ -47,14 +47,14 @@ export default function GenreMovies() {
 
   const getGenreLabel = () => {
     const selectedGenre = genreOptions.find((g) => g.value === genre);
-    return selectedGenre ? selectedGenre.label.toUpperCase() : "GENRE";
+    return selectedGenre ? selectedGenre.label : "Genre";
   };
 
   return (
     <div className="w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
       <div className="w-full flex items-center justify-between">
-        <p className="text-foreground text-xl lg:text-2xl tracking-[-3px] lg:border-l-4 lg:border-cyan-600 lg:pl-6 flex items-center gap-2 zxczxc">
-          {getGenreLabel()} MOVIES
+        <p className="text-foreground text-xl lg:text-2xl lg:border-l-4 lg:border-cyan-600 lg:pl-6 flex items-center gap-2 font-semibold">
+          {getGenreLabel()} Movies
         </p>
 
         <div className="relative">
@@ -78,7 +78,7 @@ export default function GenreMovies() {
         freeMode={true}
         slidesPerView="auto"
         spaceBetween={45}
-        className="!pb-13"
+        className="!pb-15"
         navigation={{
           nextEl: ".genre-button-next",
           prevEl: ".genre-button-prev",

@@ -260,7 +260,7 @@ export default function MovieWebsite() {
   const [companyOpen, setCompanyOpen] = useState(false);
 
   // Simple year list
-  const years = Array.from({ length: 30 }, (_, i) => 2024 - i);
+  const years = Array.from({ length: 30 }, (_, i) => 2025 - i);
 
   // Fetch movies function - with pagination
   const fetchMovies = async (page = 1, append = false) => {
@@ -342,20 +342,14 @@ export default function MovieWebsite() {
     }
   };
 
-
-
-
-
   return (
     <div className="min-h-screen w-[95%] lg:w-[90%] mx-auto">
       <NavBar />
       {/* Header Section */}
 
-      <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-3  lg:mt-25 mt-20">
+      <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-10  lg:mt-25 mt-20">
         <div className="">
-          <h1 className="text-4xl  font-bold mb-2 zxczxc lg:tracking-[-6px] tracking-[-3px]">
-            Movies
-          </h1>
+          <h1 className="text-4xl  font-bold mb-2 ">Movies</h1>
           <p className="lg:text-lg text-sm text-muted-foreground">
             Discover and explore thousands of movies
           </p>

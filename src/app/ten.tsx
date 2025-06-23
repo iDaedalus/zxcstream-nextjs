@@ -44,7 +44,7 @@ export default function Ten() {
   return (
     <div className="w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
       <div className="w-full flex items-center justify-between">
-        <p className="text-foreground relative zxczxc text-xl lg:text-2xl tracking-[-3px] lg:border-l-4 lg:border-blue-800 lg:pl-6 flex items-center gap-2">
+        <p className="text-foreground relative font-semibold text-xl lg:text-2xl  lg:border-l-4 lg:border-blue-800 lg:pl-6 flex items-center gap-2">
           TOP 20
         </p>
 

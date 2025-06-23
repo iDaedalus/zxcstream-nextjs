@@ -11,11 +11,14 @@ export default function Home() {
     <main>
       <NavBar />
       <SwiperBackdrops />
-      <Ten />
-      <ClassicMovies />
-      <GenreMovies />
-      <RuntimeMovies />
-      <Footer />
+
+      <div className="space-y-30">
+        <Ten />
+        <ClassicMovies />
+        <GenreMovies />
+        <RuntimeMovies />
+        <Footer />
+      </div>
     </main>
   );
 }

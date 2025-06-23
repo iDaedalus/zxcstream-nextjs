@@ -35,7 +35,7 @@ export default function SwiperBackdrops() {
       pagination={{ type: "progressbar" }}
       slidesPerView={"auto"}
       spaceBetween={10}
-      className="relative h-[75vh]"
+      className="relative h-[75vh] w-full"
     >
       {loading ? (
         <SwiperSlide className="swiper-slide relative overflow-hidden">

@@ -48,8 +48,8 @@ export default function ClassicMovies() {
   return (
     <div className="w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
       <div className="w-full flex items-center justify-between">
-        <p className="text-foreground text-xl lg:text-2xl tracking-[-3px] lg:border-l-4 lg:border-purple-600 lg:pl-6 flex items-center gap-2 zxczxc">
-          CLASSIC MOVIES
+        <p className="text-foreground text-xl lg:text-2xl  lg:border-l-4 lg:border-purple-600 lg:pl-6 flex items-center gap-2 font-semibold ">
+          Classic Movies
         </p>
 
         <div className="relative">

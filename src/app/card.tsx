@@ -1,86 +1,122 @@
 "use client";
-
-import { Badge } from "@/components/ui/badge";
-import { Play } from "lucide-react";
 import type { MovieType } from "@/lib/getMovieData";
 import { useState } from "react";
+import { Play } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+interface CircularProgressProps {
+  value: number;
+  size?: number;
+  strokeWidth?: number;
+}
+
+function CircularProgress({
+  value,
+  size = 35,
+  strokeWidth = 2,
+}: CircularProgressProps) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const progress = (value / 10) * 100; // Convert to percentage (assuming max is 10)
+  const strokeDasharray = circumference;
+  const strokeDashoffset = circumference - (progress / 100) * circumference;
+
+  // Color based on rating
+  const getColor = (rating: number) => {
+    if (rating >= 7) return "#22c55e"; // green-500
+    if (rating >= 5) return "#eab308"; // yellow-500
+    return "#ef4444"; // red-500
+  };
+
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="transform -rotate-90">
+        {/* Background circle */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="rgba(255, 255, 255, 0.2)"
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
+        {/* Progress circle */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={getColor(value)}
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeDasharray={strokeDasharray}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+          className="transition-all duration-500 ease-out"
+        />
+      </svg>
+      {/* Rating text */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-white text-xs font-semibold drop-shadow-lg">
+          {value.toFixed(1)}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export function MovieCard({ movie }: { movie: MovieType }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
-  console.log(imageError);
+
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
     : null;
+  const fallbackUrl =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOxgXTO4Kc4XORUFvZembSzymC7B6RYupJLQ&s";
 
-  const fallbackUrl = "/placeholder.svg?height=750&width=500";
-
-  const displayTitle = movie.name || movie.title;
   const releaseYear =
     movie.release_date || movie.first_air_date
       ? new Date(movie.release_date || movie.first_air_date).getFullYear()
       : null;
 
   return (
-    <div className="group cursor-pointer w-full">
+    <div className="group cursor-pointer">
       {/* Image Container */}
-      <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-muted mb-3 shadow-md hover:shadow-xl transition-shadow duration-300">
-        {/* Loading State */}
-        {!imageLoaded && (
-          <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/60 animate-pulse" />
-        )}
+      <div className="relative  mb-3">
+        <div className="w-full h-full overflow-hidden rounded-md">
+          <img
+            src={posterUrl || fallbackUrl}
+            alt={movie.name || movie.title}
+            className="w-full h-full object-cover"
+            onLoad={() => setImageLoaded(true)}
+            onError={() => {
+              setImageError(true);
+              setImageLoaded(true);
+            }}
+          />
 
-        {/* Movie Poster */}
-        <img
-          src={posterUrl || fallbackUrl}
-          alt={displayTitle}
-          className={`w-full h-full object-cover transition-all duration-300 ${
-            imageLoaded ? "opacity-100 group-hover:scale-105" : "opacity-0"
-          }`}
-          onLoad={() => setImageLoaded(true)}
-          onError={() => {
-            setImageError(true);
-            setImageLoaded(true);
-          }}
-          loading="lazy"
-        />
-
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 border border-white/30 transform scale-90 group-hover:scale-100 transition-transform duration-200">
-            <Play className="w-6 h-6 text-white fill-white" />
+          {/* Play icon overlay */}
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+            <div className="bg-white/90 rounded-full p-3">
+              <Play className="w-6 h-6 text-black fill-black" />
+            </div>
           </div>
         </div>
 
-        {/* Top Badges */}
-        <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-          <Badge
-            variant="secondary"
-            className="bg-black/80 text-white border-0 text-xs font-medium"
-          >
-            {movie.media_type === "tv" ? "TV Series" : "Movie"}
-          </Badge>
-
-          {movie.vote_average > 0 && (
-            <Badge
-              variant="secondary"
-              className="bg-amber-500/90 text-white border-0 text-xs font-medium"
-            >
-              ★ {movie.vote_average.toFixed(1)}
-            </Badge>
-          )}
-        </div>
+        {movie.vote_average > 0 && (
+          <div className="absolute -bottom-2 right-1.5">
+            <div className="bg-black/60 rounded-full p-1 backdrop-blur-sm">
+              <CircularProgress value={movie.vote_average} />
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Movie Info */}
+      {/* Title and Year */}
       <div className="space-y-1">
-        <h3 className="font-semibold text-foreground text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors duration-200">
-          {displayTitle}
+        <h3 className="font-medium text-sm line-clamp-1 text-gray-500">
+          {movie.name || movie.title}
         </h3>
-
-        {releaseYear && (
-          <p className="text-muted-foreground text-xs">{releaseYear}</p>
-        )}
+        {releaseYear && <p className="text-xs text-gray-500">{releaseYear}</p>}
       </div>
     </div>
   );

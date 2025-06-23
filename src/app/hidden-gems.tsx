@@ -72,14 +72,14 @@ export default function RuntimeMovies() {
 
   const getRuntimeLabel = () => {
     const selectedRuntime = runtimeOptions.find((r) => r.value === runtime);
-    return selectedRuntime ? selectedRuntime.label.toUpperCase() : "RUNTIME";
+    return selectedRuntime ? selectedRuntime.label : "Runtime";
   };
 
   return (
     <div className="w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
       <div className="w-full flex items-center justify-between">
-        <p className="text-foreground text-xl lg:text-2xl tracking-[-3px] lg:border-l-4 lg:border-teal-600 lg:pl-6 flex items-center gap-2 zxczxc">
-          {getRuntimeLabel()} PICKS ⏱️
+        <p className="text-foreground text-xl lg:text-2xl lg:border-l-4 lg:border-teal-600 lg:pl-6 flex items-center gap-2 font-semibold">
+          {getRuntimeLabel()} Picks
         </p>
 
         <div className="relative flex flex-wrap gap-1">
@@ -104,7 +104,7 @@ export default function RuntimeMovies() {
         freeMode={true}
         slidesPerView="auto"
         spaceBetween={45}
-        className="!pb-13"
+        className="!pb-15"
         navigation={{
           nextEl: ".runtime-button-next",
           prevEl: ".runtime-button-prev",

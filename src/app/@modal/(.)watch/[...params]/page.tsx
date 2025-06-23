@@ -14,7 +14,7 @@ export default function WatchPage() {
   const id = params?.[1];
   const season = params?.[2];
   const episode = params?.[3];
-  const [selected, setSelected] = useState("Server Epsilon");
+  const [selected, setSelected] = useState("Server Alpha");
   const [sandboxEnabled, setSandboxEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -23,10 +23,10 @@ export default function WatchPage() {
     {
       name: "Server Alpha",
 
-      sublabel: "Sandbox required",
+      sublabel: "No Ads",
       description: "Fast and clean experience, but limited to movies only.",
-      movieLink: `https://vidsrc.su/embed/movie/${id}`,
-      tvLink: `https://vidsrc.su/embed/tv/${id}/${season}/${episode}`,
+      movieLink: `https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=true`,
+      tvLink: `https://vidsrc.cc/v2/embed/tv/${id}/${season}/${episode}?autoPlay=true`,
     },
     {
       name: "Server Beta",
@@ -45,10 +45,10 @@ export default function WatchPage() {
     },
     {
       name: "Server Gamma",
-      sublabel: "No ads",
+      sublabel: "Sandbox required",
       description: "Smooth playback with autoplay enabled by default.",
-      movieLink: `https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=true`,
-      tvLink: `https://vidsrc.cc/v2/embed/tv/${id}/${season}/${episode}?autoPlay=true`,
+      movieLink: `https://vidsrc.su/embed/movie/${id}`,
+      tvLink: `https://vidsrc.su/embed/tv/${id}/${season}/${episode}`,
     },
     {
       name: "Server Epsilon",
@@ -86,7 +86,7 @@ export default function WatchPage() {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed z-[999] inset-0 w-full flex flex-col bg-gradient-to-br from-gray-900 via-black to-gray-800"
+      className="fixed z-[999] inset-0 w-full h-screen overflow-auto flex flex-col bg-background"
     >
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b border-gray-700">
@@ -110,7 +110,7 @@ export default function WatchPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="min-h-[50vh] h-screen w-full flex overflow-hidden">
         {/* Video Player */}
         <div className="flex-1 relative">
           {/* Loading Overlay */}
@@ -153,7 +153,10 @@ export default function WatchPage() {
               <div className="flex grow items-center gap-3">
                 <Server className="h-5 w-5 flex-shrink-0" />
                 <div className="grid gap-2 ">
-                  <Label htmlFor={server.name} className="cursor-pointer truncate">
+                  <Label
+                    htmlFor={server.name}
+                    className="cursor-pointer truncate"
+                  >
                     {server.name}{" "}
                     <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
                       ({server.sublabel})
