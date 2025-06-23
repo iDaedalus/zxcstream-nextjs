@@ -2,7 +2,6 @@
 import type { MovieType } from "@/lib/getMovieData";
 import { useState } from "react";
 import { Play } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 interface CircularProgressProps {
   value: number;
   size?: number;
