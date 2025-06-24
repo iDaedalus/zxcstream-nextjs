@@ -647,8 +647,6 @@ export default function MovieWebsite() {
     selectedNetworks,
     yearSelected,
     page,
-    media_type,
-
     apiKey,
   ]);
 
@@ -734,7 +732,9 @@ export default function MovieWebsite() {
                 <Tabs defaultValue="genre" className="w-full p-3 overflow-auto">
                   <TabsList className="w-full">
                     <TabsTrigger value="genre">Genres</TabsTrigger>
-                    <TabsTrigger value="production">Production</TabsTrigger>
+                    <TabsTrigger value="Companies">
+                      {media_type === "movie" ? "Production" : "Networks"}
+                    </TabsTrigger>
                     <TabsTrigger value="year">Year</TabsTrigger>
                   </TabsList>
                   <TabsContent value="genre" className="mt-3 ">
