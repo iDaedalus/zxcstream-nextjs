@@ -308,7 +308,7 @@ export default function MovieWebsite() {
   const [year, setYear] = useState(currentYear);
   const [page, setPage] = useState(1);
   const path = usePathname();
-  const [_, , media_type, category] = path.split("/");
+  const [, , media_type, category] = path.split("/");
   console.log("Type:", media_type); // "movie"
   console.log("Category:", category); // "popular"
   // const randomNumber = Math.floor(Math.random() * 5) + 1;
