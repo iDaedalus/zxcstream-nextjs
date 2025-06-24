@@ -732,8 +732,8 @@ export default function MovieWebsite() {
                 <Tabs defaultValue="genre" className="w-full p-3 overflow-auto">
                   <TabsList className="w-full">
                     <TabsTrigger value="genre">Genres</TabsTrigger>
-                    <TabsTrigger value="Companies">
-                      {media_type === "movie" ? "Production" : "Networks"}
+                    <TabsTrigger value="production">
+                      {media_type === "movie" ? "Companies" : "Networks"}
                     </TabsTrigger>
                     <TabsTrigger value="year">Year</TabsTrigger>
                   </TabsList>
