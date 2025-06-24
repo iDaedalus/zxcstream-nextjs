@@ -355,7 +355,7 @@ export default function MovieWebsite() {
     }
 
     fetchPopularMovies();
-  }, [media_type, year, page]);
+  }, [year, page]);
 
   return (
     <main>
