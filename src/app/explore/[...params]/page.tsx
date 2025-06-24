@@ -11,6 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { usePathname } from "next/navigation";
 import {
   Zap,
   Compass,
@@ -37,7 +38,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import NavBar from "../navBar";
+import NavBar from "@/app/navBar";
 
 const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
@@ -297,20 +298,56 @@ const productionCompanies = [
 
 import { useEffect, useState } from "react";
 import { MovieType } from "@/lib/getMovieData";
-import { MovieCard } from "../card";
+import { MovieCard } from "@/app/card";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 export default function MovieWebsite() {
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 30 }, (_, i) => currentYear - i);
   const [movie, setMovie] = useState<MovieType[]>();
-  const randomNumber = Math.floor(Math.random() * 5) + 1;
-
+  const [year, setYear] = useState(currentYear);
+  const [page, setPage] = useState(1);
+  const path = usePathname();
+  const [_, , media_type, category] = path.split("/");
+  console.log("Type:", media_type); // "movie"
+  console.log("Category:", category); // "popular"
+  // const randomNumber = Math.floor(Math.random() * 5) + 1;
+  const randomNumber = 0;
   useEffect(() => {
     async function fetchPopularMovies() {
-      const url = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${apiKey}`;
+      let url = "";
+
+      if (category === "popular") {
+        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&primary_release_year=${year}&language=en-US&page=${page}`;
+      } else if (category === "top-rated") {
+        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=vote_average.desc&vote_count.gte=100&primary_release_year=${year}&language=en-US&page=${page}`;
+      } else if (category === "now-playing") {
+        url =
+          media_type === "movie"
+            ? `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&primary_release_year=${year}&language=en-US&page=${page}`
+            : `https://api.themoviedb.org/3/tv/airing_today?api_key=${apiKey}&first_air_date_year=${year}&language=en-US&page=${page}`;
+      } else if (category === "coming-soon") {
+        const today = new Date().toISOString().split("T")[0];
+        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=primary_release_date.asc&${
+          media_type === "movie"
+            ? `primary_release_date.gte=${today}&primary_release_year=${year}`
+            : `first_air_date.gte=${today}&first_air_date_year=${year}`
+        }&language=en-US&page=${page}`;
+      } else {
+        // fallback: show popular
+        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&primary_release_year=${year}&language=en-US&page=${page}`;
+      }
 
       try {
         const res = await fetch(url);
         const data = await res.json();
-        setMovie(data.results);
+        if (page === 1) {
+          // First page: set featured movie and initialize list
+          setMovie(data.results);
+        } else {
+          // Subsequent pages: append to existing list
+          setMovie((prev = []) => [...prev, ...data?.results]);
+        }
       } catch (error) {
         console.error("Failed to fetch popular movies:", error);
         return [];
@@ -318,7 +355,7 @@ export default function MovieWebsite() {
     }
 
     fetchPopularMovies();
-  }, []);
+  }, [media_type, year, page]);
 
   return (
     <main>
@@ -327,7 +364,7 @@ export default function MovieWebsite() {
       {movie?.[randomNumber] && (
         <div
           key={movie[randomNumber].id}
-          className="relative h-[75vh] overflow-hidden "
+          className="relative lg:h-[75vh] h-[50vh] overflow-hidden "
         >
           <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25  z-20 text-white zxc flex flex-col items-end  ">
             <p className="text-right text-sm lg:text-base">
@@ -364,16 +401,28 @@ export default function MovieWebsite() {
       )}
 
       {/* The rest of the movies - inside a centered, narrower container */}
-      <div className="lg:w-[90%] w-full mx-auto grid lg:grid-cols-6 grid-cols-3 lg:gap-5 gap-3 lg:p-4 p-2">
-        <h1 className="col-start-1 lg:text-2xl text-xl font-semibold whitespace-nowrap">
-          Popular Movies
+      <div className="lg:w-[90%] w-full mx-auto grid lg:grid-cols-6 grid-cols-3 lg:gap-5 gap-2 lg:p-4 p-2">
+        <h1 className="col-start-1 lg:text-2xl text-xl whitespace-nowrap  font-bold flex gap-2">
+          <p>
+            {" "}
+            {category === "popular"
+              ? "Popular"
+              : category === "top-rated"
+              ? "Top Rated"
+              : category === "now-playing"
+              ? "Now Playing"
+              : category === "coming-soon"
+              ? "Coming Soon"
+              : ""}
+          </p>
+
+          <p> {media_type === "movie" ? "Movies" : "TV Shows"}</p>
         </h1>
         <div className="lg:col-start-6 col-start-3">
           <Drawer>
             <DrawerTrigger asChild>
-              <Button className="gap-5 w-full" variant="outline">
-                <Funnel/> Filter{" "}
-                <ChevronsUpDown />
+              <Button className="lg:gap-5 w-full" variant="outline">
+                <Funnel /> Filter <ChevronsUpDown />
               </Button>
             </DrawerTrigger>
             <DrawerContent>
@@ -389,9 +438,8 @@ export default function MovieWebsite() {
               <Tabs defaultValue="genre" className="w-full p-3 overflow-auto">
                 <TabsList className="w-full">
                   <TabsTrigger value="genre">Genres</TabsTrigger>
-                  <TabsTrigger value="production">
-                    Production Companies
-                  </TabsTrigger>
+                  <TabsTrigger value="production">Production</TabsTrigger>
+                  <TabsTrigger value="year">Year</TabsTrigger>
                 </TabsList>
                 <TabsContent value="genre" className="mt-3 ">
                   <div className="grid lg:grid-cols-3 grid-cols-1 gap-2 ">
@@ -441,6 +489,19 @@ export default function MovieWebsite() {
                     })}
                   </div>
                 </TabsContent>
+                <TabsContent value="year">
+                  <div className="grid grid-cols-3">
+                    {years.map((year) => (
+                      <p
+                        key={year}
+                        onClick={() => setYear(year)}
+                        className="text-center p-4"
+                      >
+                        {year}
+                      </p>
+                    ))}
+                  </div>
+                </TabsContent>
               </Tabs>
               <DrawerFooter>
                 <DrawerClose asChild>
@@ -453,8 +514,21 @@ export default function MovieWebsite() {
         {movie
           ?.filter((_, index) => index !== randomNumber)
           .map((data) => (
-            <MovieCard key={data.id} movie={data} />
+            <Link key={data.id} href={`/${media_type}/${data.id}`}>
+              {" "}
+              <MovieCard movie={data} />
+            </Link>
           ))}
+        <Skeleton className="h-full w-full" />
+        <Skeleton className="h-full w-full" />
+        <Skeleton className="h-full w-full" />
+        <Skeleton className="h-full w-full" />
+        <Skeleton className="h-full w-full" />
+        <Skeleton className="h-full w-full" />
+      </div>
+
+      <div className="flex justify-center items-center py-3 mb-20">
+        <Button onClick={() => setPage((prev) => prev + 1)}>Load More</Button>
       </div>
     </main>
   );

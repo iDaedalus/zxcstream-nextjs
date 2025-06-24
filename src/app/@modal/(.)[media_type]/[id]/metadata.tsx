@@ -38,7 +38,7 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { MovieCard } from "@/app/card";
+
 export default function DrawerMetadata({
   id,
   media_type,
@@ -218,7 +218,7 @@ export default function DrawerMetadata({
                         <LibraryBig />
                         {show.belongs_to_collection.name}
                       </h1>
-                      <div className="grid lg:grid-cols-3 grid-cols-3 lg:gap-3 gap-1">
+                      <div className="grid lg:grid-cols-3 grid-cols-2 lg:gap-3 gap-1">
                         {collection?.parts.map((meow) => (
                           <EnglishBackdropMeta
                             key={meow.id}
@@ -313,7 +313,14 @@ export default function DrawerMetadata({
                           key={reco.id}
                           className="reco overflow-hidden rounded-sm cursor-pointer"
                         >
-                          <MovieCard movie={reco} />
+                          <div>
+                            <img
+                              key={reco.id}
+                              src={`https://image.tmdb.org/t/p/w500/${reco.poster_path}`}
+                              alt={reco.name || reco.title}
+                              className="flex-1 object-cover"
+                            />
+                          </div>
                         </SwiperSlide>
                       ))}
                       <div className="swiper-button-prev"></div>

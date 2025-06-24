@@ -1,6 +1,7 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
+import { FreeMode } from "swiper/modules";
 import Link from "next/link";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -44,7 +45,7 @@ export default function Ten() {
   return (
     <div className="w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
       <div className="w-full flex items-center justify-between">
-        <p className="text-foreground relative font-semibold text-xl lg:text-2xl  lg:border-l-4 lg:border-blue-800 lg:pl-6 flex items-center gap-2">
+        <p className="text-foreground relative font-semibold text-base lg:text-2xl  lg:border-l-4 lg:border-blue-800 lg:pl-6 flex items-center gap-2">
           TOP 20
         </p>
 
@@ -65,11 +66,10 @@ export default function Ten() {
       </div>
 
       <Swiper
-        modules={[Navigation, Pagination]}
+        modules={[Navigation, Pagination, FreeMode]}
         freeMode={true}
         slidesPerView="auto"
         spaceBetween={45}
-        className=" !pb-13 "
         navigation={{
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
@@ -85,7 +85,7 @@ export default function Ten() {
         }}
       >
         {loading ? (
-          <SwiperSlide className="relative w-full ">
+          <SwiperSlide className="relative !w-auto ">
             <div className="flex w-full justify-evenly">
               {Array.from({ length: 6 }).map((_, index) => (
                 <Skeleton

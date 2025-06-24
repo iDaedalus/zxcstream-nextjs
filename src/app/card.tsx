@@ -1,22 +1,18 @@
 "use client";
 import type { MovieType } from "@/lib/getMovieData";
-import { Play } from "lucide-react";
+
 interface CircularProgressProps {
   value: number;
-  size?: number;
+  className?: string;
   strokeWidth?: number;
 }
 
 function CircularProgress({
   value,
-  size = 35,
-  strokeWidth = 2,
+  className = "w-7 h-7 md:w-9 md:h-9 lg:w-10 lg:h-10",
+  strokeWidth = 3,
 }: CircularProgressProps) {
-  const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
   const progress = (value / 10) * 100; // Convert to percentage (assuming max is 10)
-  const strokeDasharray = circumference;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   // Color based on rating
   const getColor = (rating: number) => {
@@ -26,34 +22,34 @@ function CircularProgress({
   };
 
   return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="transform -rotate-90">
+    <div className={`relative ${className}`}>
+      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
         {/* Background circle */}
         <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
+          cx="18"
+          cy="18"
+          r="16"
           stroke="rgba(255, 255, 255, 0.2)"
           strokeWidth={strokeWidth}
           fill="none"
         />
         {/* Progress circle */}
         <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
+          cx="18"
+          cy="18"
+          r="16"
           stroke={getColor(value)}
           strokeWidth={strokeWidth}
           fill="none"
-          strokeDasharray={strokeDasharray}
-          strokeDashoffset={strokeDashoffset}
+          strokeDasharray="100"
+          strokeDashoffset={100 - progress}
           strokeLinecap="round"
           className="transition-all duration-500 ease-out"
         />
       </svg>
       {/* Rating text */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-white text-xs font-semibold drop-shadow-lg">
+        <span className="text-white text-[0.6rem] md:text-xs font-semibold drop-shadow-lg">
           {value.toFixed(1)}
         </span>
       </div>
@@ -62,6 +58,10 @@ function CircularProgress({
 }
 
 export function MovieCard({ movie }: { movie: MovieType }) {
+  const releaseYear =
+    movie.release_date || movie.first_air_date
+      ? new Date(movie.release_date || movie.first_air_date).getFullYear()
+      : null;
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
     : null;
@@ -69,38 +69,32 @@ export function MovieCard({ movie }: { movie: MovieType }) {
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOxgXTO4Kc4XORUFvZembSzymC7B6RYupJLQ&s";
 
   return (
-    <div className="group cursor-pointer">
-      {/* Image Container */}
-      <div className="relative  mb-3">
-        <div className="w-full h-full overflow-hidden rounded-md">
-          <img
-            src={posterUrl || fallbackUrl}
-            alt={movie.name || movie.title}
-            className="w-full h-full object-cover"
-          />
-
-          {/* Play icon overlay */}
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-            <div className="bg-white/90 rounded-full p-3">
-              <Play className="w-6 h-6 text-black fill-black" />
-            </div>
-          </div>
-        </div>
-
-        {movie.vote_average > 0 && (
-          <div className="absolute -bottom-2 right-1.5">
-            <div className="bg-black/60 rounded-full p-1 backdrop-blur-sm">
-              <CircularProgress value={movie.vote_average} />
-            </div>
-          </div>
-        )}
+    <div className="relative h-full w-full flex flex-col gap-1">
+      <div className="h-full w-full flex justify-center items-center overflow-hidden rounded-md aspect-[9/12.5]">
+        <img
+          src={posterUrl || fallbackUrl}
+          alt={movie.name || movie.title}
+          className="flex-1 object-cover"
+        />
       </div>
 
-      {/* Title and Year */}
-      <div className="space-y-1">
-        <h3 className="font-medium text-base truncate text-gray-500">
+      {movie.vote_average > 0 && (
+        <div className="absolute top-0.5 right-0.5 ">
+          <div className="bg-black/50 rounded-full p-0.5 backdrop-blur-sm">
+            <CircularProgress
+              value={movie.vote_average}
+              className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10"
+            />
+          </div>
+        </div>
+      )}
+      <div className="flex justify-between gap-2">
+        <h1 className="truncate text-xs font-light lg:text-sm">
           {movie.name || movie.title}
-        </h3>
+        </h1>
+        {releaseYear && (
+          <p className=" text-xs font-light lg:text-sm">{releaseYear}</p>
+        )}
       </div>
     </div>
   );

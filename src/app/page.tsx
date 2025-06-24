@@ -12,7 +12,7 @@ export default function Home() {
       <NavBar />
       <SwiperBackdrops />
 
-      <div className="space-y-30">
+      <div className="lg:space-y-20 space-y-10">
         <Ten />
         <ClassicMovies />
         <GenreMovies />
