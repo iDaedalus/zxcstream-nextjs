@@ -641,7 +641,16 @@ export default function MovieWebsite() {
     }
 
     fetchPopularMovies();
-  }, [yearSelected, page, genreParam, companyParam, networkParam]);
+  }, [
+    selectedGenres,
+    selectedCompanies,
+    selectedNetworks,
+    yearSelected,
+    page,
+    media_type,
+
+    apiKey,
+  ]);
 
   return (
     <main>
