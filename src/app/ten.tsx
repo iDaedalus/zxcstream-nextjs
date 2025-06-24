@@ -97,7 +97,7 @@ export default function Ten() {
           1024: {
             slidesPerView: 6,
             slidesPerGroup: 6,
-            spaceBetween: 15,
+            spaceBetween: 20,
           },
         }}
       >
@@ -129,7 +129,9 @@ export default function Ten() {
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                 >
                   <div className="cursor-pointer h-full w-full">
-                    <p className="numbering">{index + 1}</p>
+                    <p className="numbering lg:bottom-6 bottom-2.5">
+                      {index + 1}
+                    </p>
                     <MovieCard movie={meow} />
                   </div>
                 </motion.div>

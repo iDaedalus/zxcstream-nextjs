@@ -98,11 +98,12 @@ body::-webkit-scrollbar,
 }
 .numbering {
   position: relative;
-  line-height: 105px;
+
+  line-height: 102px;
   font-family: "CustomFont";
   font-size: clamp(6rem, 5.8rem + 3.5088vw, 9rem);
   position: absolute;
-  bottom: 0px;
+ 
   z-index: -1;
   letter-spacing: -30px;
   transform: translateX(-80%);
