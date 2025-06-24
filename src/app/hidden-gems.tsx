@@ -77,7 +77,7 @@ export default function RuntimeMovies() {
 
   return (
     <div className="w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
-      <div className="w-full flex items-center justify-between">
+      <div className="w-full flex items-end justify-between">
         <p className="text-foreground text-base lg:text-2xl lg:border-l-4 lg:border-teal-600 lg:pl-6 flex items-center gap-2 font-semibold">
           {getRuntimeLabel()} Picks
         </p>
@@ -101,26 +101,48 @@ export default function RuntimeMovies() {
 
       <Swiper
         modules={[Navigation, Pagination]}
-        freeMode={true}
-        slidesPerView="auto"
-        spaceBetween={45}
+        slidesPerView={6}
+        spaceBetween={15}
         className="!pb-15"
         navigation={{
           nextEl: ".runtime-button-next",
           prevEl: ".runtime-button-prev",
         }}
         breakpoints={{
-          320: { spaceBetween: 28 },
-          1280: { spaceBetween: 45 },
+          320: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+            spaceBetween: 8,
+          },
+          480: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+            spaceBetween: 10,
+          },
+          640: {
+            slidesPerView: 4,
+            slidesPerGroup: 4,
+            spaceBetween: 12,
+          },
+          768: {
+            slidesPerView: 5,
+            slidesPerGroup: 5,
+            spaceBetween: 14,
+          },
+          1024: {
+            slidesPerView: 6,
+            slidesPerGroup: 6,
+            spaceBetween: 15,
+          },
         }}
       >
         {loading ? (
-          <SwiperSlide className="relative w-full">
+          <SwiperSlide className="relative !w-auto">
             <div className="flex w-full justify-evenly">
               {Array.from({ length: 6 }).map((_, index) => (
                 <Skeleton
                   key={index}
-                  className={`ten rounded-sm bg-zinc-500 ${
+                  className={` rounded-sm bg-zinc-500 ${
                     index >= 3 ? "hidden lg:block" : ""
                   }`}
                 />
@@ -129,7 +151,7 @@ export default function RuntimeMovies() {
           </SwiperSlide>
         ) : (
           movies.map((movie, index) => (
-            <SwiperSlide key={movie.id} className="relative ten">
+            <SwiperSlide key={movie.id} className="relative ">
               <Link href={`/movie/${movie.id}`} prefetch={true} scroll={false}>
                 <motion.div
                   className="h-full w-full"
