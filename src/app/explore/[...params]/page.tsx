@@ -536,6 +536,7 @@ export default function MovieWebsite() {
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [yearSelected, setYearSelected] = useState<number | null>(null);
+  const [filtersChanged, setFiltersChanged] = useState(false);
   const path = usePathname();
 
   const [, , media_type, category] = path.split("/");
@@ -621,10 +622,13 @@ export default function MovieWebsite() {
       try {
         const res = await fetch(url);
         const data = await res.json();
-        if (page === 1) {
-          // First page: set featured movie and initialize list
+
+        if (page === 1 || filtersChanged) {
+          // First page or filters changed: replace results
           setMovie(data.results);
+          setFiltersChanged(false);
         } else {
+          // Load more: append results
           setMovie((prev = []) => {
             const existingIds = new Set(prev.map((movie) => movie.id));
             const newMovies =
@@ -648,7 +652,14 @@ export default function MovieWebsite() {
     yearSelected,
     page,
     apiKey,
+    filtersChanged,
   ]);
+
+  useEffect(() => {
+    // Reset page to 1 and mark filters as changed when any filter changes
+    setPage(1);
+    setFiltersChanged(true);
+  }, [selectedGenres, selectedCompanies, selectedNetworks, yearSelected]);
 
   return (
     <main>
