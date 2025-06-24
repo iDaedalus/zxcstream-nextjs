@@ -129,9 +129,7 @@ export default function Ten() {
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                 >
                   <div className="cursor-pointer h-full w-full">
-                    <p className="numbering lg:bottom-6 bottom-2.5">
-                      {index + 1}
-                    </p>
+                    <p className="numbering lg:block hidden">{index + 1}</p>
                     <MovieCard movie={meow} />
                   </div>
                 </motion.div>
