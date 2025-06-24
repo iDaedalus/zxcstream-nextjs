@@ -75,8 +75,8 @@ export default function Ten() {
         }}
         breakpoints={{
           320: {
-            slidesPerView: 2.5,
-            slidesPerGroup: 2.5,
+            slidesPerView: 3,
+            slidesPerGroup: 3,
             spaceBetween: 10,
           },
           480: {
