@@ -66,21 +66,39 @@ export default function Ten() {
       </div>
 
       <Swiper
-        modules={[Navigation, Pagination, FreeMode]}
-        freeMode={true}
-        slidesPerView="auto"
-        spaceBetween={45}
+        modules={[Navigation, Pagination]}
+        slidesPerView={6}
+        spaceBetween={15}
+        className="!pb-15"
         navigation={{
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
+          nextEl: ".runtime-button-next",
+          prevEl: ".runtime-button-prev",
         }}
         breakpoints={{
           320: {
-            spaceBetween: 28,
+            slidesPerView: 2.5,
+            slidesPerGroup: 2.5,
+            spaceBetween: 10,
           },
-
-          1280: {
-            spaceBetween: 45,
+          480: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+            spaceBetween: 10,
+          },
+          640: {
+            slidesPerView: 4,
+            slidesPerGroup: 4,
+            spaceBetween: 12,
+          },
+          768: {
+            slidesPerView: 5,
+            slidesPerGroup: 5,
+            spaceBetween: 14,
+          },
+          1024: {
+            slidesPerView: 6,
+            slidesPerGroup: 6,
+            spaceBetween: 15,
           },
         }}
       >
@@ -99,7 +117,7 @@ export default function Ten() {
           </SwiperSlide>
         ) : (
           weekly.map((meow, index) => (
-            <SwiperSlide key={meow.id} className="relative ten">
+            <SwiperSlide key={meow.id} className="relative ">
               <Link
                 href={`/${meow.media_type}/${meow.id}`}
                 prefetch={true}
