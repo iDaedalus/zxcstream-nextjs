@@ -40,6 +40,7 @@ import {
   Globe,
   MonitorPlay,
   Landmark,
+  Calendar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -530,11 +531,11 @@ export default function MovieWebsite() {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 30 }, (_, i) => currentYear - i);
   const [movie, setMovie] = useState<MovieType[]>();
-  const [year, setYear] = useState(currentYear);
   const [page, setPage] = useState(1);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [yearSelected, setYearSelected] = useState<number | null>(null);
   const path = usePathname();
 
   const [, , media_type, category] = path.split("/");
@@ -551,47 +552,68 @@ export default function MovieWebsite() {
       let url = "";
 
       if (category === "popular") {
-        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&primary_release_year=${year}&language=en-US&page=${page}${
+        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&language=en-US&page=${page}${
           genreParam ? `&with_genres=${genreParam}` : ""
         }${
           media_type === "movie"
             ? companyParam
               ? `&with_companies=${companyParam}`
               : ""
-            : `&with_networks=${networkParam}`
-        }`;
-      } else if (category === "top-rated") {
-        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=vote_average.desc&vote_count.gte=100&primary_release_year=${year}&language=en-US&page=${page}${
-          genreParam ? `&with_genres=${genreParam}` : ""
+            : networkParam
+            ? `&with_networks=${networkParam}`
+            : ""
         }${
           media_type === "movie"
-            ? companyParam
-              ? `&with_companies=${companyParam}`
+            ? yearSelected
+              ? `&primary_release_year=${yearSelected}`
               : ""
-            : `&with_networks=${networkParam}`
+            : yearSelected
+            ? `&first_air_date_year=${yearSelected}`
+            : ""
         }`;
+
         console.log(url);
+      } else if (category === "top-rated") {
+        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=vote_average.desc&vote_count.gte=100&language=en-US&page=${page}${
+          genreParam ? `&with_genres=${genreParam}` : ""
+        }${
+          media_type === "movie"
+            ? companyParam
+              ? `&with_companies=${companyParam}`
+              : ""
+            : networkParam
+            ? `&with_networks=${networkParam}`
+            : ""
+        }${
+          media_type === "movie"
+            ? yearSelected
+              ? `&primary_release_year=${yearSelected}`
+              : ""
+            : yearSelected
+            ? `&first_air_date_year=${yearSelected}`
+            : ""
+        }`;
       } else if (category === "now-playing") {
         url =
           media_type === "movie"
-            ? `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&primary_release_year=${year}&language=en-US&page=${page}${
+            ? `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=en-US&page=${page}${
                 genreParam ? `&with_genres=${genreParam}` : ""
               }`
-            : `https://api.themoviedb.org/3/tv/airing_today?api_key=${apiKey}&first_air_date_year=${year}&language=en-US&page=${page}${
+            : `https://api.themoviedb.org/3/tv/airing_today?api_key=${apiKey}&first_air_date_year=${yearSelected}&language=en-US&page=${page}${
                 genreParam ? `&with_genres=${genreParam}` : ""
               }`;
       } else if (category === "coming-soon") {
         const today = new Date().toISOString().split("T")[0];
         url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=primary_release_date.asc&${
           media_type === "movie"
-            ? `primary_release_date.gte=${today}&primary_release_year=${year}`
-            : `first_air_date.gte=${today}&first_air_date_year=${year}`
+            ? `primary_release_date.gte=${today}`
+            : `first_air_date.gte=${today}&first_air_date_year=${yearSelected}`
         }&language=en-US&page=${page}${
           genreParam ? `&with_genres=${genreParam}` : ""
         }`;
       } else {
         // fallback: show popular
-        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&primary_release_year=${year}&language=en-US&page=${page}${
+        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&language=en-US&page=${page}${
           genreParam ? `&with_genres=${genreParam}` : ""
         }`;
       }
@@ -619,7 +641,7 @@ export default function MovieWebsite() {
     }
 
     fetchPopularMovies();
-  }, [year, page, genreParam, companyParam, networkParam]);
+  }, [yearSelected, page, genreParam, companyParam, networkParam]);
 
   return (
     <main>
@@ -683,151 +705,165 @@ export default function MovieWebsite() {
           <p> {media_type === "movie" ? "Movies" : "TV Shows"}</p>
         </h1>
         <div className="lg:col-start-6 col-start-3">
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button className="lg:gap-5 w-full" variant="outline">
-                <Funnel /> Filter <ChevronsUpDown />
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-              <div className="sr-only">
-                <DrawerHeader>
-                  <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                  <DrawerDescription>
-                    This action cannot be undone.
-                  </DrawerDescription>
-                </DrawerHeader>
-              </div>
+          {category === "popular" || category === "top-rated" ? (
+            <Drawer>
+              <DrawerTrigger asChild>
+                <Button className="lg:gap-5 w-full" variant="outline">
+                  <Funnel /> Filter <ChevronsUpDown />
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <div className="sr-only">
+                  <DrawerHeader>
+                    <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                    <DrawerDescription>
+                      This action cannot be undone.
+                    </DrawerDescription>
+                  </DrawerHeader>
+                </div>
 
-              <Tabs defaultValue="genre" className="w-full p-3 overflow-auto">
-                <TabsList className="w-full">
-                  <TabsTrigger value="genre">Genres</TabsTrigger>
-                  <TabsTrigger value="production">Production</TabsTrigger>
-                  <TabsTrigger value="year">Year</TabsTrigger>
-                </TabsList>
-                <TabsContent value="genre" className="mt-3 ">
-                  <div className="grid lg:grid-cols-3 grid-cols-1 gap-2 ">
-                    {(media_type === "movie" ? movieGenres : tvGenres).map(
-                      (genre) => {
-                        const GenreIcon = genre.icon;
+                <Tabs defaultValue="genre" className="w-full p-3 overflow-auto">
+                  <TabsList className="w-full">
+                    <TabsTrigger value="genre">Genres</TabsTrigger>
+                    <TabsTrigger value="production">Production</TabsTrigger>
+                    <TabsTrigger value="year">Year</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="genre" className="mt-3 ">
+                    <div className="grid lg:grid-cols-3 grid-cols-1 gap-2 ">
+                      {(media_type === "movie" ? movieGenres : tvGenres).map(
+                        (genre) => {
+                          const GenreIcon = genre.icon;
+                          return (
+                            <div
+                              key={genre.id}
+                              className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${genre.color}`}
+                            >
+                              <Checkbox
+                                key={genre.id}
+                                checked={selectedGenres.includes(
+                                  genre.id.toString()
+                                )}
+                                onCheckedChange={() => {
+                                  setSelectedGenres(
+                                    (prev) =>
+                                      prev.includes(genre.id.toString())
+                                        ? prev.filter(
+                                            (g) => g !== genre.id.toString()
+                                          ) // remove
+                                        : [...prev, genre.id.toString()] // add
+                                  );
+                                }}
+                                className="order-1 after:absolute after:inset-0"
+                              />
+
+                              <div className="flex grow items-center gap-3">
+                                <GenreIcon className={`${genre.iconColor}`} />
+                                <div className="grid gap-2">
+                                  <Label className="">{genre.name}</Label>
+                                  <p className="text-muted-foreground text-xs truncate">
+                                    {genre.description}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="production" className="mt-3">
+                    <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
+                      {(media_type === "movie"
+                        ? productionCompanies
+                        : tvNetworks
+                      ).map((company) => {
+                        const GenreIcon = company.icon;
                         return (
                           <div
-                            key={genre.id}
-                            className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${genre.color}`}
+                            key={company.id}
+                            className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${company.color}`}
                           >
                             <Checkbox
-                              key={genre.id}
-                              checked={selectedGenres.includes(
-                                genre.id.toString()
-                              )}
+                              checked={
+                                media_type === "movie"
+                                  ? selectedCompanies.includes(
+                                      company.id.toString()
+                                    )
+                                  : selectedNetworks.includes(
+                                      company.id.toString()
+                                    )
+                              }
                               onCheckedChange={() => {
-                                setSelectedGenres(
-                                  (prev) =>
-                                    prev.includes(genre.id.toString())
-                                      ? prev.filter(
-                                          (g) => g !== genre.id.toString()
-                                        ) // remove
-                                      : [...prev, genre.id.toString()] // add
-                                );
+                                if (media_type === "movie") {
+                                  setSelectedCompanies(
+                                    (prev) =>
+                                      prev.includes(company.id.toString())
+                                        ? prev.filter(
+                                            (g) => g !== company.id.toString()
+                                          ) // remove
+                                        : [...prev, company.id.toString()] // add
+                                  );
+                                } else {
+                                  setSelectedNetworks(
+                                    (prev) =>
+                                      prev.includes(company.id.toString())
+                                        ? prev.filter(
+                                            (g) => g !== company.id.toString()
+                                          ) // remove
+                                        : [...prev, company.id.toString()] // add
+                                  );
+                                }
                               }}
                               className="order-1 after:absolute after:inset-0"
                             />
-
                             <div className="flex grow items-center gap-3">
-                              <GenreIcon className={`${genre.iconColor}`} />
+                              <GenreIcon className={`${company.iconColor}`} />
                               <div className="grid gap-2">
-                                <Label className="">{genre.name}</Label>
+                                <Label className="">{company.name}</Label>
                                 <p className="text-muted-foreground text-xs truncate">
-                                  {genre.description}
+                                  {company.description}
                                 </p>
                               </div>
                             </div>
                           </div>
                         );
-                      }
-                    )}
-                  </div>
-                </TabsContent>
-                <TabsContent value="production" className="mt-3">
-                  <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
-                    {(media_type === "movie"
-                      ? productionCompanies
-                      : tvNetworks
-                    ).map((company) => {
-                      const GenreIcon = company.icon;
-                      return (
-                        <div
-                          key={company.id}
-                          className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${company.color}`}
+                      })}
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="year">
+                    <div className="grid grid-cols-3 gap-3 p-4">
+                      {years.map((yearOption) => (
+                        <Button
+                          key={yearOption}
+                          onClick={() => {
+                            setYearSelected((prev) =>
+                              prev === yearOption ? null : yearOption
+                            );
+                          }}
+                          variant="outline"
+                          className={`text-center !py-3 ${
+                            yearSelected === yearOption
+                              ? "!border-blue-800 text-blue-800 "
+                              : ""
+                          }`}
                         >
-                          <Checkbox
-                            checked={
-                              media_type === "movie"
-                                ? selectedCompanies.includes(
-                                    company.id.toString()
-                                  )
-                                : selectedNetworks.includes(
-                                    company.id.toString()
-                                  )
-                            }
-                            onCheckedChange={() => {
-                              if (media_type === "movie") {
-                                setSelectedCompanies(
-                                  (prev) =>
-                                    prev.includes(company.id.toString())
-                                      ? prev.filter(
-                                          (g) => g !== company.id.toString()
-                                        ) // remove
-                                      : [...prev, company.id.toString()] // add
-                                );
-                              } else {
-                                setSelectedNetworks(
-                                  (prev) =>
-                                    prev.includes(company.id.toString())
-                                      ? prev.filter(
-                                          (g) => g !== company.id.toString()
-                                        ) // remove
-                                      : [...prev, company.id.toString()] // add
-                                );
-                              }
-                            }}
-                            className="order-1 after:absolute after:inset-0"
-                          />
-                          <div className="flex grow items-center gap-3">
-                            <GenreIcon className={`${company.iconColor}`} />
-                            <div className="grid gap-2">
-                              <Label className="">{company.name}</Label>
-                              <p className="text-muted-foreground text-xs truncate">
-                                {company.description}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </TabsContent>
-                <TabsContent value="year">
-                  <div className="grid grid-cols-3">
-                    {years.map((year) => (
-                      <p
-                        key={year}
-                        onClick={() => setYear(year)}
-                        className="text-center p-4"
-                      >
-                        {year}
-                      </p>
-                    ))}
-                  </div>
-                </TabsContent>
-              </Tabs>
-              <DrawerFooter>
-                <DrawerClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DrawerClose>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+                          <Calendar />
+                          {yearOption}
+                        </Button>
+                      ))}
+                    </div>
+                  </TabsContent>
+                </Tabs>
+                <DrawerFooter>
+                  <DrawerClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </DrawerContent>
+            </Drawer>
+          ) : (
+            ""
+          )}
         </div>
         {movie
           ?.filter((_, index) => index !== randomNumber)
