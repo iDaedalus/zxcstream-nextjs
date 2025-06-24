@@ -32,9 +32,14 @@ import {
   GhostIcon as Thriller,
   Swords,
   Mountain,
-  Funnel,
+  FilterIcon as Funnel,
   ChevronsUpDown,
   ChevronRight,
+  BookOpenCheck,
+  Mic,
+  Globe,
+  MonitorPlay,
+  Landmark,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -196,6 +201,136 @@ const movieGenres = [
     iconColor: "text-orange-600",
   },
 ];
+const tvGenres = [
+  {
+    name: "Action & Adventure",
+    id: 10759,
+    icon: Zap,
+    description: "Thrilling TV with action and exploration",
+    color: "text-red-700 border-red-950",
+    iconColor: "text-red-600",
+  },
+  {
+    name: "Animation",
+    id: 16,
+    icon: Palette,
+    description: "Animated shows for all ages",
+    color: "text-purple-700 border-purple-950",
+    iconColor: "text-purple-600",
+  },
+  {
+    name: "Comedy",
+    id: 35,
+    icon: Laugh,
+    description: "TV that makes you laugh",
+    color: "text-yellow-700 border-yellow-950",
+    iconColor: "text-yellow-600",
+  },
+  {
+    name: "Crime",
+    id: 80,
+    icon: Shield,
+    description: "Crime investigations and dramas",
+    color: "text-gray-700 border-gray-950",
+    iconColor: "text-gray-600",
+  },
+  {
+    name: "Documentary",
+    id: 99,
+    icon: FileText,
+    description: "True stories and real-world topics",
+    color: "text-blue-700 border-blue-950",
+    iconColor: "text-blue-600",
+  },
+  {
+    name: "Drama",
+    id: 18,
+    icon: BookOpenCheck,
+    description: "Emotional, character-driven stories",
+    color: "text-indigo-700 border-indigo-950",
+    iconColor: "text-indigo-600",
+  },
+  {
+    name: "Family",
+    id: 10751,
+    icon: Users,
+    description: "TV shows suitable for all ages",
+    color: "text-green-700 border-green-950",
+    iconColor: "text-green-600",
+  },
+  {
+    name: "Kids",
+    id: 10762,
+    icon: Tv,
+    description: "Fun and friendly content for kids",
+    color: "text-teal-700 border-teal-950",
+    iconColor: "text-teal-600",
+  },
+  {
+    name: "Mystery",
+    id: 9648,
+    icon: HelpCircle,
+    description: "Puzzling and intriguing stories",
+    color: "text-slate-700 border-slate-950",
+    iconColor: "text-slate-600",
+  },
+  {
+    name: "News",
+    id: 10763,
+    icon: Mic,
+    description: "Latest happenings and headlines",
+    color: "text-cyan-700 border-cyan-950",
+    iconColor: "text-cyan-600",
+  },
+  {
+    name: "Reality",
+    id: 10764,
+    icon: MonitorPlay,
+    description: "Real-life experiences and drama",
+    color: "text-orange-700 border-orange-950",
+    iconColor: "text-orange-600",
+  },
+  {
+    name: "Sci-Fi & Fantasy",
+    id: 10765,
+    icon: Rocket,
+    description: "Futuristic and magical adventures",
+    color: "text-pink-700 border-pink-950",
+    iconColor: "text-pink-600",
+  },
+  {
+    name: "Soap",
+    id: 10766,
+    icon: Heart,
+    description: "Emotional and romantic TV dramas",
+    color: "text-rose-700 border-rose-950",
+    iconColor: "text-rose-600",
+  },
+  {
+    name: "Talk",
+    id: 10767,
+    icon: Mic,
+    description: "Discussion-based shows and interviews",
+    color: "text-lime-700 border-lime-950",
+    iconColor: "text-lime-600",
+  },
+  {
+    name: "War & Politics",
+    id: 10768,
+    icon: Landmark,
+    description: "Conflicts, diplomacy, and leadership",
+    color: "text-stone-700 border-stone-950",
+    iconColor: "text-stone-600",
+  },
+  {
+    name: "Western",
+    id: 37,
+    icon: Mountain,
+    description: "Wild west TV stories",
+    color: "text-orange-700 border-orange-950",
+    iconColor: "text-orange-600",
+  },
+];
 
 const productionCompanies = [
   {
@@ -295,9 +430,99 @@ const productionCompanies = [
     iconColor: "text-amber-600",
   },
 ];
+const tvNetworks = [
+  {
+    name: "Netflix",
+    id: 213,
+    icon: Tv,
+    description: "Global streaming platform with original series",
+    color: "text-red-700 border-red-950",
+    iconColor: "text-red-600",
+  },
+  {
+    name: "HBO",
+    id: 49,
+    icon: Drama,
+    description: "High-quality premium television network",
+    color: "text-purple-700 border-purple-950",
+    iconColor: "text-purple-600",
+  },
+  {
+    name: "Amazon Prime Video",
+    id: 1024,
+    icon: Rocket,
+    description: "Streaming service with original content",
+    color: "text-yellow-700 border-yellow-950",
+    iconColor: "text-yellow-600",
+  },
+  {
+    name: "Hulu",
+    id: 453,
+    icon: Wand2,
+    description: "Popular US-based streaming network",
+    color: "text-green-700 border-green-950",
+    iconColor: "text-green-600",
+  },
+  {
+    name: "Disney+",
+    id: 2739,
+    icon: Palette,
+    description: "Streaming home of Disney, Marvel & Star Wars",
+    color: "text-pink-700 border-pink-950",
+    iconColor: "text-pink-600",
+  },
+  {
+    name: "Apple TV+",
+    id: 2552,
+    icon: Tv,
+    description: "Apple’s premium original content platform",
+    color: "text-gray-700 border-gray-950",
+    iconColor: "text-gray-600",
+  },
+  {
+    name: "The CW",
+    id: 71,
+    icon: Heart,
+    description: "Teen and fantasy-oriented TV shows",
+    color: "text-rose-700 border-rose-950",
+    iconColor: "text-rose-600",
+  },
+  {
+    name: "BBC One",
+    id: 4,
+    icon: Mic,
+    description: "UK broadcaster with acclaimed dramas",
+    color: "text-blue-700 border-blue-950",
+    iconColor: "text-blue-600",
+  },
+  {
+    name: "NBC",
+    id: 6,
+    icon: Globe,
+    description: "Major US network with long-running series",
+    color: "text-cyan-700 border-cyan-950",
+    iconColor: "text-cyan-600",
+  },
+  {
+    name: "CBS",
+    id: 16,
+    icon: Landmark,
+    description: "Network known for crime, procedural, and sitcoms",
+    color: "text-indigo-700 border-indigo-950",
+    iconColor: "text-indigo-600",
+  },
+  {
+    name: "Paramount+",
+    id: 4330,
+    icon: Mountain,
+    description: "Home of Star Trek and other franchises",
+    color: "text-orange-700 border-orange-950",
+    iconColor: "text-orange-600",
+  },
+];
 
 import { useEffect, useState } from "react";
-import { MovieType } from "@/lib/getMovieData";
+import type { MovieType } from "@/lib/getMovieData";
 import { MovieCard } from "@/app/card";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -307,35 +532,68 @@ export default function MovieWebsite() {
   const [movie, setMovie] = useState<MovieType[]>();
   const [year, setYear] = useState(currentYear);
   const [page, setPage] = useState(1);
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
+  const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const path = usePathname();
+
   const [, , media_type, category] = path.split("/");
   console.log("Type:", media_type); // "movie"
   console.log("Category:", category); // "popular"
   // const randomNumber = Math.floor(Math.random() * 5) + 1;
+  const genreParam = selectedGenres.join(",");
+  const companyParam = selectedCompanies.join(",");
+  const networkParam = selectedNetworks.join(",");
+
   const randomNumber = 0;
   useEffect(() => {
     async function fetchPopularMovies() {
       let url = "";
 
       if (category === "popular") {
-        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&primary_release_year=${year}&language=en-US&page=${page}`;
+        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&primary_release_year=${year}&language=en-US&page=${page}${
+          genreParam ? `&with_genres=${genreParam}` : ""
+        }${
+          media_type === "movie"
+            ? companyParam
+              ? `&with_companies=${companyParam}`
+              : ""
+            : `&with_networks=${networkParam}`
+        }`;
       } else if (category === "top-rated") {
-        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=vote_average.desc&vote_count.gte=100&primary_release_year=${year}&language=en-US&page=${page}`;
+        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=vote_average.desc&vote_count.gte=100&primary_release_year=${year}&language=en-US&page=${page}${
+          genreParam ? `&with_genres=${genreParam}` : ""
+        }${
+          media_type === "movie"
+            ? companyParam
+              ? `&with_companies=${companyParam}`
+              : ""
+            : `&with_networks=${networkParam}`
+        }`;
+        console.log(url);
       } else if (category === "now-playing") {
         url =
           media_type === "movie"
-            ? `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&primary_release_year=${year}&language=en-US&page=${page}`
-            : `https://api.themoviedb.org/3/tv/airing_today?api_key=${apiKey}&first_air_date_year=${year}&language=en-US&page=${page}`;
+            ? `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&primary_release_year=${year}&language=en-US&page=${page}${
+                genreParam ? `&with_genres=${genreParam}` : ""
+              }`
+            : `https://api.themoviedb.org/3/tv/airing_today?api_key=${apiKey}&first_air_date_year=${year}&language=en-US&page=${page}${
+                genreParam ? `&with_genres=${genreParam}` : ""
+              }`;
       } else if (category === "coming-soon") {
         const today = new Date().toISOString().split("T")[0];
         url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=primary_release_date.asc&${
           media_type === "movie"
             ? `primary_release_date.gte=${today}&primary_release_year=${year}`
             : `first_air_date.gte=${today}&first_air_date_year=${year}`
-        }&language=en-US&page=${page}`;
+        }&language=en-US&page=${page}${
+          genreParam ? `&with_genres=${genreParam}` : ""
+        }`;
       } else {
         // fallback: show popular
-        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&primary_release_year=${year}&language=en-US&page=${page}`;
+        url = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&primary_release_year=${year}&language=en-US&page=${page}${
+          genreParam ? `&with_genres=${genreParam}` : ""
+        }`;
       }
 
       try {
@@ -345,8 +603,14 @@ export default function MovieWebsite() {
           // First page: set featured movie and initialize list
           setMovie(data.results);
         } else {
-          // Subsequent pages: append to existing list
-          setMovie((prev = []) => [...prev, ...data?.results]);
+          setMovie((prev = []) => {
+            const existingIds = new Set(prev.map((movie) => movie.id));
+            const newMovies =
+              data?.results?.filter(
+                (movie: MovieType) => !existingIds.has(movie.id)
+              ) || [];
+            return [...prev, ...newMovies];
+          });
         }
       } catch (error) {
         console.error("Failed to fetch popular movies:", error);
@@ -355,7 +619,7 @@ export default function MovieWebsite() {
     }
 
     fetchPopularMovies();
-  }, [year, page]);
+  }, [year, page, genreParam, companyParam, networkParam]);
 
   return (
     <main>
@@ -443,38 +707,92 @@ export default function MovieWebsite() {
                 </TabsList>
                 <TabsContent value="genre" className="mt-3 ">
                   <div className="grid lg:grid-cols-3 grid-cols-1 gap-2 ">
-                    {movieGenres.map((genre) => {
-                      const GenreIcon = genre.icon;
-                      return (
-                        <div
-                          key={genre.id}
-                          className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${genre.color}`}
-                        >
-                          <Checkbox className="order-1 after:absolute after:inset-0" />
-                          <div className="flex grow items-center gap-3">
-                            <GenreIcon className={`${genre.iconColor}`} />
-                            <div className="grid gap-2">
-                              <Label className="">{genre.name}</Label>
-                              <p className="text-muted-foreground text-xs truncate">
-                                {genre.description}
-                              </p>
+                    {(media_type === "movie" ? movieGenres : tvGenres).map(
+                      (genre) => {
+                        const GenreIcon = genre.icon;
+                        return (
+                          <div
+                            key={genre.id}
+                            className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${genre.color}`}
+                          >
+                            <Checkbox
+                              key={genre.id}
+                              checked={selectedGenres.includes(
+                                genre.id.toString()
+                              )}
+                              onCheckedChange={() => {
+                                setSelectedGenres(
+                                  (prev) =>
+                                    prev.includes(genre.id.toString())
+                                      ? prev.filter(
+                                          (g) => g !== genre.id.toString()
+                                        ) // remove
+                                      : [...prev, genre.id.toString()] // add
+                                );
+                              }}
+                              className="order-1 after:absolute after:inset-0"
+                            />
+
+                            <div className="flex grow items-center gap-3">
+                              <GenreIcon className={`${genre.iconColor}`} />
+                              <div className="grid gap-2">
+                                <Label className="">{genre.name}</Label>
+                                <p className="text-muted-foreground text-xs truncate">
+                                  {genre.description}
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      }
+                    )}
                   </div>
                 </TabsContent>
                 <TabsContent value="production" className="mt-3">
                   <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
-                    {productionCompanies.map((company) => {
+                    {(media_type === "movie"
+                      ? productionCompanies
+                      : tvNetworks
+                    ).map((company) => {
                       const GenreIcon = company.icon;
                       return (
                         <div
                           key={company.id}
                           className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${company.color}`}
                         >
-                          <Checkbox className="order-1 after:absolute after:inset-0" />
+                          <Checkbox
+                            checked={
+                              media_type === "movie"
+                                ? selectedCompanies.includes(
+                                    company.id.toString()
+                                  )
+                                : selectedNetworks.includes(
+                                    company.id.toString()
+                                  )
+                            }
+                            onCheckedChange={() => {
+                              if (media_type === "movie") {
+                                setSelectedCompanies(
+                                  (prev) =>
+                                    prev.includes(company.id.toString())
+                                      ? prev.filter(
+                                          (g) => g !== company.id.toString()
+                                        ) // remove
+                                      : [...prev, company.id.toString()] // add
+                                );
+                              } else {
+                                setSelectedNetworks(
+                                  (prev) =>
+                                    prev.includes(company.id.toString())
+                                      ? prev.filter(
+                                          (g) => g !== company.id.toString()
+                                        ) // remove
+                                      : [...prev, company.id.toString()] // add
+                                );
+                              }
+                            }}
+                            className="order-1 after:absolute after:inset-0"
+                          />
                           <div className="flex grow items-center gap-3">
                             <GenreIcon className={`${company.iconColor}`} />
                             <div className="grid gap-2">
