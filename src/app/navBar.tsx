@@ -117,7 +117,7 @@ export default function NavBar() {
         scroll: false,
       });
     } else {
-      router.back();
+      router.push("/");
     }
   };
 
