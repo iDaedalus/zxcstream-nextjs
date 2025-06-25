@@ -113,11 +113,13 @@ export default function NavBar() {
     setInputValue(value);
 
     if (value.trim()) {
-      router.push(`/search?q=${encodeURIComponent(value)}`, {
+      router.replace(`/search?q=${encodeURIComponent(value)}`, {
         scroll: false,
       });
+      setIsLoading(true);
     } else {
-      router.push("/");
+      router.back();
+      setIsLoading(false);
     }
   };
 
@@ -205,10 +207,7 @@ export default function NavBar() {
                 placeholder="Search movies, TV shows..."
                 type="search"
                 value={inputValue}
-                onChange={(e) => {
-                  handleSearchChange(e);
-                  setIsLoading(true);
-                }}
+                onChange={handleSearchChange}
                 autoFocus
               />
               <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
