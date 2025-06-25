@@ -28,6 +28,8 @@ export default function WatchPage() {
       movieLink: `https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=true`,
       tvLink: `https://vidsrc.cc/v2/embed/tv/${id}/${season}/${episode}?autoPlay=true`,
     },
+
+    // movieLink: `https://www.zxcstream.icu/#play?movie/${id}`,
     {
       name: "Server Beta",
       sublabel: "Sandbox required",

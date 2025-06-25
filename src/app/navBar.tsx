@@ -38,6 +38,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRef, useState } from "react";
+import SpotlightBorderWrapper from "@/components/border";
 
 export default function NavBar() {
   const router = useRouter();
@@ -218,16 +219,18 @@ export default function NavBar() {
         </nav>
 
         {showSearch && (
-          <div className="absolute right-20 hidden lg:block">
+          <div className="absolute right-15 hidden lg:block mt-1">
             <div className="relative">
-              <Input
-                className="peer ps-9 pe-9 h-9 backdrop-blur-2xl w-64"
-                placeholder="Search movies, TV shows..."
-                type="search"
-                value={inputValue}
-                onChange={handleSearchChange}
-                autoFocus
-              />
+              <SpotlightBorderWrapper>
+                <Input
+                  className="peer ps-9 pe-9 h-9 backdrop-blur-2xl w-84"
+                  placeholder="Search movies, TV shows..."
+                  type="search"
+                  value={inputValue}
+                  onChange={handleSearchChange}
+                  autoFocus
+                />
+              </SpotlightBorderWrapper>
               <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
                 {isLoading ? (
                   <LoaderCircleIcon
