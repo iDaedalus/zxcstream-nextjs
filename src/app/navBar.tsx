@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 
 export default function NavBar() {
   const router = useRouter();
@@ -107,31 +107,27 @@ export default function NavBar() {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState(false);
-  const hasNavigatedToSearch = useRef(false);
-
+  const hasPushed = useRef(false);
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
 
     if (value.trim()) {
-      if (!hasNavigatedToSearch.current) {
-        // First time navigating to search - use push to create history entry
+      if (!hasPushed.current) {
         router.push(`/search?q=${encodeURIComponent(value)}`, {
           scroll: false,
         });
-        hasNavigatedToSearch.current = true;
+        hasPushed.current = true;
       } else {
-        // Subsequent updates - use replace to avoid multiple history entries
         router.replace(`/search?q=${encodeURIComponent(value)}`, {
           scroll: false,
         });
       }
       setIsLoading(true);
     } else {
-      // Reset the flag when clearing
-      hasNavigatedToSearch.current = false;
       router.back();
       setIsLoading(false);
+      hasPushed.current = false; // reset if input is cleared
     }
   };
 
@@ -238,10 +234,7 @@ export default function NavBar() {
                 className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label="Close search"
                 type="button"
-                onClick={() => {
-                  setShowSearch(false);
-                  hasNavigatedToSearch.current = false;
-                }}
+                onClick={() => setShowSearch(false)}
               >
                 <ArrowRight size={16} aria-hidden="true" />
               </button>
