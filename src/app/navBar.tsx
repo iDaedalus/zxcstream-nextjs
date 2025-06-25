@@ -14,6 +14,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import type React from "react";
+
 import {
   Drawer,
   DrawerContent,
@@ -21,6 +22,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+
 import logo from "@/assets/zxzx.png";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
@@ -109,7 +111,11 @@ export default function NavBar() {
   const [savedPath, setSavedPath] = useState("");
 
   useEffect(() => {
-    if (!pathname.startsWith("/search")) {
+    if (
+      !pathname.startsWith("/search") &&
+      !pathname.startsWith("/movie") &&
+      !pathname.startsWith("/tv")
+    ) {
       setSavedPath(pathname);
     }
   }, [pathname]);
@@ -128,6 +134,7 @@ export default function NavBar() {
       setIsLoading(false);
     }
   };
+  console.log(savedPath);
   return (
     <>
       <header className="absolute z-[111] flex   w-full  justify-center items-center py-5">
