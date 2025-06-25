@@ -113,7 +113,7 @@ export default function NavBar() {
     setInputValue(value);
 
     if (value.trim()) {
-      router.replace(`/search?q=${encodeURIComponent(value)}`, {
+      router.push(`/search?q=${encodeURIComponent(value)}`, {
         scroll: false,
       });
     } else {
