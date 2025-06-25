@@ -23,10 +23,6 @@ import {
   Globe,
   MonitorPlay,
   Landmark,
-  FilterIcon as Funnel,
-  ChevronsUpDown,
-  ChevronRight,
-  Calendar,
 } from "lucide-react";
 
 export const movieGenres = [
