@@ -14,7 +14,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import type React from "react";
-
 import {
   Drawer,
   DrawerContent,
@@ -22,9 +21,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-
 import logo from "@/assets/zxzx.png";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   NavigationMenu,
@@ -37,111 +35,99 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import SpotlightBorderWrapper from "@/components/border";
+const items = [
+  {
+    name: "Movie",
+    logo: Film,
+    tags: [
+      {
+        title: "Popular",
+        link: "explore/movie/popular",
+        icon: Film,
+        details: "Most watched movies right now",
+      },
+      {
+        title: "Top Rated",
+        link: "explore/movie/top-rated",
+        icon: Layers,
+        details: "Highest rated movies by viewers",
+      },
+      {
+        title: "Now Playing",
+        link: "explore/movie/now-playing",
+        icon: TrendingUp,
+        details: "Movies gaining popularity today",
+      },
+      {
+        title: "Coming Soon",
+        link: "explore/movie/coming-soon",
+        icon: LayoutDashboard,
+        details: "Curated sets of related movies",
+      },
+    ],
+  },
+  {
+    name: "TV Show",
+    logo: Tv,
+    tags: [
+      {
+        title: "Popular",
+        link: "explore/tv/popular",
+        icon: Film,
+        details: "Most watched TV shows currently",
+      },
+      {
+        title: "Top Rated",
+        link: "explore/tv/top-rated",
+        icon: TrendingUp,
+        details: "TV shows getting attention now",
+      },
+      {
+        title: "Now Playing",
+        link: "explore/tv/now-playing",
+        icon: Layers,
+        details: "Top rated shows by audiences",
+      },
+      {
+        title: "Coming Soon",
+        link: "explore/tv/coming-soon",
+        icon: LayoutDashboard,
+        details: "Themed TV show bundles",
+      },
+    ],
+  },
+];
 
 export default function NavBar() {
   const router = useRouter();
-  const items = [
-    {
-      name: "Movie",
-      logo: Film,
-      tags: [
-        {
-          title: "Popular",
-          link: "explore/movie/popular",
-          icon: Film,
-          details: "Most watched movies right now",
-        },
-        {
-          title: "Top Rated",
-          link: "explore/movie/top-rated",
-          icon: Layers,
-          details: "Highest rated movies by viewers",
-        },
-        {
-          title: "Now Playing",
-          link: "explore/movie/now-playing",
-          icon: TrendingUp,
-          details: "Movies gaining popularity today",
-        },
-        {
-          title: "Coming Soon",
-          link: "explore/movie/coming-soon",
-          icon: LayoutDashboard,
-          details: "Curated sets of related movies",
-        },
-      ],
-    },
-    {
-      name: "TV Show",
-      logo: Tv,
-      tags: [
-        {
-          title: "Popular",
-          link: "explore/tv/popular",
-          icon: Film,
-          details: "Most watched TV shows currently",
-        },
-        {
-          title: "Top Rated",
-          link: "explore/tv/top-rated",
-          icon: TrendingUp,
-          details: "TV shows getting attention now",
-        },
-        {
-          title: "Now Playing",
-          link: "explore/tv/now-playing",
-          icon: Layers,
-          details: "Top rated shows by audiences",
-        },
-        {
-          title: "Coming Soon",
-          link: "explore/tv/coming-soon",
-          icon: LayoutDashboard,
-          details: "Themed TV show bundles",
-        },
-      ],
-    },
-  ];
-
+  const pathname = usePathname();
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState(false);
-  const hasPushed = useRef(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [savedPath, setSavedPath] = useState("");
+
+  useEffect(() => {
+    if (!pathname.startsWith("/search")) {
+      setSavedPath(pathname);
+    }
+  }, [pathname]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
 
-    // Clear the previous timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
+    if (value.trim()) {
+      router.push(`/search?q=${encodeURIComponent(value)}`, {
+        scroll: false,
+      });
+      setIsLoading(true);
+    } else {
+      router.push(savedPath);
+      setIsLoading(false);
     }
-
-    // Set a new timeout
-    timeoutRef.current = setTimeout(() => {
-      if (value.trim()) {
-        if (!hasPushed.current) {
-          router.push(`/search?q=${encodeURIComponent(value)}`, {
-            scroll: false,
-          });
-          hasPushed.current = true;
-        } else {
-          router.replace(`/search?q=${encodeURIComponent(value)}`, {
-            scroll: false,
-          });
-        }
-        setIsLoading(true);
-      } else {
-        router.back();
-        setIsLoading(false);
-        hasPushed.current = false;
-      }
-    }, 50);
   };
-
   return (
     <>
       <header className="absolute z-[111] flex   w-full  justify-center items-center py-5">
@@ -222,14 +208,16 @@ export default function NavBar() {
           <div className="absolute right-15 hidden lg:block mt-1">
             <div className="relative">
               <SpotlightBorderWrapper>
-                <Input
-                  className="peer ps-9 pe-9 h-9 backdrop-blur-2xl w-84"
-                  placeholder="Search movies, TV shows..."
-                  type="search"
-                  value={inputValue}
-                  onChange={handleSearchChange}
-                  autoFocus
-                />
+                <div className="border rounded-lg p-1">
+                  <Input
+                    className="peer ps-9 pe-9 h-9 backdrop-blur-xl w-84 border-0"
+                    placeholder="Search movies, TV shows..."
+                    type="search"
+                    value={inputValue}
+                    onChange={handleSearchChange}
+                    autoFocus
+                  />
+                </div>
               </SpotlightBorderWrapper>
               <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
                 {isLoading ? (

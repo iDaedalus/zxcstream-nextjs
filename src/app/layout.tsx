@@ -22,11 +22,9 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
   modal,
-  search,
 }: Readonly<{
   children: React.ReactNode;
   modal: React.ReactNode;
-  search: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -40,18 +38,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="fixed z-[-1] inset-0 bg-background bg-[radial-gradient(ellipse_at_top,_rgba(30,64,175,0.3)_0%,_transparent_70%)] p-10"></div>
-          {/* <div className="dark bg-background text-foreground text-sm lg:text-base text-center px-4 py-3">
-            <p className="flex justify-center text-xs">
-              <a href="#" className="group">
-                <span className="me-1 text-base leading-none">🚧</span>
-                This website is still in development. Some features may not work
-                as expected.
-              </a>
-            </p>
-          </div> */}
+
           <NavBar />
           {children}
-          {search}
           {modal}
 
           <Toaster />

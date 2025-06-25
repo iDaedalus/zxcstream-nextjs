@@ -45,8 +45,6 @@ export default function MovieWebsite() {
   const path = usePathname();
 
   const [, , media_type, category] = path.split("/");
-  console.log("Type:", media_type);
-  console.log("Category:", category);
 
   const genreParam = selectedGenres.join(",");
   const companyParam = selectedCompanies.join(",");
@@ -166,8 +164,6 @@ export default function MovieWebsite() {
 
   return (
     <main>
-    
-
       {movie?.[randomNumber] && (
         <div
           key={movie[randomNumber].id}
