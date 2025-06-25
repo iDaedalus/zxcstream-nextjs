@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import useCollection from "@/lib/collectionFetch";
-import EpisodeList from "@/app/@modal/(.)[media_type]/[id]/episode-metadata";
+import EpisodeMetaData from "./episode-metadata";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import EnglishBackdropMeta from "./english-backdrop-meta";
@@ -280,7 +280,7 @@ export default function DrawerMetadata({
                         </PopoverContent>
                       </Popover>
                     </div>
-                    <EpisodeList id={id} season={season} />
+                    <EpisodeMetaData id={id} season={season} />
                   </div>
                 )}
 

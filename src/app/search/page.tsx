@@ -1,4 +1,4 @@
-import InterceptionSearch from "../@modal/(.)search/page";
+import InterceptionSearch from "../@search/(.)search/page";
 export default function Search() {
   return <InterceptionSearch />;
 }
