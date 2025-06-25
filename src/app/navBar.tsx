@@ -19,7 +19,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import logo from "../assets/zxzx.png";
+import logo from "@/assets/zxzx.png";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -100,7 +100,7 @@ export default function NavBar() {
 
   return (
     <>
-      <header className="absolute z-20 hidden lg:flex   w-full  justify-center items-center py-5">
+      <header className="absolute z-20 flex   w-full  justify-center items-center py-5">
         <div className=" lg:absolute lg:left-30 h-8.5 ">
           <img
             className="h-full w-full object-contain z-10"
