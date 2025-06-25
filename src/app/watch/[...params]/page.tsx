@@ -1,4 +1,4 @@
-import WatchPage from "@/app/@modal/(.)watch/[...params]/page";
+import WatchPage from "@/app/@player/(.)watch/[...params]/page";
 
 export default function Watch() {
   return <WatchPage />;
