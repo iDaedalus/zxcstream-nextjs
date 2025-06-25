@@ -1,4 +1,4 @@
-import InterceptModal from "@/app/@details/(.)[media_type]/[id]/page";
+import InterceptModal from "@/app/@modal/(.)[media_type]/[id]/page";
 
 interface PageProps {
   params: Promise<{ media_type: string; id: string }>;

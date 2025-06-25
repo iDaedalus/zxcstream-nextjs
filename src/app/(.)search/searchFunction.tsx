@@ -9,12 +9,13 @@ import Link from "next/link";
 const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 export default function InterceptionSearch() {
   const searchParams = useSearchParams();
-  const query = searchParams.get("q") ?? "";
+  const query = searchParams.get("q");
   const [page, setPage] = useState("1");
   const [result, setResult] = useState<MovieType[]>([]);
   console.log(result);
   useEffect(() => {
     async function fetchQuery() {
+      if (!query) return;
       const endpoint = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
         query
       )}&page=${page}&api_key=${apiKey}&include_adult=false`;
@@ -23,7 +24,7 @@ export default function InterceptionSearch() {
       setResult(data.results);
     }
     fetchQuery();
-  }, [query, page]);
+  }, [query,page]);
   return (
     <div className="fixed   inset-0 z-10 bg-background bg-[radial-gradient(ellipse_at_top,_rgba(30,64,175,0.3)_0%,_transparent_70%)] overflow-hidden">
       <div className="overflow-auto h-screen w-full">
