@@ -1,6 +1,9 @@
 "use client";
 import { SwiperSlide, Swiper } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import { Navigation, Pagination, Controller } from "swiper/modules";
+import "swiper/css/effect-cards";
+import { EffectCards } from "swiper/modules";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFetchTmdb from "./fetchMovie";
 import Link from "next/link";
@@ -8,7 +11,10 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import LazyImage from "./observer";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Play } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 let showlist = [
   { id: "1396", media_type: "tv" },
@@ -27,64 +33,130 @@ showlist = showlist.sort(() => Math.random() - 0.5);
 
 export default function SwiperBackdrops() {
   const { movies, loading } = useFetchTmdb(showlist);
-
+  const [mainSwiper, setMainSwiper] = useState<SwiperType | null>(null);
+  const [thumbSwiper, setThumbSwiper] = useState<SwiperType | null>(null);
+  console.log(movies);
   return (
-    <Swiper
-      modules={[Navigation, Pagination]}
-      navigation
-      pagination={{ type: "progressbar" }}
-      slidesPerView={"auto"}
-      spaceBetween={10}
-      className="relative lg:h-[75vh] h-[50vh] w-full"
-    >
-      {loading ? (
-        <SwiperSlide className="swiper-slide relative overflow-hidden">
-          <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25  z-10 text-white zxc flex flex-col items-end gap-1">
-            <Skeleton className="h-5 w-40 lg:h-8 lg:w-70 bg-zinc-500" />
-            <Skeleton className="h-8 w-54 lg:h-15 lg:w-full  bg-zinc-500" />
-            <Skeleton className="w-[90%] h-4 lg:h-5 lg:w-full  bg-zinc-500" />
-            <Skeleton className="w-1/2 h-4 lg:h-5 lg:w-90  bg-zinc-500" />
-            <Skeleton className="h-6 w-6 lg:h-8 lg:w-8 bg-zinc-500" />
-          </div>
-        </SwiperSlide>
-      ) : (
-        movies.map((meow) => (
-          <SwiperSlide
-            key={meow.id}
-            className="swiper-slide relative overflow-hidden"
-          >
-            <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25  z-10 text-white zxc flex flex-col items-end landing-data ">
-              <p className="text-right text-sm lg:text-base">{meow.tagline}</p>
-              <span className="lg:text-6xl  text-3xl tracking-[-5px] lg:tracking-[-11px] font-bold zxczxc text-right mt-1 mb-2 lg:mt-2 lg:mb-4">
-                {(meow.title || meow.name)?.split(" ").slice(0, -1).join(" ")}{" "}
-                <span className="text-yellow-500">
-                  {(meow.title || meow.name)?.split(" ").pop()}
+    <div className="relative ">
+      <Swiper
+        modules={[Navigation, Pagination, Controller]}
+        controller={{ control: thumbSwiper }}
+        onSwiper={setMainSwiper}
+        navigation
+        pagination={{ type: "progressbar" }}
+        slidesPerView={"auto"}
+        spaceBetween={10}
+        className="relative lg:h-[75vh] h-[50vh] w-full"
+      >
+        {loading ? (
+          <SwiperSlide className="swiper-slide relative overflow-hidden">
+            <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25  z-10 text-white zxc flex flex-col items-end gap-1">
+              <Skeleton className="h-5 w-40 lg:h-8 lg:w-70 bg-zinc-500" />
+              <Skeleton className="h-8 w-54 lg:h-15 lg:w-full  bg-zinc-500" />
+              <Skeleton className="w-[90%] h-4 lg:h-5 lg:w-full  bg-zinc-500" />
+              <Skeleton className="w-1/2 h-4 lg:h-5 lg:w-90  bg-zinc-500" />
+              <Skeleton className="h-6 w-6 lg:h-8 lg:w-8 bg-zinc-500" />
+            </div>
+          </SwiperSlide>
+        ) : (
+          movies.map((meow) => (
+            <SwiperSlide
+              key={meow.id}
+              className="swiper-slide relative overflow-hidden"
+            >
+              <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25  z-10 text-white zxc hidden lg:flex flex-col items-end landing-data ">
+                <p className="text-right text-sm lg:text-base">
+                  {meow.tagline}
+                </p>
+                <span className="lg:text-6xl  text-3xl tracking-[-5px] lg:tracking-[-11px] font-bold zxczxc text-right mt-1 mb-2 lg:mt-2 lg:mb-4">
+                  {(meow.title || meow.name)?.split(" ").slice(0, -1).join(" ")}{" "}
+                  <span className="text-yellow-500">
+                    {(meow.title || meow.name)?.split(" ").pop()}
+                  </span>
                 </span>
-              </span>
 
-              <span className="bg-blue-800/30 border-1 border-blue-800 text-blue-100 mt-3  cursor-pointer">
+                <span className="bg-blue-800/30 border-1 border-blue-800 text-blue-100 mt-3  cursor-pointer">
+                  <Link
+                    href={`/${meow.media_type}/${meow.id}`}
+                    prefetch={true}
+                    scroll={false}
+                  >
+                    <ChevronRight className="h-4 w-4 lg:h-6 lg:w-6" />
+                  </Link>
+                </span>
+              </div>
+
+              <div className="absolute bottom-0 transform translate-x-[50%] right-[50%] lg:hidden grid grid-cols-3 gap-3 z-20 ">
+                <Badge className="w-full" variant="outline">
+                  {meow.media_type === "movie" ? "Movie" : "TV"}
+                </Badge>
+                <Badge className="w-full" variant="outline">
+                  {meow.media_type === "movie"
+                    ? meow.release_date?.slice(0, 4) || "N/A"
+                    : meow.first_air_date?.slice(0, 4) || "N/A"}
+                </Badge>
+                <Badge className="w-full" variant="outline">
+                  {meow.media_type === "movie"
+                    ? meow.release_dates?.results
+                        ?.find((r) => r.iso_3166_1 === "US")
+                        ?.release_dates?.find((r) => r.type === 3)
+                        ?.certification || "NR"
+                    : meow.content_ratings?.results?.find(
+                        (r) => r.iso_3166_1 === "US"
+                      )?.rating || "NR"}
+                </Badge>
                 <Link
                   href={`/${meow.media_type}/${meow.id}`}
+                  className="w-full  col-span-3 "
                   prefetch={true}
-                  scroll={false}
                 >
-                  <ChevronRight className="h-4 w-4 lg:h-6 lg:w-6" />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs w-full"
+                  >
+                    <Play />
+                    Watch Now
+                  </Button>
                 </Link>
-              </span>
-            </div>
+              </div>
 
-            <LazyImage
-              className="absolute h-full w-full object-cover object-[center_40%] mask-gradient backdrop opacity-backrop"
-              src={`https://image.tmdb.org/t/p/original/${meow.backdrop_path}`}
-              alt="Lazy loaded"
-              placeholder="/images/blur.jpg"
-            />
-          </SwiperSlide>
-        ))
-      )}
-      <div className="swiper-pagination"></div>
-      <div className="swiper-button-prev"></div>
-      <div className="swiper-button-next"></div>
-    </Swiper>
+              <LazyImage
+                className="absolute h-full w-full object-cover object-[center_40%] mask-gradient backdrop opacity-backrop blur-[8px] lg:blur-[0]"
+                src={`https://image.tmdb.org/t/p/original/${meow.backdrop_path}`}
+                alt="Lazy loaded"
+                placeholder="/images/blur.jpg"
+              />
+            </SwiperSlide>
+          ))
+        )}
+        <div className="swiper-pagination"></div>
+        <div className="swiper-button-prev"></div>
+        <div className="swiper-button-next"></div>
+      </Swiper>
+      <div className="absolute bottom-20 lg:hidden z-10  w-full h-[31vh] overflow-hidden">
+        <Swiper
+          modules={[Controller, EffectCards]}
+          controller={{ control: mainSwiper }}
+          onSwiper={setThumbSwiper}
+          effect={"cards"}
+          slidesPerView={2}
+          centeredSlides={true}
+          spaceBetween={30}
+          className="h-full w-full"
+        >
+          {movies.map((meow) => (
+            <SwiperSlide key={meow.id} className="swiper-slide relative">
+              <LazyImage
+                className="absolute h-full w-full object-cover object-center rounded-lg "
+                src={`https://image.tmdb.org/t/p/w500/${meow.poster_path}`}
+                alt="Lazy loaded"
+                placeholder="/images/blur.jpg"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </div>
   );
 }

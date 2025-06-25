@@ -51,10 +51,10 @@
 }
 .swiper-button-prev,
 .swiper-button-next {
-  transform: translateY(-50%);
-  top: 50%;
-  background: rgba(0, 21, 255, 0.195);
-  border: 1px solid rgba(0, 21, 255);
+  /* transform: translateY(-50%);
+  top: 50%; */
+  background: rgba(0, 21, 255, 0.078);
+  border: 1px solid rgba(0, 21, 255, 0.142);
 }
 .swiper-button-prev::after,
 .swiper-button-next::after {

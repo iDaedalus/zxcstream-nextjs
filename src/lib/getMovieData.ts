@@ -92,6 +92,23 @@ interface ContentRatingsResultTypes {
   iso_3166_1: string;
   rating: string;
 }
+interface MoveRating {
+  results: string;
+}
+interface ReleaseDates {
+  results: ReleaseDatesResult[];
+}
+interface ReleaseDatesResult {
+  iso_3166_1: string;
+  release_dates: CertificationRelease[];
+}
+interface CertificationRelease {
+  certification: string;
+  iso_3166_1: string;
+  release_date: string;
+  type: number;
+}
+
 export interface MovieType {
   id: string;
   title?: string;
@@ -105,6 +122,8 @@ export interface MovieType {
   overview: string;
   media_type: string;
   runtime: number;
+  release_dates?: ReleaseDates;
+  origin_country: string;
   release_date: string;
   first_air_date: string;
   number_of_seasons: string;

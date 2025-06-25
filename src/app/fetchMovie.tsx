@@ -1,17 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-
-interface MovieType {
-  id: number;
-  title?: string;
-  tagline: string;
-  name?: string;
-  vote_average: number;
-  poster_path: string;
-  backdrop_path: string;
-  overview: string;
-  media_type: string;
-}
+import { MovieType } from "@/lib/getMovieData";
 
 interface showlistType {
   id: string;
@@ -33,7 +22,13 @@ export default function useFetchTmdb(showlist: showlistType[]) {
         const results = await Promise.all(
           showlist.map(async (item) => {
             const res = await fetch(
-              `https://api.themoviedb.org/3/${item.media_type}/${item.id}?api_key=${apiKey}&language=en-US`
+              `https://api.themoviedb.org/3/${item.media_type}/${
+                item.id
+              }?api_key=${apiKey}&language=en-US${
+                item.media_type === "movie"
+                  ? "&append_to_response=release_dates"
+                  : "&append_to_response=content_ratings"
+              }`
             );
             const data = await res.json();
             return {

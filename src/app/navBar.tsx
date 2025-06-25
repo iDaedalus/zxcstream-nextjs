@@ -137,7 +137,7 @@ export default function NavBar() {
   console.log(savedPath);
   return (
     <>
-      <header className="absolute z-[111] flex   w-full  justify-center items-center py-5">
+      <header className="absolute z-[111] flex   w-full  justify-center items-center lg:py-5 py-3">
         <div className=" lg:absolute lg:left-30 h-8.5 ">
           <img
             className="h-full w-full object-contain z-10"

@@ -43,8 +43,8 @@ export default function Ten() {
   }, [media]);
   return (
     <div className="w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
-      <div className="w-full flex items-center justify-between">
-        <p className="text-foreground relative font-semibold text-base lg:text-2xl  lg:border-l-4 lg:border-blue-800 lg:pl-6 flex items-center gap-2">
+      <div className="w-full flex items-end justify-between">
+        <p className="text-foreground relative font-semibold text-[1.1rem] lg:text-2xl  lg:border-l-4 border-l-2 border-blue-800 lg:pl-6 pl-3 flex items-center gap-2">
           TOP 20
         </p>
 
