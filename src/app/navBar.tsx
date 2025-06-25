@@ -9,7 +9,11 @@ import {
   Layers,
   TrendingUp,
   LayoutDashboard,
+  SearchIcon,
+  LoaderCircleIcon,
+  ArrowRight,
 } from "lucide-react";
+import type React from "react";
 
 import {
   Drawer,
@@ -32,6 +36,8 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 export default function NavBar() {
   const router = useRouter();
@@ -98,13 +104,30 @@ export default function NavBar() {
     },
   ];
 
+  const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showSearch, setShowSearch] = useState(false);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+
+    if (value.trim()) {
+      router.replace(`/search?q=${encodeURIComponent(value)}`, {
+        scroll: false,
+      });
+    } else {
+      router.back();
+    }
+  };
+
   return (
     <>
-      <header className="absolute z-20 flex   w-full  justify-center items-center py-5">
+      <header className="absolute z-[999] flex   w-full  justify-center items-center py-5">
         <div className=" lg:absolute lg:left-30 h-8.5 ">
           <img
             className="h-full w-full object-contain z-10"
-            src={logo.src}
+            src={logo.src || "/placeholder.svg"}
             alt=""
           />
         </div>
@@ -156,8 +179,11 @@ export default function NavBar() {
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  <span className="flex items-center gap-3">
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  onClick={() => setShowSearch(!showSearch)}
+                >
+                  <span className="flex items-center gap-3 cursor-pointer">
                     <Search size={16} /> Search
                   </span>
                 </NavigationMenuLink>
@@ -170,6 +196,44 @@ export default function NavBar() {
             <Settings size={16} />
           </div>
         </nav>
+
+        {showSearch && (
+          <div className="absolute right-20 hidden lg:block">
+            <div className="relative">
+              <Input
+                className="peer ps-9 pe-9 h-9 backdrop-blur-2xl w-64"
+                placeholder="Search movies, TV shows..."
+                type="search"
+                value={inputValue}
+                onChange={(e) => {
+                  handleSearchChange(e);
+                  setIsLoading(true);
+                }}
+                autoFocus
+              />
+              <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                {isLoading ? (
+                  <LoaderCircleIcon
+                    className="animate-spin"
+                    size={16}
+                    role="status"
+                    aria-label="Loading..."
+                  />
+                ) : (
+                  <SearchIcon size={16} aria-hidden="true" />
+                )}
+              </div>
+              <button
+                className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="Close search"
+                type="button"
+                onClick={() => setShowSearch(false)}
+              >
+                <ArrowRight size={16} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        )}
       </header>
 
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border">

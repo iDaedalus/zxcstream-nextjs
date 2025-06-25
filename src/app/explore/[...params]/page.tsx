@@ -24,7 +24,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import NavBar from "@/app/navBar";
 
 const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
@@ -167,7 +166,7 @@ export default function MovieWebsite() {
 
   return (
     <main>
-      <NavBar />
+    
 
       {movie?.[randomNumber] && (
         <div

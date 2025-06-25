@@ -9,9 +9,7 @@ import Footer from "./footer";
 export default function Home() {
   return (
     <main>
-      <NavBar />
       <SwiperBackdrops />
-
       <div className="lg:space-y-20 space-y-10">
         <Ten />
         <ClassicMovies />

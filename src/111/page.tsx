@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, ChevronsUpDown, Film, Tv } from "lucide-react";
 import { Spotlight, SpotLightItem } from "@/components/ui/main-spotlight";
 import SpotlightBorderWrapper from "@/components/border";
-import NavBar from "../navBar";
+import NavBar from "../app/navBar";
 import { useRouter } from "next/navigation";
 import useSearch from "@/lib/useSearch";
 import {
@@ -29,7 +29,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { MovieCard } from "../card";
+import { MovieCard } from "../app/card";
 
 export default function Dash() {
   const [open, setOpen] = useState(false);
