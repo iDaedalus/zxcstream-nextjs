@@ -92,9 +92,7 @@ interface ContentRatingsResultTypes {
   iso_3166_1: string;
   rating: string;
 }
-interface MoveRating {
-  results: string;
-}
+
 interface ReleaseDates {
   results: ReleaseDatesResult[];
 }
