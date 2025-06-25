@@ -173,7 +173,7 @@ export default function MovieWebsite() {
           key={movie[randomNumber].id}
           className="relative lg:h-[75vh] h-[50vh] overflow-hidden "
         >
-          <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25  z-20 text-white zxc flex flex-col items-end  ">
+          <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25  z-10 text-white zxc flex flex-col items-end  ">
             <p className="text-right text-sm lg:text-base">
               {movie?.[randomNumber].tagline}
             </p>

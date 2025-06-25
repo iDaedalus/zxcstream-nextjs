@@ -108,32 +108,42 @@ export default function NavBar() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState(false);
   const hasPushed = useRef(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
 
-    if (value.trim()) {
-      if (!hasPushed.current) {
-        router.push(`/search?q=${encodeURIComponent(value)}`, {
-          scroll: false,
-        });
-        hasPushed.current = true;
-      } else {
-        router.replace(`/search?q=${encodeURIComponent(value)}`, {
-          scroll: false,
-        });
-      }
-      setIsLoading(true);
-    } else {
-      router.back();
-      setIsLoading(false);
-      hasPushed.current = false; // reset if input is cleared
+    // Clear the previous timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
+
+    // Set a new timeout
+    timeoutRef.current = setTimeout(() => {
+      if (value.trim()) {
+        if (!hasPushed.current) {
+          router.push(`/search?q=${encodeURIComponent(value)}`, {
+            scroll: false,
+          });
+          hasPushed.current = true;
+        } else {
+          router.replace(`/search?q=${encodeURIComponent(value)}`, {
+            scroll: false,
+          });
+        }
+        setIsLoading(true);
+      } else {
+        router.back();
+        setIsLoading(false);
+        hasPushed.current = false;
+      }
+    }, 50);
   };
 
   return (
     <>
-      <header className="absolute z-[999] flex   w-full  justify-center items-center py-5">
+      <header className="absolute z-[111] flex   w-full  justify-center items-center py-5">
         <div className=" lg:absolute lg:left-30 h-8.5 ">
           <img
             className="h-full w-full object-contain z-10"
@@ -244,6 +254,41 @@ export default function NavBar() {
       </header>
 
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border">
+        {showSearch && (
+          <div className=" block lg:hidden p-2">
+            <div className="relative">
+              <Input
+                className="peer ps-9 pe-9  backdrop-blur-2xl w-full"
+                placeholder="Search..."
+                type="search"
+                value={inputValue}
+                onChange={handleSearchChange}
+                autoFocus
+              />
+              <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                {isLoading ? (
+                  <LoaderCircleIcon
+                    className="animate-spin"
+                    size={16}
+                    role="status"
+                    aria-label="Loading..."
+                  />
+                ) : (
+                  <SearchIcon size={16} aria-hidden="true" />
+                )}
+              </div>
+              <button
+                className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="Close search"
+                type="button"
+                onClick={() => setShowSearch(false)}
+              >
+                <ArrowRight size={16} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="flex items-center justify-around px-2 py-2">
           {/* Home */}
           <Link
@@ -342,13 +387,13 @@ export default function NavBar() {
           </Link>
 
           {/* Search */}
-          <Link
-            href="/search"
+          <div
+            onClick={() => setShowSearch(!showSearch)}
             className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-accent transition-colors"
           >
             <Search size={20} className="text-foreground" />
             <span className="text-xs text-muted-foreground">Search</span>
-          </Link>
+          </div>
         </div>
       </div>
     </>
