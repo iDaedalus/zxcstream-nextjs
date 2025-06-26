@@ -76,6 +76,7 @@ export default function ReusableCategory({
 }: ReusableCategoryProps) {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 30 }, (_, i) => currentYear - i);
+  console.log(page);
   return (
     <main>
       <div className="relative lg:h-[75vh] h-[50vh] w-full ">
@@ -446,7 +447,6 @@ export default function ReusableCategory({
           {loadingMore ? "Loading..." : "Load More"}
           <Plus />
         </Button>
-
         {loadingMore && (
           <>
             {Array.from({ length: 6 }).map((_, index) => (
