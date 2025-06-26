@@ -27,6 +27,7 @@ import type { MovieType } from "@/lib/getMovieData";
 import { MovieCard } from "@/app/card";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 export default function MovieWebsite() {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 30 }, (_, i) => currentYear - i);
@@ -161,9 +162,9 @@ export default function MovieWebsite() {
       {movie?.[randomNumber] && (
         <div
           key={movie[randomNumber].id}
-          className="relative lg:h-[75vh] h-[50vh] overflow-hidden"
+          className="relative lg:h-[75vh] h-[50vh] overflow-hidden flex justify-center"
         >
-          <div className="absolute w-[calc(100%-40px)] lg:w-1/2 lg:bottom-15 bottom-8 right-5 lg:right-25 z-10 text-white  flex flex-col items-end">
+          <div className="absolute w-[calc(100%-40px)] lg:w-1/2 lg:bottom-15 bottom-8 right-5 lg:right-25 z-10 text-white  lg:flex flex-col items-end hidden">
             <span className="lg:text-5xl text-2xl tracking-[-3px] lg:tracking-[-9px] font-bold zxczxc text-right mt-1 mb-2 lg:mt-2 lg:mb-4 drop-shadow-lg drop-shadow-black/50 truncate w-full">
               {(movie[randomNumber].title || movie[randomNumber].name)
                 ?.split(" ")
@@ -195,9 +196,47 @@ export default function MovieWebsite() {
               </Button>
             </Link>
           </div>
+          <div className="absolute bottom-20 lg:hidden z-10 overflow-hidden  pointer-events-none w-[170px]">
+            <img
+              className=" h-full w-full object-cover object-center rounded-lg "
+              src={`https://image.tmdb.org/t/p/w500/${movie[randomNumber].poster_path}`}
+              alt="Lazy loaded"
+            />
+          </div>
+
+          <div className="absolute bottom-0 transform translate-x-[50%] right-[50%] lg:hidden grid grid-cols-3 gap-3 z-20">
+            <Badge className="w-full" variant="outline">
+              {movie[randomNumber].media_type === "movie" ? "Movie" : "TV"}
+            </Badge>
+            <Badge className="w-full" variant="outline">
+              {movie[randomNumber].media_type === "movie"
+                ? movie[randomNumber].release_date?.slice(0, 4) || "N/A"
+                : movie[randomNumber].first_air_date?.slice(0, 4) || "N/A"}
+            </Badge>
+            <Badge className="w-full" variant="outline">
+              {movie[randomNumber].media_type === "movie"
+                ? movie[randomNumber].release_dates?.results
+                    ?.find((r) => r.iso_3166_1 === "US")
+                    ?.release_dates?.find((r) => r.type === 3)?.certification ||
+                  "NR"
+                : movie[randomNumber].content_ratings?.results?.find(
+                    (r) => r.iso_3166_1 === "US"
+                  )?.rating || "NR"}
+            </Badge>
+            <Link
+              href={`/${media_type}/${movie[randomNumber].id}`}
+              className="w-full  col-span-3 "
+              prefetch={true}
+            >
+              <Button variant="outline" size="sm" className="text-xs w-full">
+                <Play />
+                Watch Now
+              </Button>
+            </Link>
+          </div>
 
           <img
-            className="abslute h-full w-full object-cover object-[center_40%] mask-gradient opacity-70"
+            className="abslute h-full w-full object-cover object-[center_40%] mask-gradient opacity-70 blur-[2px] lg:blur-[0]"
             src={`https://image.tmdb.org/t/p/original/${movie[randomNumber].backdrop_path}`}
             alt="Lazy loaded"
           />
