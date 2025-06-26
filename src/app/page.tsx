@@ -5,7 +5,6 @@ import Ten from "./ten";
 import ClassicMovies from "./classic";
 import GenreMovies from "./genre";
 import RuntimeMovies from "./hidden-gems";
-import Footer from "./footer";
 export default function Home() {
   return (
     <main>
@@ -15,7 +14,7 @@ export default function Home() {
         <ClassicMovies />
         <GenreMovies />
         <RuntimeMovies />
-        <Footer />
+       
       </div>
     </main>
   );

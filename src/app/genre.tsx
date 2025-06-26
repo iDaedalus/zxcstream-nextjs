@@ -77,10 +77,9 @@ export default function GenreMovies() {
         modules={[Navigation, Pagination]}
         slidesPerView={6}
         spaceBetween={15}
-        className="!pb-15"
         navigation={{
-          nextEl: ".runtime-button-next",
-          prevEl: ".runtime-button-prev",
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
         }}
         breakpoints={{
           320: {
@@ -141,8 +140,8 @@ export default function GenreMovies() {
             </SwiperSlide>
           ))
         )}
-        <div className="genre-button-prev swiper-button-prev"></div>
-        <div className="genre-button-next swiper-button-next"></div>
+        <div className="swiper-button-prev"></div>
+        <div className="swiper-button-next"></div>
       </Swiper>
     </div>
   );

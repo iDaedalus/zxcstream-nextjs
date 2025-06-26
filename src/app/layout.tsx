@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/app/navBar";
+import Footer from "./footer";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -42,9 +43,9 @@ export default function RootLayout({
 
           <NavBar />
           {children}
-         
-          {modal}
 
+          {modal}
+          <Footer />
           <Toaster />
         </ThemeProvider>
       </body>

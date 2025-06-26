@@ -10,6 +10,7 @@ import Link from "next/link";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+
 import LazyImage from "./observer";
 import { ChevronRight, Play } from "lucide-react";
 import { useState } from "react";
@@ -42,10 +43,13 @@ export default function SwiperBackdrops() {
         modules={[Navigation, Pagination, Controller]}
         controller={{ control: thumbSwiper }}
         onSwiper={setMainSwiper}
-        navigation
         pagination={{ type: "progressbar" }}
         slidesPerView={"auto"}
         spaceBetween={10}
+        navigation={{
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        }}
         className="relative lg:h-[75vh] h-[50vh] w-full"
       >
         {loading ? (
@@ -142,7 +146,7 @@ export default function SwiperBackdrops() {
         <div className="swiper-button-prev"></div>
         <div className="swiper-button-next"></div>
       </Swiper>
-      <div className="absolute bottom-20 lg:hidden z-10  w-full overflow-hidden">
+      <div className="absolute bottom-20 lg:hidden z-10  w-full overflow-hidde  pointer-events-none">
         <Swiper
           modules={[Controller, EffectCards, Autoplay]}
           controller={{ control: mainSwiper }}

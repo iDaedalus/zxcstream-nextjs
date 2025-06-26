@@ -102,11 +102,12 @@ const items = [
     ],
   },
 ];
-
+console.log(items[1].name);
 export default function NavBar() {
   const router = useRouter();
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  const [openA, setOpenA] = useState(false);
+  const [openB, setOpenB] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -136,7 +137,7 @@ export default function NavBar() {
       setIsLoading(false);
     }
   };
-  console.log(savedPath);
+
   return (
     <>
       <header className="absolute z-[111] flex   w-full  justify-center items-center lg:py-5 py-3">
@@ -305,7 +306,7 @@ export default function NavBar() {
           </Link>
 
           {/* Movies Drawer */}
-          <Drawer open={open} onOpenChange={setOpen}>
+          <Drawer open={openA} onOpenChange={setOpenA}>
             <DrawerTrigger asChild>
               <Button
                 variant="ghost"
@@ -327,7 +328,7 @@ export default function NavBar() {
                   <Link
                     href={`/${tag.link}`}
                     prefetch={true}
-                    onClick={() => setOpen(false)}
+                    onClick={() => setOpenA(false)}
                     key={tag.title}
                     className="w-full"
                   >
@@ -350,7 +351,7 @@ export default function NavBar() {
           </Drawer>
 
           {/* TV Shows Drawer */}
-          <Drawer open={open} onOpenChange={setOpen}>
+          <Drawer open={openB} onOpenChange={setOpenB}>
             <DrawerTrigger asChild>
               <Button
                 variant="ghost"
@@ -372,7 +373,7 @@ export default function NavBar() {
                   <Link
                     href={`/${tag.link}`}
                     prefetch={true}
-                    onClick={() => setOpen(false)}
+                    onClick={() => setOpenB(false)}
                     key={tag.title}
                     className="w-full"
                   >
