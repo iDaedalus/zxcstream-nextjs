@@ -45,7 +45,7 @@ export default function ClassicMovies() {
       media={decade}
       setMedia={setDecade}
       mediaOptions={decadeOptions}
-      numbering={true}
+      numbering={false}
     />
   );
 }

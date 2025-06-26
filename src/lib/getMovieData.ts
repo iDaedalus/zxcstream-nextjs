@@ -77,6 +77,7 @@ interface LogoTypes {
 }
 interface ImageTypes {
   file_path: string;
+  iso_639_1: string;
 }
 interface CreditsTypes {
   cast: CastsTypes[];

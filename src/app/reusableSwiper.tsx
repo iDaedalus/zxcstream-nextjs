@@ -1,6 +1,6 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import { Navigation, Pagination, Keyboard } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -56,9 +56,13 @@ export default function ReusableSwiper({
       </div>
 
       <Swiper
-        modules={[Navigation, Pagination]}
+        modules={[Navigation, Pagination, Keyboard]}
         slidesPerView={6}
         spaceBetween={15}
+        keyboard={{
+          enabled: true,
+          onlyInViewport: true,
+        }}
         navigation={{
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",

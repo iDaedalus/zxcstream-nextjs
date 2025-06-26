@@ -16,12 +16,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { usePathname } from "next/navigation";
-import {
-  FilterIcon as Funnel,
-  ChevronsUpDown,
-  ChevronRight,
-  Calendar,
-} from "lucide-react";
+import { Calendar, Play, Info, ListFilter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -50,7 +45,7 @@ export default function MovieWebsite() {
   const companyParam = selectedCompanies.join(",");
   const networkParam = selectedNetworks.join(",");
 
-  const randomNumber = 0;
+  const randomNumber = 5;
   useEffect(() => {
     async function fetchPopularMovies() {
       let url = "";
@@ -157,55 +152,60 @@ export default function MovieWebsite() {
   ]);
 
   useEffect(() => {
-    // Reset page to 1 and mark filters as changed when any filter changes
     setPage(1);
     setFiltersChanged(true);
   }, [selectedGenres, selectedCompanies, selectedNetworks, yearSelected]);
-
+  console.log(movie);
   return (
     <main>
       {movie?.[randomNumber] && (
         <div
           key={movie[randomNumber].id}
-          className="relative lg:h-[75vh] h-[50vh] overflow-hidden "
+          className="relative lg:h-[75vh] h-[50vh] overflow-hidden"
         >
-          <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25  z-10 text-white zxc flex flex-col items-end  ">
-            <p className="text-right text-sm lg:text-base">
-              {movie?.[randomNumber].tagline}
-            </p>
-            <span className="lg:text-6xl  text-3xl tracking-[-5px] lg:tracking-[-11px] font-bold zxczxc text-right mt-1 mb-2 lg:mt-2 lg:mb-4">
-              {(movie?.[randomNumber].title || movie?.[randomNumber].name)
+          <div className="absolute w-[calc(100%-40px)] lg:w-1/2 lg:bottom-15 bottom-8 right-5 lg:right-25 z-10 text-white  flex flex-col items-end">
+            <span className="lg:text-5xl text-2xl tracking-[-3px] lg:tracking-[-9px] font-bold zxczxc text-right mt-1 mb-2 lg:mt-2 lg:mb-4 drop-shadow-lg drop-shadow-black/50 truncate w-full">
+              {(movie[randomNumber].title || movie[randomNumber].name)
                 ?.split(" ")
                 .slice(0, -1)
                 .join(" ")}{" "}
               <span className="text-yellow-500">
-                {(movie?.[randomNumber].title || movie?.[randomNumber].name)
+                {(movie[randomNumber].title || movie[randomNumber].name)
                   ?.split(" ")
                   .pop()}
               </span>
             </span>
-
-            <span className="bg-blue-800/30 border-1 border-blue-800 text-blue-100 mt-3  cursor-pointer">
-              <Link
-                href={`/movie/${movie?.[randomNumber].id}`}
-                prefetch={true}
-                scroll={false}
-              >
-                <ChevronRight className="h-4 w-4 lg:h-6 lg:w-6" />
-              </Link>
-            </span>
+            <p className="text-right text-xs lg:text-base line-clamp-3 zxc">
+              {/* Replace tagline with overview */}
+              {movie[randomNumber].overview || "No description available."}
+            </p>
+            <Link
+              href={`/movie/${movie?.[randomNumber].id}`}
+              prefetch={true}
+              scroll={false}
+              className="mt-5 space-x-2"
+            >
+              <Button variant="secondary">
+                <Play />
+                Play Now
+              </Button>
+              <Button variant="outline">
+                <Info />
+                More Info
+              </Button>
+            </Link>
           </div>
+
           <img
-            className="abslute h-full w-full object-cover object-[center_40%] mask-gradient backdrop opacity-backrop"
+            className="abslute h-full w-full object-cover object-[center_40%] mask-gradient opacity-70"
             src={`https://image.tmdb.org/t/p/original/${movie[randomNumber].backdrop_path}`}
             alt="Lazy loaded"
           />
         </div>
       )}
 
-      {/* The rest of the movies - inside a centered, narrower container */}
-      <div className="lg:w-[90%] w-full mx-auto grid lg:grid-cols-6 grid-cols-3 lg:gap-5 gap-2 lg:p-4 p-2">
-        <h1 className="col-start-1 lg:text-2xl text-xl whitespace-nowrap  font-bold flex gap-2">
+      <div className="flex items-center justify-between lg:w-[90%] mx-auto lg:p-4 p-2">
+        <h1 className="lg:text-2xl text-xl whitespace-nowrap  font-bold flex gap-2">
           <p>
             {" "}
             {category === "popular"
@@ -221,12 +221,12 @@ export default function MovieWebsite() {
 
           <p> {media_type === "movie" ? "Movies" : "TV Shows"}</p>
         </h1>
-        <div className="lg:col-start-6 col-start-3">
+        <div>
           {category === "popular" || category === "top-rated" ? (
             <Drawer>
               <DrawerTrigger asChild>
-                <Button className="lg:gap-5 w-full" variant="outline">
-                  <Funnel /> Filter <ChevronsUpDown />
+                <Button variant="outline">
+                  <ListFilter /> <span className="">Filter</span>
                 </Button>
               </DrawerTrigger>
               <DrawerContent>
@@ -384,6 +384,8 @@ export default function MovieWebsite() {
             ""
           )}
         </div>
+      </div>
+      <div className="lg:w-[90%] w-full mx-auto grid lg:grid-cols-6 grid-cols-3 lg:gap-5 gap-2 lg:p-4 p-2">
         {movie
           ?.filter((_, index) => index !== randomNumber)
           .map((data) => (

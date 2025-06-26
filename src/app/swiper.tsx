@@ -12,12 +12,13 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import LazyImage from "./observer";
-import { ChevronRight, Play } from "lucide-react";
+import { Info, Play } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 let showlist = [
+  { id: "94605", media_type: "tv" },
   { id: "1396", media_type: "tv" },
   { id: "823219", media_type: "movie" },
   { id: "1064213", media_type: "movie" },
@@ -76,26 +77,39 @@ export default function SwiperBackdrops() {
               key={meow.id}
               className="swiper-slide relative overflow-hidden"
             >
-              <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25  z-10 text-white zxc hidden lg:flex flex-col items-end landing-data ">
-                <p className="text-right text-sm lg:text-base">
-                  {meow.tagline}
-                </p>
-                <span className="lg:text-6xl  text-3xl tracking-[-5px] lg:tracking-[-11px] font-bold zxczxc text-right mt-1 mb-2 lg:mt-2 lg:mb-4">
+              <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25 z-10 text-white   flex-col items-end hidden lg:flex">
+                <span className="lg:text-5xl text-3xl tracking-[-5px] lg:tracking-[-9px] font-bold zxczxc text-right mt-1 mb-2 lg:mt-2 lg:mb-4 drop-shadow-lg drop-shadow-black/50">
                   {(meow.title || meow.name)?.split(" ").slice(0, -1).join(" ")}{" "}
                   <span className="text-yellow-500">
                     {(meow.title || meow.name)?.split(" ").pop()}
                   </span>
                 </span>
-
-                <span className="bg-blue-800/30 border-1 border-blue-800 text-blue-100 mt-3  cursor-pointer">
+                <p className="text-right text-xs lg:text-base line-clamp-3 zxc">
+                  {/* Replace tagline with overview */}
+                  {meow.overview || "No description available."}
+                </p>
+                <div className="mt-5 space-x-2">
                   <Link
-                    href={`/${meow.media_type}/${meow.id}`}
+                    href={`watch/${meow.media_type}/${meow.id}`}
                     prefetch={true}
                     scroll={false}
                   >
-                    <ChevronRight className="h-4 w-4 lg:h-6 lg:w-6" />
+                    <Button variant="secondary">
+                      <Play />
+                      Play Now
+                    </Button>
                   </Link>
-                </span>
+                  <Link
+                    href={`${meow.media_type}/${meow.id}`}
+                    prefetch={true}
+                    scroll={false}
+                  >
+                    <Button variant="outline">
+                      <Info />
+                      More Info
+                    </Button>
+                  </Link>
+                </div>
               </div>
 
               <div className="absolute bottom-0 transform translate-x-[50%] right-[50%] lg:hidden grid grid-cols-3 gap-3 z-20 landingBtns">
