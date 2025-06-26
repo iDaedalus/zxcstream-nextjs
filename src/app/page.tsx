@@ -11,10 +11,9 @@ export default function Home() {
       <SwiperBackdrops />
       <div className="lg:space-y-20 space-y-10">
         <Ten />
-        {/* <ClassicMovies />
+        <ClassicMovies />
         <GenreMovies />
-        <RuntimeMovies /> */}
-       
+        <RuntimeMovies />
       </div>
     </main>
   );

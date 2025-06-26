@@ -36,7 +36,7 @@ export default function ReusableSwiper({
     <div className="relative w-[95%] lg:w-[90%] mt-8 mx-auto space-y-4">
       <div className="w-full flex items-end justify-between">
         <p className="text-foreground relative font-semibold text-[1.1rem] lg:text-2xl  lg:border-l-4 border-l-2 border-blue-800 lg:pl-6 pl-3 flex items-center gap-2">
-          {title}
+          {title} {mediaOptions.find((meow) => meow.value === media)?.label}
         </p>
 
         <div className="relative zxc">
