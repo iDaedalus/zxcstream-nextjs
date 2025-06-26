@@ -87,6 +87,14 @@
   transition-delay: 0.5s;
 }
 
+.swiper-pagination-bullet {
+  background-color: rgb(255, 255, 255) !important;
+  width: 2% !important;
+  min-width: 15px;
+  height: 4px !important;
+  border-radius: 10px !important;
+}
+
 .swiper-slide.swiper-slide-active .landing-data {
   opacity: 1;
   filter: blur(0);

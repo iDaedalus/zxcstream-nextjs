@@ -146,7 +146,7 @@ export default function SwiperBackdrops() {
         <div className="swiper-button-prev"></div>
         <div className="swiper-button-next"></div>
       </Swiper>
-      <div className="absolute bottom-20 lg:hidden z-10  w-full overflow-hidde  pointer-events-none">
+      <div className="absolute bottom-20 lg:hidden z-10  w-full overflow-hidden  pointer-events-none">
         <Swiper
           modules={[Controller, EffectCards, Autoplay]}
           controller={{ control: mainSwiper }}

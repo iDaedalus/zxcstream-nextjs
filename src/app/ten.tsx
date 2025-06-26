@@ -72,6 +72,12 @@ export default function Ten() {
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
         }}
+        pagination={{
+          el: ".swiper-pagination", // Link to the pagination container
+          clickable: true, // Make bullets clickable
+          type: "bullets", // Set bullet type
+        }}
+        className="lg:!pb-10 !pb-8"
         breakpoints={{
           320: {
             slidesPerView: 3,
@@ -136,6 +142,7 @@ export default function Ten() {
             </SwiperSlide>
           ))
         )}
+        <div className="swiper-pagination"></div>
         <div className="swiper-button-prev"></div>
         <div className="swiper-button-next"></div>
       </Swiper>
