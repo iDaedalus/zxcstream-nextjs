@@ -92,6 +92,17 @@
   filter: blur(0);
 }
 
+.landingBtns {
+  opacity: 0;
+  filter: blur(5px);
+  transition: opacity 0.5s ease-out;
+  transition-delay: 0.5s;
+}
+.swiper-slide.swiper-slide-active .landingBtns {
+  opacity: 1;
+  filter: blur(0);
+}
+
 body::-webkit-scrollbar,
 .meow::-webkit-scrollbar {
   display: none;

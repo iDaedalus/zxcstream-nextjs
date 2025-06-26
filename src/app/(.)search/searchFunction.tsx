@@ -28,8 +28,8 @@ export default function InterceptionSearch() {
   return (
     <div className="fixed   inset-0 z-10 bg-background bg-[radial-gradient(ellipse_at_top,_rgba(30,64,175,0.3)_0%,_transparent_70%)] overflow-hidden">
       <div className="overflow-auto h-screen w-full">
-        <div className="grid lg:grid-cols-6 grid-cols-3 w-[90%] mx-auto lg:gap-5 gap-3 lg:mt-30  mt-20">
-          <span className="col-start-1 lg:col-start-1 flex items-end space-x-2">
+        <div className="grid lg:grid-cols-6 grid-cols-3 w-[90%] mx-auto lg:gap-5 gap-2 lg:mt-30  mt-15">
+          <span className="col-start-1 lg:col-start-1 flex items-end space-x-2 whitespace-nowrap">
             <p> Search results for:</p>
             <p className="text-blue-800"> {query}</p>
           </span>

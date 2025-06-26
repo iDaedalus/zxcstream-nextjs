@@ -105,6 +105,7 @@ const items = [
 export default function NavBar() {
   const router = useRouter();
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -298,7 +299,7 @@ export default function NavBar() {
           </Link>
 
           {/* Movies Drawer */}
-          <Drawer>
+          <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
               <Button
                 variant="ghost"
@@ -317,27 +318,33 @@ export default function NavBar() {
               </DrawerHeader>
               <div className="grid grid-cols-1 gap-3 p-4 pb-8">
                 {items[0].tags.map((tag) => (
-                  <Button
+                  <Link
+                    href={`/${tag.link}`}
+                    prefetch={true}
+                    onClick={() => setOpen(false)}
                     key={tag.title}
-                    variant="outline"
-                    className="flex flex-col items-start gap-2 h-auto p-4"
-                    onClick={() => router.push(`/${tag.link}`)}
+                    className="w-full"
                   >
-                    <div className="flex items-center gap-2">
-                      <tag.icon size={16} />
-                      <span className="font-medium">{tag.title}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground text-left">
-                      {tag.details}
-                    </span>
-                  </Button>
+                    <Button
+                      variant="outline"
+                      className="flex flex-col items-start gap-2 h-auto p-4 w-full"
+                    >
+                      <div className="flex items-center gap-2">
+                        <tag.icon size={16} />
+                        <span className="font-medium">{tag.title}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground text-left">
+                        {tag.details}
+                      </span>
+                    </Button>
+                  </Link>
                 ))}
               </div>
             </DrawerContent>
           </Drawer>
 
           {/* TV Shows Drawer */}
-          <Drawer>
+          <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
               <Button
                 variant="ghost"
@@ -356,20 +363,26 @@ export default function NavBar() {
               </DrawerHeader>
               <div className="grid grid-cols-1 gap-3 p-4 pb-8">
                 {items[1].tags.map((tag) => (
-                  <Button
+                  <Link
+                    href={`/${tag.link}`}
+                    prefetch={true}
+                    onClick={() => setOpen(false)}
                     key={tag.title}
-                    variant="outline"
-                    className="flex flex-col items-start gap-2 h-auto p-4"
-                    onClick={() => router.push(`/${tag.link}`)}
+                    className="w-full"
                   >
-                    <div className="flex items-center gap-2">
-                      <tag.icon size={16} />
-                      <span className="font-medium">{tag.title}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground text-left">
-                      {tag.details}
-                    </span>
-                  </Button>
+                    <Button
+                      variant="outline"
+                      className="flex flex-col items-start gap-2 h-auto p-4 w-full"
+                    >
+                      <div className="flex items-center gap-2">
+                        <tag.icon size={16} />
+                        <span className="font-medium">{tag.title}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground text-left">
+                        {tag.details}
+                      </span>
+                    </Button>
+                  </Link>
                 ))}
               </div>
             </DrawerContent>
@@ -379,6 +392,7 @@ export default function NavBar() {
           <Link
             href="/watchlist"
             className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-accent transition-colors"
+            prefetch={true}
           >
             <LayoutGrid size={20} className="text-foreground" />
             <span className="text-xs text-muted-foreground">Watchlist</span>
