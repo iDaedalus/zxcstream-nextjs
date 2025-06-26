@@ -114,7 +114,7 @@ export default function ReusableSwiper({
           data.map((meow, index) => (
             <SwiperSlide key={meow.id} className="relative">
               <Link
-                href={`/${meow.media_type}/${meow.id}`}
+                href={`/${meow.media_type || "movie"}/${meow.id}`}
                 prefetch={true}
                 scroll={false}
               >
