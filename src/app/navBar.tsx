@@ -39,6 +39,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import SpotlightBorderWrapper from "@/components/border";
+import { ModeToggle } from "./darkmode-toggle";
 const items = [
   {
     name: "Movie",
@@ -139,7 +140,7 @@ export default function NavBar() {
   return (
     <>
       <header className="absolute z-[111] flex   w-full  justify-center items-center lg:py-5 py-3">
-        <div className=" lg:absolute lg:left-30 h-8.5 ">
+        <div className=" lg:absolute lg:left-20 h-8.5 ">
           <img
             className="h-full w-full object-contain z-10"
             src={logo.src || "/placeholder.svg"}
@@ -147,7 +148,7 @@ export default function NavBar() {
           />
         </div>
 
-        <nav className="hidden lg:flex items-center text-gray-300">
+        <nav className="hidden lg:flex items-center">
           <Link href="/" className="px-5 hover:bg-blue-800">
             <HomeIcon size={16} />
           </Link>
@@ -212,44 +213,49 @@ export default function NavBar() {
           </div>
         </nav>
 
-        {showSearch && (
-          <div className="absolute right-15 hidden lg:block mt-1">
-            <div className="relative">
-              <SpotlightBorderWrapper>
-                <div className="border rounded-lg p-1">
-                  <Input
-                    className="peer ps-9 pe-9 h-9 backdrop-blur-xl w-84 border-0"
-                    placeholder="Search movies, TV shows..."
-                    type="search"
-                    value={inputValue}
-                    onChange={handleSearchChange}
-                    autoFocus
-                  />
+        <div className="absolute lg:right-20 right-3 flex items-center gap-3">
+          {showSearch && (
+            <div className=" hidden lg:block mt-1">
+              <div className="relative">
+                <SpotlightBorderWrapper>
+                  <div className="border rounded-lg p-1">
+                    <Input
+                      className="peer ps-9 pe-9 h-9 backdrop-blur-xl w-84 border-0"
+                      placeholder="Search movies, TV shows..."
+                      type="search"
+                      value={inputValue}
+                      onChange={handleSearchChange}
+                      autoFocus
+                    />
+                  </div>
+                </SpotlightBorderWrapper>
+                <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                  {isLoading ? (
+                    <LoaderCircleIcon
+                      className="animate-spin"
+                      size={16}
+                      role="status"
+                      aria-label="Loading..."
+                    />
+                  ) : (
+                    <SearchIcon size={16} aria-hidden="true" />
+                  )}
                 </div>
-              </SpotlightBorderWrapper>
-              <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                {isLoading ? (
-                  <LoaderCircleIcon
-                    className="animate-spin"
-                    size={16}
-                    role="status"
-                    aria-label="Loading..."
-                  />
-                ) : (
-                  <SearchIcon size={16} aria-hidden="true" />
-                )}
+                <button
+                  className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                  aria-label="Close search"
+                  type="button"
+                  onClick={() => setShowSearch(false)}
+                >
+                  <ArrowRight size={16} aria-hidden="true" />
+                </button>
               </div>
-              <button
-                className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label="Close search"
-                type="button"
-                onClick={() => setShowSearch(false)}
-              >
-                <ArrowRight size={16} aria-hidden="true" />
-              </button>
             </div>
+          )}
+          <div>
+            <ModeToggle />
           </div>
-        )}
+        </div>
       </header>
 
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border">
