@@ -1,5 +1,6 @@
 "use client";
 import type { MovieType } from "@/lib/getMovieData";
+import { WatchlistButton } from "./watchlist/watchlist-button";
 import Image from "next/image";
 
 interface CircularProgressProps {
@@ -81,8 +82,19 @@ export function MovieCard({ movie }: { movie: MovieType }) {
         />
       </div>
 
+      <div className="absolute top-0.5 right-0.5 ">
+        <WatchlistButton
+          movie={{
+            id: movie.id,
+            media_type: "movie",
+            poster_path: movie.poster_path ?? null,
+            backdrop_path: movie.backdrop_path ?? null,
+          }}
+        />
+      </div>
+
       {movie.vote_average > 0 && (
-        <div className="absolute top-0.5 right-0.5 ">
+        <div className="absolute top-0.5 left-0.5 ">
           <div className="bg-black/50 rounded-full p-0.5 backdrop-blur-sm">
             <CircularProgress
               value={movie.vote_average}

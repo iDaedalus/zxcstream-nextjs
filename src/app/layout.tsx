@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -23,10 +23,10 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
   modal,
-
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;  searchModal: React.ReactNode;
+  modal: React.ReactNode;
+  searchModal: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>

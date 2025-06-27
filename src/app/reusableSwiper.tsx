@@ -5,7 +5,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { MovieType } from "@/lib/getMovieData";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { MovieCard } from "./card";
 import { Button } from "@/components/ui/button";
@@ -117,25 +116,19 @@ export default function ReusableSwiper({
         ) : (
           data.map((meow, index) => (
             <SwiperSlide key={meow.id} className="relative">
-              <Link
-                href={`/${meow.media_type || "movie"}/${meow.id}`}
-                prefetch={true}
-                scroll={false}
+              <motion.div
+                className="h-full w-full"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
               >
-                <motion.div
-                  className="h-full w-full"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
-                >
-                  <div className="cursor-pointer h-full w-full">
-                    {numbering && (
-                      <p className="numbering lg:block hidden">{index + 1}</p>
-                    )}
-                    <MovieCard movie={meow} />
-                  </div>
-                </motion.div>
-              </Link>
+                <div className="cursor-pointer h-full w-full">
+                  {numbering && (
+                    <p className="numbering lg:block hidden">{index + 1}</p>
+                  )}
+                  <MovieCard movie={meow} />
+                </div>
+              </motion.div>
             </SwiperSlide>
           ))
         )}
