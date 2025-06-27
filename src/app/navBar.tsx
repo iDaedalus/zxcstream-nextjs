@@ -129,7 +129,7 @@ export default function NavBar() {
 
   return (
     <>
-      <header className="absolute z-[111] flex   w-full  justify-center items-center lg:py-5 py-3">
+      <header className="absolute z-20 flex   w-full  justify-center items-center lg:py-5 py-3">
         <div className=" lg:absolute lg:left-20 h-8.5 ">
           <img
             className="h-full w-full object-contain z-10"
@@ -257,7 +257,7 @@ export default function NavBar() {
         </div>
       </header>
 
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-20 bg-background/95 backdrop-blur-sm border-t border-border">
         {showSearch && (
           <div className=" block lg:hidden p-2">
             <div className="relative">
