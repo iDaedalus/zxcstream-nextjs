@@ -20,8 +20,6 @@ import {
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import GetMovieData from "@/lib/getMovieData";
-
-import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import TmdbEpisode from "./tmdb-episode";
 
