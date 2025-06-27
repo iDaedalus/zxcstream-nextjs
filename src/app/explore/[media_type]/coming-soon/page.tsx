@@ -24,6 +24,10 @@ export default function ComingSoon() {
   const networkParam = selectedNetworks.join(",");
   const today = new Date().toISOString().split("T")[0];
   useEffect(() => {
+    setMovies([]);
+    setPage(1);
+  }, [genreParam, companyParam, networkParam, yearSelected]);
+  useEffect(() => {
     async function fetchPopular() {
       try {
         if (page === 1) {

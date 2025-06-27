@@ -26,7 +26,7 @@ export default function PopularMovies() {
   useEffect(() => {
     setMovies([]);
     setPage(1);
-  }, [genreParam, companyParam, networkParam, yearSelected, media_type]);
+  }, [genreParam, companyParam, networkParam, yearSelected]);
   useEffect(() => {
     async function fetchPopular() {
       try {

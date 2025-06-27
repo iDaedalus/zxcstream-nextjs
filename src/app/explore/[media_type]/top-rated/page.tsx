@@ -22,7 +22,10 @@ export default function TopRatedMovies() {
   const genreParam = selectedGenres.join(",");
   const companyParam = selectedCompanies.join(",");
   const networkParam = selectedNetworks.join(",");
-
+  useEffect(() => {
+    setMovies([]);
+    setPage(1);
+  }, [genreParam, companyParam, networkParam, yearSelected]);
   useEffect(() => {
     async function fetchPopular() {
       try {
