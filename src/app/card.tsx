@@ -1,5 +1,6 @@
 "use client";
 import type { MovieType } from "@/lib/getMovieData";
+import Image from "next/image";
 
 interface CircularProgressProps {
   value: number;
@@ -70,11 +71,13 @@ export function MovieCard({ movie }: { movie: MovieType }) {
 
   return (
     <div className="relative h-full w-full flex flex-col gap-1">
-      <div className="h-full w-full flex justify-center items-center overflow-hidden rounded-md aspect-[9/12.5]">
-        <img
+      <div className=" h-full w-full aspect-[9/12.5] overflow-hidden flex justify-center items-center  rounded-md">
+        <Image
           src={posterUrl || fallbackUrl}
-          alt={movie.name || movie.title}
-          className="flex-1 object-cover"
+          alt={movie.name || movie.title || "poster"}
+          width={300}
+          height={417}
+          className=" object-cover"
         />
       </div>
 

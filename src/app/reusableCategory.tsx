@@ -17,21 +17,22 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import {
-  BoxIcon,
   Calendar,
-  HouseIcon,
+  CalendarIcon,
+  FactoryIcon,
   Info,
   ListFilter,
   LoaderCircleIcon,
-  PanelsTopLeftIcon,
   Play,
   Plus,
+  TagsIcon,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 interface ReusableCategoryProps {
   data: MovieType[];
   loading: boolean;
@@ -111,7 +112,7 @@ export default function ReusableCategory({
                 </p>
                 <div className="mt-5 space-x-2">
                   <Link
-                    href={`watch/${meow.media_type}/${meow.id}`}
+                    href={`/watch/${media_type}/${meow.id}`}
                     prefetch={true}
                     scroll={false}
                   >
@@ -121,7 +122,7 @@ export default function ReusableCategory({
                     </Button>
                   </Link>
                   <Link
-                    href={`${meow.media_type}/${meow.id}`}
+                    href={`/${media_type}/${meow.id}`}
                     prefetch={true}
                     scroll={false}
                   >
@@ -168,10 +169,12 @@ export default function ReusableCategory({
                 </Link>
               </div>
 
-              <img
-                className="absolute h-full w-full object-cover object-[center_40%] mask-gradient blur-[2px] lg:blur-[0]"
+              <Image
+                className="absolute h-full w-full object-cover object-[center_40%] mask-gradient blur-[2px] lg:blur-[0] opacity-70"
                 src={`https://image.tmdb.org/t/p/original/${meow.backdrop_path}`}
                 alt="Lazy loaded"
+                priority
+                fill
               />
             </div>
           ))
@@ -200,262 +203,281 @@ export default function ReusableCategory({
         </div>
       </div>
 
-      <div className="flex items-center justify-between lg:w-[90%] mx-auto lg:p-4 p-2">
-        <h1 className="lg:text-2xl text-xl whitespace-nowrap  font-bold flex gap-2">
-          <p>{category}</p>
-          <p> {media_type === "movie" ? "Movies" : "TV Shows"}</p>
-        </h1>
-        <div>
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button variant="outline">
-                <ListFilter /> <span className="">Filter</span>
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-              <div className="sr-only">
-                <DrawerHeader>
-                  <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                  <DrawerDescription>
-                    This action cannot be undone.
-                  </DrawerDescription>
-                </DrawerHeader>
-              </div>
+      <div className="space-y-4 mt-9   w-[95%] lg:w-[90%] mx-auto">
+        <div className="flex items-center justify-between w-full ">
+          <h1 className="lg:text-2xl text-xl whitespace-nowrap  font-bold flex gap-2">
+            <p className="text-foreground relative font-semibold text-[1.1rem] lg:text-2xl  lg:border-l-4 border-l-2 border-blue-800 lg:pl-6 pl-3 flex items-center gap-2">
+              {category}&nbsp;{media_type === "movie" ? "Movies" : "TV Shows"}
+            </p>
+          </h1>
+          <div>
+            <Drawer>
+              <DrawerTrigger asChild>
+                <Button variant="outline">
+                  <ListFilter />{" "}
+                  <span className="">
+                    Filter{" "}
+                    <Badge
+                      className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                      variant="secondary"
+                    >
+                      {selectedGenres.length +
+                        (media_type === "movie"
+                          ? selectedCompanies.length
+                          : selectedNetworks.length) +
+                        (yearSelected ? 1 : 0)}
+                    </Badge>
+                  </span>
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <div className="sr-only">
+                  <DrawerHeader>
+                    <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                    <DrawerDescription>
+                      This action cannot be undone.
+                    </DrawerDescription>
+                  </DrawerHeader>
+                </div>
 
-              <Tabs defaultValue="genre" className="w-full p-3 overflow-auto">
-                <TabsList className="before:bg-border relative mb-3 h-auto w-full gap-0.5 bg-transparent p-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px">
-                  <TabsTrigger
-                    value="genre"
-                    className="bg-muted overflow-hidden rounded-b-none border-x border-t py-2 data-[state=active]:z-10 data-[state=active]:shadow-none"
-                  >
-                    <HouseIcon
-                      className="-ms-0.5 me-1.5 opacity-60"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                    Genres
-                    <Badge
-                      className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
-                      variant="secondary"
+                <Tabs defaultValue="genre" className="w-full p-3 overflow-auto">
+                  <TabsList className="before:bg-border relative mb-3 h-auto w-full gap-0.5 bg-transparent p-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px">
+                    <TabsTrigger
+                      value="genre"
+                      className="bg-muted overflow-hidden rounded-b-none border-x border-t py-2 data-[state=active]:z-10 data-[state=active]:shadow-none"
                     >
-                      {selectedGenres.length}
-                    </Badge>
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="production"
-                    className="bg-muted overflow-hidden rounded-b-none border-x border-t py-2 data-[state=active]:z-10 data-[state=active]:shadow-none"
-                  >
-                    <PanelsTopLeftIcon
-                      className="-ms-0.5 me-1.5 opacity-60"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                    {media_type === "movie" ? "Companies" : "Networks"}
-                    <Badge
-                      className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
-                      variant="secondary"
-                    >
-                      {media_type === "movie"
-                        ? selectedCompanies.length
-                        : selectedNetworks.length}
-                    </Badge>
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="year"
-                    className="bg-muted overflow-hidden rounded-b-none border-x border-t py-2 data-[state=active]:z-10 data-[state=active]:shadow-none"
-                  >
-                    <BoxIcon
-                      className="-ms-0.5 me-1.5 opacity-60"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                    Year
-                    <Badge
-                      className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
-                      variant="secondary"
-                    >
-                      {yearSelected ? 1 : 0}
-                    </Badge>
-                  </TabsTrigger>
-                </TabsList>
+                      <TagsIcon
+                        className="-ms-0.5 me-1.5 opacity-60 hidden lg:block"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                      Genres
+                      <Badge
+                        className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                        variant="secondary"
+                      >
+                        {selectedGenres.length}
+                      </Badge>
+                    </TabsTrigger>
 
-                <TabsContent value="genre" className="mt-3 ">
-                  <div className="grid lg:grid-cols-3 grid-cols-1 gap-2 ">
-                    {(media_type === "movie" ? movieGenres : tvGenres).map(
-                      (genre) => {
-                        const GenreIcon = genre.icon;
+                    <TabsTrigger
+                      value="production"
+                      className="bg-muted overflow-hidden rounded-b-none border-x border-t py-2 data-[state=active]:z-10 data-[state=active]:shadow-none"
+                    >
+                      <FactoryIcon
+                        className="-ms-0.5 me-1.5 opacity-60 hidden lg:block"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                      {media_type === "movie" ? "Studios" : "Networks"}
+                      <Badge
+                        className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                        variant="secondary"
+                      >
+                        {media_type === "movie"
+                          ? selectedCompanies.length
+                          : selectedNetworks.length}
+                      </Badge>
+                    </TabsTrigger>
+
+                    <TabsTrigger
+                      value="year"
+                      className="bg-muted overflow-hidden rounded-b-none border-x border-t py-2 data-[state=active]:z-10 data-[state=active]:shadow-none"
+                    >
+                      <CalendarIcon
+                        className="-ms-0.5 me-1.5 opacity-60 hidden lg:block"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                      Year
+                      <Badge
+                        className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                        variant="secondary"
+                      >
+                        {yearSelected ? 1 : 0}
+                      </Badge>
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="genre" className="mt-3 ">
+                    <div className="grid lg:grid-cols-3 grid-cols-1 gap-2 ">
+                      {(media_type === "movie" ? movieGenres : tvGenres).map(
+                        (genre) => {
+                          const GenreIcon = genre.icon;
+                          return (
+                            <div
+                              key={genre.id}
+                              className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${genre.color}`}
+                            >
+                              <Checkbox
+                                key={genre.id}
+                                checked={selectedGenres.includes(
+                                  genre.id.toString()
+                                )}
+                                onCheckedChange={() => {
+                                  setSelectedGenres(
+                                    (prev) =>
+                                      prev.includes(genre.id.toString())
+                                        ? prev.filter(
+                                            (g) => g !== genre.id.toString()
+                                          ) // remove
+                                        : [...prev, genre.id.toString()] // add
+                                  );
+                                }}
+                                className="order-1 after:absolute after:inset-0"
+                              />
+
+                              <div className="flex grow items-center gap-3">
+                                <GenreIcon className={`${genre.iconColor}`} />
+                                <div className="grid gap-2">
+                                  <Label className="">{genre.name}</Label>
+                                  <p className="text-muted-foreground text-xs truncate">
+                                    {genre.description}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="production" className="mt-3">
+                    <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
+                      {(media_type === "movie"
+                        ? productionCompanies
+                        : tvNetworks
+                      ).map((company) => {
+                        const GenreIcon = company.icon;
                         return (
                           <div
-                            key={genre.id}
-                            className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${genre.color}`}
+                            key={company.id}
+                            className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${company.color}`}
                           >
                             <Checkbox
-                              key={genre.id}
-                              checked={selectedGenres.includes(
-                                genre.id.toString()
-                              )}
+                              checked={
+                                media_type === "movie"
+                                  ? selectedCompanies.includes(
+                                      company.id.toString()
+                                    )
+                                  : selectedNetworks.includes(
+                                      company.id.toString()
+                                    )
+                              }
                               onCheckedChange={() => {
-                                setSelectedGenres(
-                                  (prev) =>
-                                    prev.includes(genre.id.toString())
-                                      ? prev.filter(
-                                          (g) => g !== genre.id.toString()
-                                        ) // remove
-                                      : [...prev, genre.id.toString()] // add
-                                );
+                                if (media_type === "movie") {
+                                  setSelectedCompanies(
+                                    (prev) =>
+                                      prev.includes(company.id.toString())
+                                        ? prev.filter(
+                                            (g) => g !== company.id.toString()
+                                          ) // remove
+                                        : [...prev, company.id.toString()] // add
+                                  );
+                                } else {
+                                  setSelectedNetworks(
+                                    (prev) =>
+                                      prev.includes(company.id.toString())
+                                        ? prev.filter(
+                                            (g) => g !== company.id.toString()
+                                          ) // remove
+                                        : [...prev, company.id.toString()] // add
+                                  );
+                                }
                               }}
                               className="order-1 after:absolute after:inset-0"
                             />
-
                             <div className="flex grow items-center gap-3">
-                              <GenreIcon className={`${genre.iconColor}`} />
+                              <GenreIcon className={`${company.iconColor}`} />
                               <div className="grid gap-2">
-                                <Label className="">{genre.name}</Label>
+                                <Label className="">{company.name}</Label>
                                 <p className="text-muted-foreground text-xs truncate">
-                                  {genre.description}
+                                  {company.description}
                                 </p>
                               </div>
                             </div>
                           </div>
                         );
-                      }
-                    )}
-                  </div>
-                </TabsContent>
-                <TabsContent value="production" className="mt-3">
-                  <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
-                    {(media_type === "movie"
-                      ? productionCompanies
-                      : tvNetworks
-                    ).map((company) => {
-                      const GenreIcon = company.icon;
-                      return (
-                        <div
-                          key={company.id}
-                          className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${company.color}`}
+                      })}
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="year">
+                    <div className="grid grid-cols-3 gap-3 p-4">
+                      {years.map((yearOption) => (
+                        <Button
+                          key={yearOption}
+                          onClick={() => {
+                            setYearSelected((prev) =>
+                              prev === yearOption ? null : yearOption
+                            );
+                          }}
+                          variant="outline"
+                          className={`text-center !py-3 ${
+                            yearSelected === yearOption
+                              ? "!border-blue-800 text-blue-800 "
+                              : ""
+                          }`}
                         >
-                          <Checkbox
-                            checked={
-                              media_type === "movie"
-                                ? selectedCompanies.includes(
-                                    company.id.toString()
-                                  )
-                                : selectedNetworks.includes(
-                                    company.id.toString()
-                                  )
-                            }
-                            onCheckedChange={() => {
-                              if (media_type === "movie") {
-                                setSelectedCompanies(
-                                  (prev) =>
-                                    prev.includes(company.id.toString())
-                                      ? prev.filter(
-                                          (g) => g !== company.id.toString()
-                                        ) // remove
-                                      : [...prev, company.id.toString()] // add
-                                );
-                              } else {
-                                setSelectedNetworks(
-                                  (prev) =>
-                                    prev.includes(company.id.toString())
-                                      ? prev.filter(
-                                          (g) => g !== company.id.toString()
-                                        ) // remove
-                                      : [...prev, company.id.toString()] // add
-                                );
-                              }
-                            }}
-                            className="order-1 after:absolute after:inset-0"
-                          />
-                          <div className="flex grow items-center gap-3">
-                            <GenreIcon className={`${company.iconColor}`} />
-                            <div className="grid gap-2">
-                              <Label className="">{company.name}</Label>
-                              <p className="text-muted-foreground text-xs truncate">
-                                {company.description}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </TabsContent>
-                <TabsContent value="year">
-                  <div className="grid grid-cols-3 gap-3 p-4">
-                    {years.map((yearOption) => (
-                      <Button
-                        key={yearOption}
-                        onClick={() => {
-                          setYearSelected((prev) =>
-                            prev === yearOption ? null : yearOption
-                          );
-                        }}
-                        variant="outline"
-                        className={`text-center !py-3 ${
-                          yearSelected === yearOption
-                            ? "!border-blue-800 text-blue-800 "
-                            : ""
-                        }`}
-                      >
-                        <Calendar />
-                        {yearOption}
-                      </Button>
-                    ))}
-                  </div>
-                </TabsContent>
-              </Tabs>
-              <DrawerFooter>
-                <DrawerClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DrawerClose>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+                          <Calendar />
+                          {yearOption}
+                        </Button>
+                      ))}
+                    </div>
+                  </TabsContent>
+                </Tabs>
+                <DrawerFooter>
+                  <DrawerClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </DrawerContent>
+            </Drawer>
+          </div>
+        </div>
+        <div className="grid lg:grid-cols-6 grid-cols-3 w-full lg:gap-5  gap-2.5">
+          {loading
+            ? Array.from({ length: 6 }).map((_, index) => (
+                <Skeleton
+                  key={index}
+                  className="aspect-[2/3] w-full bg-zinc-500"
+                />
+              ))
+            : data?.map((movie, index) => (
+                <Link
+                  key={`${movie.id}-${index}`}
+                  href={`/${media_type}/${movie.id}`}
+                  prefetch={true}
+                >
+                  <MovieCard movie={movie} />
+                </Link>
+              ))}
+          <Button
+            variant="outline"
+            onClick={() => setPage((prev) => prev + 1)}
+            disabled={loadingMore}
+            className="h-full w-full aspect-[2/3] flex-col "
+          >
+            <Plus />
+            <div className="flex gap-1">
+              {loadingMore ? (
+                <LoaderCircleIcon
+                  className="-ms-1 animate-spin"
+                  size={16}
+                  aria-hidden="true"
+                />
+              ) : null}
+              {loadingMore ? "Loading..." : "Load More"}
+            </div>
+          </Button>
+          {loadingMore && (
+            <>
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Skeleton key={index} className="h-full w-full bg-zinc-500" />
+              ))}
+            </>
+          )}
         </div>
       </div>
-      <div className="grid lg:grid-cols-6 grid-cols-3 lg:w-[90%] mx-auto gap-3 p-2">
-        {loading
-          ? Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton
-                key={index}
-                className="aspect-[2/3] w-full bg-zinc-500"
-              />
-            ))
-          : data?.map((movie) => (
-              <Link
-                key={movie.id}
-                href={`/${media_type}/${movie.id}`}
-                prefetch={true}
-              >
-                <MovieCard movie={movie} />
-              </Link>
-            ))}
-        <Button
-          variant="outline"
-          onClick={() => setPage((prev) => prev + 1)}
-          disabled={loadingMore}
-          className="h-full w-full aspect-[2/3]"
-        >
-          {loadingMore ? (
-            <LoaderCircleIcon
-              className="-ms-1 animate-spin"
-              size={16}
-              aria-hidden="true"
-            />
-          ) : null}
-          {loadingMore ? "Loading..." : "Load More"}
-          <Plus />
-        </Button>
-        {loadingMore && (
-          <>
-            {Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton key={index} className="h-full w-full bg-zinc-500" />
-            ))}
-          </>
-        )}
-      </div>
-      <div className="w-full flex justify-center"></div>
     </main>
   );
 }

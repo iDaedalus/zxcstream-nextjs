@@ -6,12 +6,12 @@ import {
   Tv,
   Search,
   LayoutGrid,
-  Layers,
-  TrendingUp,
-  LayoutDashboard,
   SearchIcon,
   LoaderCircleIcon,
   ArrowRight,
+  Flame,
+  Star,
+  Clock,
 } from "lucide-react";
 import type React from "react";
 
@@ -48,26 +48,20 @@ const items = [
       {
         title: "Popular",
         link: "explore/movie/popular",
-        icon: Film,
+        icon: Flame, // Better represents "popular"
         details: "Most watched movies right now",
       },
       {
         title: "Top Rated",
         link: "explore/movie/top-rated",
-        icon: Layers,
+        icon: Star, // Better for ratings
         details: "Highest rated movies by viewers",
-      },
-      {
-        title: "Now Playing",
-        link: "explore/movie/now-playing",
-        icon: TrendingUp,
-        details: "Movies gaining popularity today",
       },
       {
         title: "Coming Soon",
         link: "explore/movie/coming-soon",
-        icon: LayoutDashboard,
-        details: "Curated sets of related movies",
+        icon: Clock, // More suitable for upcoming content
+        details: "Upcoming movie releases",
       },
     ],
   },
@@ -78,30 +72,25 @@ const items = [
       {
         title: "Popular",
         link: "explore/tv/popular",
-        icon: Film,
-        details: "Most watched TV shows currently",
+        icon: Flame,
+        details: "Most watched TV shows right now",
       },
       {
         title: "Top Rated",
         link: "explore/tv/top-rated",
-        icon: TrendingUp,
-        details: "TV shows getting attention now",
-      },
-      {
-        title: "Now Playing",
-        link: "explore/tv/now-playing",
-        icon: Layers,
-        details: "Top rated shows by audiences",
+        icon: Star,
+        details: "Highest rated TV shows by viewers",
       },
       {
         title: "Coming Soon",
         link: "explore/tv/coming-soon",
-        icon: LayoutDashboard,
-        details: "Themed TV show bundles",
+        icon: Clock,
+        details: "Upcoming TV show releases",
       },
     ],
   },
 ];
+
 console.log(items[1].name);
 export default function NavBar() {
   const router = useRouter();
@@ -150,7 +139,7 @@ export default function NavBar() {
         </div>
 
         <nav className="hidden lg:flex items-center">
-          <Link href="/" className="px-5 hover:bg-blue-800">
+          <Link href="/" className="px-5 hover:bg-blue-800" prefetch={true}>
             <HomeIcon size={16} />
           </Link>
 
@@ -167,20 +156,29 @@ export default function NavBar() {
 
                   {item.tags && (
                     <NavigationMenuContent>
-                      <div className="grid grid-cols-2  w-[480px] gap-1 p-2">
-                        {item.tags.map((tag) => (
-                          <NavigationMenuLink
+                      <div className="grid grid-cols-2 w-[480px] gap-2 p-2">
+                        {item.tags.map((tag, index) => (
+                          <Link
                             key={tag.title}
-                            className="relative border rounded-sm flex flex-col justify-end p-2"
-                            onClick={() => router.push(`/${tag.link}`)}
+                            href={`/${tag.link}`}
+                            prefetch={true}
+                            className={`group relative rounded-md border bg-muted p-3 flex flex-col justify-between transition hover:shadow-md hover:border-primary ${
+                              index === 0 ? "row-span-2" : ""
+                            }`}
                           >
-                            <p className=" flex gap-2 text-sm zxc font-bold">
-                              <tag.icon /> {tag.title}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2 mb-1">
+                              <tag.icon
+                                className="text-primary group-hover:scale-110 transition-transform"
+                                size={18}
+                              />
+                              <span className="text-sm font-semibold text-foreground">
+                                {tag.title}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground leading-snug">
                               {tag.details}
                             </p>
-                          </NavigationMenuLink>
+                          </Link>
                         ))}
                       </div>
                     </NavigationMenuContent>
@@ -299,6 +297,7 @@ export default function NavBar() {
           {/* Home */}
           <Link
             href="/"
+            prefetch={true}
             className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-accent transition-colors"
           >
             <HomeIcon size={20} className="text-foreground" />

@@ -35,9 +35,8 @@ export default function PopularMovies() {
         } else {
           setLoadingMore(true);
         }
-        const endpoint = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&language=en-US&page=${page}${
-          genreParam ? `&with_genres=${genreParam}` : ""
-        }${
+        const endpoint = `https://api.themoviedb.org/3/discover/${media_type}?api_key=${apiKey}&sort_by=popularity.desc&vote_count.gte=200
+&language=en-US&page=${page}${genreParam ? `&with_genres=${genreParam}` : ""}${
           media_type === "movie"
             ? companyParam
               ? `&with_companies=${companyParam}`

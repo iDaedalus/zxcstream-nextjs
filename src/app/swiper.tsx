@@ -10,8 +10,7 @@ import Link from "next/link";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-
-import LazyImage from "./observer";
+import Image from "next/image";
 import { Info, Play } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -147,11 +146,12 @@ export default function SwiperBackdrops() {
                 </Link>
               </div>
 
-              <LazyImage
+              <Image
                 className="absolute h-full w-full object-cover object-[center_40%] mask-gradient backdrop opacity-backrop blur-[2px] lg:blur-[0]"
                 src={`https://image.tmdb.org/t/p/original/${meow.backdrop_path}`}
+                fill
+                priority
                 alt="Lazy loaded"
-                placeholder="/images/blur.jpg"
               />
             </SwiperSlide>
           ))
@@ -185,11 +185,12 @@ export default function SwiperBackdrops() {
                 key={meow.id}
                 className="aspect-[9/13] !w-[170px] swiper-slide relative"
               >
-                <LazyImage
-                  className="absolute h-full w-full object-cover object-center rounded-lg "
+                <Image
+                  className="absolute h-full w-full object-cover object-center rounded-lg"
                   src={`https://image.tmdb.org/t/p/w500/${meow.poster_path}`}
-                  alt="Lazy loaded"
-                  placeholder="/images/blur.jpg"
+                  alt={meow.name || meow.title || "BACKDROP"}
+                  width={170}
+                  height={245}
                 />
               </SwiperSlide>
             ))
