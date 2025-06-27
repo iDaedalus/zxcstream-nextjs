@@ -65,7 +65,7 @@ interface CollectionPartsType {
   id: string;
   name: string;
 }
-interface SeasonsType {
+export interface SeasonsType {
   id: number;
   episode_count: number;
   season_number: string;

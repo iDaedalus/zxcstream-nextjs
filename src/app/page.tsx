@@ -1,6 +1,5 @@
 import SwiperBackdrops from "./swiper";
 
-
 import Ten from "./ten";
 import ClassicMovies from "./classic";
 import GenreMovies from "./genre";

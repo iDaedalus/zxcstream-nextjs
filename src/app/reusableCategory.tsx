@@ -112,7 +112,9 @@ export default function ReusableCategory({
                 </p>
                 <div className="mt-5 space-x-2">
                   <Link
-                    href={`/watch/${media_type}/${meow.id}`}
+                    href={`/watch/${media_type}/${meow.id}${
+                      media_type === "tv" ? "/1/1" : ""
+                    }`}
                     prefetch={true}
                     scroll={false}
                   >
@@ -154,7 +156,7 @@ export default function ReusableCategory({
                       )?.rating || "NR"}
                 </Badge>
                 <Link
-                  href={`/${meow.media_type}/${meow.id}`}
+                  href={`/${media_type}/${meow.id}`}
                   className="w-full  col-span-3 "
                   prefetch={true}
                 >

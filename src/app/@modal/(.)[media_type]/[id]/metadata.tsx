@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import useCollection from "@/lib/collectionFetch";
-import EpisodeMetaData from "./episode-metadata";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import EnglishBackdropMeta from "./english-backdrop-meta";
@@ -11,9 +10,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import {
   Bookmark,
-  ChevronsUpDown,
   Download,
-  LayoutGrid,
   LibraryBig,
   Play,
   PlayCircle,
@@ -23,21 +20,10 @@ import {
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import GetMovieData from "@/lib/getMovieData";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import TmdbEpisode from "./tmdb-episode";
 
 export default function DrawerMetadata({
   id,
@@ -50,16 +36,15 @@ export default function DrawerMetadata({
   setOpen: (open: boolean) => void;
   setNavigate: (navigate: boolean) => void;
 }) {
-  const [seasonOpen, setSeasonOpen] = useState(false);
   const { show, loading } = GetMovieData({ id, media_type });
-  const [season, setSeason] = useState("1");
+
   const trailerKey = show?.videos?.results?.find(
     (v) => v.type === "Trailer" && v.site === "YouTube"
   );
 
   const logoImage = show?.images?.logos[0]?.file_path;
   const { collection } = useCollection(show?.belongs_to_collection?.id);
-
+  console.log(show);
   const router = useRouter();
   return (
     <div className="overflow-y-auto meow">
@@ -231,57 +216,7 @@ export default function DrawerMetadata({
                     </div>
                   )}
                 {media_type === "tv" && (
-                  <div className="w-full mt-8">
-                    <div className="flex justify-between items-center">
-                      <h1 className="text-lg font-semibold items-center gap-2 hidden lg:flex">
-                        <LayoutGrid className="h-5 w-5" />
-                        Episodes
-                      </h1>
-                      <Popover open={seasonOpen} onOpenChange={setSeasonOpen}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={seasonOpen}
-                            className="lg:w-[260px] w-full justify-between"
-                          >
-                            {season ? `Season ${season}` : "Select Season"}
-
-                            <ChevronsUpDown className="opacity-50" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="lg:w-[260px] w-full p-0">
-                          <Command>
-                            <CommandInput placeholder="Search season..." />
-                            <CommandList>
-                              <CommandEmpty>No season found.</CommandEmpty>
-                              <CommandGroup>
-                                {show.seasons
-                                  .filter(
-                                    (season) =>
-                                      season.episode_count > 0 &&
-                                      season.air_date !== null
-                                  )
-                                  .map((season) => (
-                                    <CommandItem
-                                      key={season.id}
-                                      value={season.season_number}
-                                      onSelect={() => {
-                                        setSeason(season.season_number);
-                                        setSeasonOpen(false);
-                                      }}
-                                    >
-                                      {season.name}
-                                    </CommandItem>
-                                  ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <EpisodeMetaData id={id} season={season} />
-                  </div>
+                  <TmdbEpisode id={show.id} seasons={show.seasons} />
                 )}
 
                 {(show?.recommendations?.results?.length > 0 ||
