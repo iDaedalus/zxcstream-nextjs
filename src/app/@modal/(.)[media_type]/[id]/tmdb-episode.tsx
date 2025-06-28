@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown, Clock, Eye, EyeClosed, Play } from "lucide-react";
+import { ChevronsUpDown, Eye, EyeClosed, Play } from "lucide-react";
 import useEpisode from "@/lib/fetch-episodes";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
@@ -93,7 +93,10 @@ export default function TmdbEpisode({
           loading ? (
             <div className="grid  grid-cols-1 gap-3">
               {Array.from({ length: 6 }).map((_, index) => (
-                <div className="relative flex justify-end items-center border rounded-md group">
+                <div
+                  key={index}
+                  className="relative flex justify-end items-center border rounded-md group"
+                >
                   <div className=" absolute flex flex-col left-0 w-[70%] h-full z-10 justify-end lg:p-5 p-3 lg:gap-3 gap-2">
                     <h3 className="font-semibold text-sm lg:text-base  line-clamp-1 group-hover:text-primary transition-colors">
                       Episode {index + 1}
@@ -129,6 +132,7 @@ export default function TmdbEpisode({
                       <Link
                         href={`/watch/tv/${id}/${season}/${meow.episode_number}`}
                         prefetch={true}
+                        key={meow.id}
                         className="relative flex justify-end items-center border rounded-md group"
                       >
                         <div className=" absolute flex flex-col left-0 w-[70%] h-full z-10 justify-end lg:p-5 p-3 lg:gap-3 gap-2">
@@ -165,6 +169,7 @@ export default function TmdbEpisode({
                       <Link
                         href={`/watch/tv/${id}/${season}/${meow.episode_number}`}
                         prefetch={true}
+                        key={meow.id}
                         className="relative flex justify-end items-center border rounded-md group"
                       >
                         <div className=" absolute flex flex-col left-0 w-[70%] h-full z-10 justify-end lg:p-5 p-3 lg:gap-3 gap-2">
@@ -208,44 +213,3 @@ export default function TmdbEpisode({
     </div>
   );
 }
-
-// <Link
-// href={`/watch/tv/${id}/${season}/${meow.episode_number}`}
-// prefetch={true}
-// className="group p-1 border rounded-md flex gap-1.5"
-// key={meow.episode_number}
-// >
-// <div className="relative overflow-hidden rounded-md w-[120px]  ">
-//   <img
-//     className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-//     src={
-//       meow.still_path
-//         ? `https://image.tmdb.org/t/p/w500${meow.still_path}`
-//         : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOxgXTO4Kc4XORUFvZembSzymC7B6RYupJLQ&s"
-//     }
-//     alt={meow.name}
-//   />
-
-//   {meow.runtime && (
-//     <Badge className="absolute bottom-2 right-2 bg-black/80 text-white border-0 text-xs px-2 py-1">
-//       <Clock className="w-3 h-3 mr-1" />
-//       {meow.runtime}m
-//     </Badge>
-//   )}
-
-// </div>
-
-// <div className="w-[calc(100%-120px)]">
-//   <div className="flex w-full justify-between items-center gap-0.5 mt-2">
-//     <h3 className="font-semibold text-sm lg:text-sm  line-clamp-1 group-hover:text-primary transition-colors flex-1">
-//       {meow.episode_number}. {meow.name}
-//     </h3>
-//     {meow.vote_average > 0 && (
-//       <span className="flex items-center gap-1 text-xs mr-2">
-//         ⭐ {meow.vote_average.toFixed(1)}
-//       </span>
-//     )}
-//   </div>
-
-// </div>
-// </Link>
