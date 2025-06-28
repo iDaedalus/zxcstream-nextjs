@@ -187,11 +187,15 @@ export default function NavBar() {
               ))}
 
               <NavigationMenuItem>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <Link
+                  href={`/watchlist`}
+                  prefetch={true}
+                  className={navigationMenuTriggerStyle()}
+                >
                   <span className="flex items-center gap-3">
                     <LayoutGrid size={16} /> Watchlist
                   </span>
-                </NavigationMenuLink>
+                </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink

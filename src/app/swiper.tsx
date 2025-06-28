@@ -36,7 +36,7 @@ export default function SwiperBackdrops() {
   const { movies, loading } = useFetchTmdb(showlist);
   const [mainSwiper, setMainSwiper] = useState<SwiperType | null>(null);
   const [thumbSwiper, setThumbSwiper] = useState<SwiperType | null>(null);
-  console.log(movies);
+
   return (
     <div className="relative ">
       <Swiper

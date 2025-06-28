@@ -46,7 +46,7 @@ export default function RootLayout({
 
           {modal}
           <Footer />
-          <Toaster />
+          <Toaster position="top-right" expand={false} duration={3000} />
         </ThemeProvider>
       </body>
     </html>

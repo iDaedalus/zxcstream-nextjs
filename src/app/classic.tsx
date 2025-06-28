@@ -27,7 +27,12 @@ export default function ClassicMovies() {
           `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&primary_release_date.gte=${decade}-01-01&primary_release_date.lte=${endYear}-12-31&sort_by=vote_average.desc&vote_count.gte=1000`
         );
         const data = await res.json();
-        setMovies(data.results);
+        const media = data.results.map((movie: MovieType) => ({
+          ...movie,
+          media_type: "movie",
+        }));
+
+        setMovies(media);
       } catch (error) {
         console.error(error);
       } finally {
@@ -36,7 +41,6 @@ export default function ClassicMovies() {
     }
     fetchClassicMovies();
   }, [decade, apiKey]);
-
   return (
     <ReusableSwiper
       title="Classic"

@@ -26,7 +26,11 @@ export default function GenreMovies() {
           `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${genre}&sort_by=popularity.desc`
         );
         const data = await res.json();
-        setMovies(data.results);
+        const media = data.results.map((movie: MovieType) => ({
+          ...movie,
+          media_type: "movie",
+        }));
+        setMovies(media);
       } catch (error) {
         console.error(error);
       } finally {

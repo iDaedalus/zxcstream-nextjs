@@ -4,6 +4,7 @@ import useCollection from "@/lib/collectionFetch";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import EnglishBackdropMeta from "./english-backdrop-meta";
+import { WatchlistButton } from "@/app/watchlist/watchlist-button";
 import { toast } from "sonner";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -139,9 +140,7 @@ export default function DrawerMetadata({
                     <Button>
                       <Download />
                     </Button>
-                    <Button>
-                      <Bookmark />
-                    </Button>
+                    <WatchlistButton movie={show} />
                   </div>
                   <div className="flex items-center gap-3 mt-5">
                     <span>

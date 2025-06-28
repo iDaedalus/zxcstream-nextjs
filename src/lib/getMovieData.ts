@@ -158,7 +158,8 @@ export default function GetMovieData({
         );
 
         const data = await res.json();
-        setShow(data);
+        const result = { ...data, media_type };
+        setShow(result);
       } catch (error) {
         console.error(error);
       } finally {

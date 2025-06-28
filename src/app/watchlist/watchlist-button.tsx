@@ -1,26 +1,36 @@
 // components/WatchlistButton.tsx
 "use client";
+import { useWatchlist } from "@/lib/watchlist";
 import { Bookmark } from "lucide-react";
-import { useWatchlist, WatchlistItem } from "@/lib/watchlist";
-
+import { MovieType } from "@/lib/getMovieData";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 interface Props {
-  movie: WatchlistItem;
+  movie: MovieType;
 }
-
 export function WatchlistButton({ movie }: Props) {
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
-  const inList = isInWatchlist(movie.id, movie.media_type);
 
   return (
-    <div
-      onClick={() => toggleWatchlist(movie)}
-  
-    >
-      <Bookmark
-        className={`text-blue-800 h-4 w-4 lg:h-6 lg:w-6 drop-shadow-black drop-shadow-2xl  ${
-          inList ? "fill-current" : ""
-        }`}
-      />
-    </div>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button onClick={() => toggleWatchlist(movie)}>
+          <Bookmark
+            className={` ${
+              isInWatchlist(movie.id, movie.media_type) ? "fill-current" : ""
+            }`}
+          />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent className=" px-2 py-1 text-xs zxc">
+        {isInWatchlist(movie.id, movie.media_type)
+          ? "Remove to watchlist"
+          : "Add to watchlist"}
+      </TooltipContent>
+    </Tooltip>
   );
 }

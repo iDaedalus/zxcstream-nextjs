@@ -1,124 +1,115 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useCallback } from "react"
-import { toast } from "sonner"
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
-export interface WatchlistItem {
-  id: string
-  media_type: string
-  poster_path: string | null
-  backdrop_path: string | null
-  title?: string
-  name?: string
-}
+import { MovieType } from "./getMovieData";
 
 export function useWatchlist() {
-  const [watchlist, setWatchlist] = useState<WatchlistItem[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [watchlist, setWatchlist] = useState<MovieType[]>([]);
 
-  // Load watchlist from localStorage on hook initialization
+  // Helper function to get current watchlist from localStorage
+  const getCurrentWatchlist = (): MovieType[] => {
+    try {
+      const saved = localStorage.getItem("watchlist");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  };
+
+  // Helper function to get display name
+  const getDisplayName = (item: MovieType) => {
+    return item.title || item.name || "Unknown";
+  };
+
+  // Load from localStorage on mount
   useEffect(() => {
-    const savedWatchlist = localStorage.getItem("watchlist")
-    if (savedWatchlist) {
-      try {
-        setWatchlist(JSON.parse(savedWatchlist))
-      } catch (error) {
-        console.error("Error parsing watchlist from localStorage:", error)
-        setWatchlist([])
-      }
+    setWatchlist(getCurrentWatchlist());
+  }, []);
+
+  const addToWatchlist = (item: MovieType) => {
+    // Always read current data from localStorage first
+    const currentWatchlist = getCurrentWatchlist();
+
+    const exists = currentWatchlist.some(
+      (existing) =>
+        existing.id === item.id && existing.media_type === item.media_type
+    );
+
+    if (exists) {
+      toast.info(`${getDisplayName(item)} is already in your watchlist`);
+      return;
     }
-    setIsLoading(false)
-  }, [])
 
-  // Check if an item is in the watchlist
-  const isInWatchlist = useCallback(
-    (itemId: string, mediaType = "movie") => {
-      return watchlist.some((item) => item.id === itemId && item.media_type === mediaType)
-    },
-    [watchlist],
-  )
+    const newWatchlist = [...currentWatchlist, item];
 
-  // Add item to watchlist
-  const addToWatchlist = useCallback((item: WatchlistItem) => {
-    setWatchlist((prev) => {
-      // Check if item already exists
-      if (prev.some((existing) => existing.id === item.id && existing.media_type === item.media_type)) {
-        toast.info("Already in watchlist", {
-          description: "This item is already in your watchlist",
-        })
-        return prev
-      }
+    // Update both localStorage and state
+    localStorage.setItem("watchlist", JSON.stringify(newWatchlist));
+    setWatchlist(newWatchlist);
 
-      // Add to top of the list
-      const updatedWatchlist = [item, ...prev]
-      localStorage.setItem("watchlist", JSON.stringify(updatedWatchlist))
+    // Show success toast
+    toast.success(`Added ${getDisplayName(item)} to watchlist`, {
+      description: `${
+        item.media_type === "movie" ? "Movie" : "TV Show"
+      } added successfully`,
+    });
+  };
 
-      // Show success toast
-      const itemName = item.title || item.name || "Item"
-      toast.success("Added to watchlist", {
-        description: `${itemName} has been added to your watchlist`,
-      })
+  const removeFromWatchlist = (id: string, mediaType = "movie") => {
+    // Always read current data from localStorage first
+    const currentWatchlist = getCurrentWatchlist();
 
-      return updatedWatchlist
-    })
-  }, [])
+    const itemToRemove = currentWatchlist.find(
+      (item) => item.id === id && item.media_type === mediaType
+    );
+    const newWatchlist = currentWatchlist.filter(
+      (item) => !(item.id === id && item.media_type === mediaType)
+    );
 
-  // Remove item from watchlist
-  const removeFromWatchlist = useCallback((itemId: string, mediaType = "movie") => {
-    setWatchlist((prev) => {
-      const itemToRemove = prev.find((item) => item.id === itemId && item.media_type === mediaType)
-      const updatedWatchlist = prev.filter((item) => !(item.id === itemId && item.media_type === mediaType))
+    // Update both localStorage and state
+    localStorage.setItem("watchlist", JSON.stringify(newWatchlist));
+    setWatchlist(newWatchlist);
 
-      if (itemToRemove) {
-        localStorage.setItem("watchlist", JSON.stringify(updatedWatchlist))
-
-        // Show success toast
-        const itemName = itemToRemove.title || itemToRemove.name || "Item"
-        toast.success("Removed from watchlist", {
-          description: `${itemName} has been removed from your watchlist`,
-        })
-      }
-
-      return updatedWatchlist
-    })
-  }, [])
-
-  // Toggle item in watchlist
-  const toggleWatchlist = useCallback(
-    (item: WatchlistItem) => {
-      if (isInWatchlist(item.id, item.media_type)) {
-        removeFromWatchlist(item.id, item.media_type)
-      } else {
-        addToWatchlist(item)
-      }
-    },
-    [isInWatchlist, addToWatchlist, removeFromWatchlist],
-  )
-
-  // Clear entire watchlist
-  const clearWatchlist = useCallback(() => {
-    const itemCount = watchlist.length
-    setWatchlist([])
-    localStorage.removeItem("watchlist")
-
-    if (itemCount > 0) {
-      toast.success("Watchlist cleared", {
-        description: `All ${itemCount} items have been removed from your watchlist`,
-      })
+    // Show success toast
+    if (itemToRemove) {
+      toast.success(`Removed ${getDisplayName(itemToRemove)} from watchlist`);
     }
-  }, [watchlist.length])
+  };
 
-  // Get watchlist count
-  const watchlistCount = watchlist.length
+  const isInWatchlist = (id: string, mediaType = "movie") => {
+    return watchlist.some(
+      (item) => item.id === id && item.media_type === mediaType
+    );
+  };
+
+  const toggleWatchlist = (item: MovieType) => {
+    if (isInWatchlist(item.id, item.media_type)) {
+      removeFromWatchlist(item.id, item.media_type);
+    } else {
+      addToWatchlist(item);
+    }
+  };
+
+  const clearWatchlist = () => {
+    const count = watchlist.length;
+    localStorage.removeItem("watchlist");
+    setWatchlist([]);
+
+    if (count > 0) {
+      toast.success(
+        `Cleared ${count} item${count === 1 ? "" : "s"} from watchlist`
+      );
+    }
+  };
 
   return {
     watchlist,
-    isLoading,
-    isInWatchlist,
     addToWatchlist,
     removeFromWatchlist,
+    isInWatchlist,
     toggleWatchlist,
     clearWatchlist,
-    watchlistCount,
-  }
+    count: watchlist.length,
+  };
 }

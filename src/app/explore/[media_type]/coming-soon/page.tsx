@@ -60,10 +60,14 @@ export default function ComingSoon() {
         }`;
         const res = await fetch(endpoint);
         const data = await res.json();
+        const media = data.results.map((movie: MovieType) => ({
+          ...movie,
+          media_type,
+        }));
         if (page === 1) {
-          setMovies(data.results);
+          setMovies(media);
         } else {
-          setMovies((prev) => [...prev, ...data.results]);
+          setMovies((prev) => [...prev, ...media]);
         }
       } catch (error) {
         console.error(error, "error");

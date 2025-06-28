@@ -52,7 +52,11 @@ export default function RuntimeMovies() {
           `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&${selectedRuntime?.range}&sort_by=vote_average.desc&vote_count.gte=500`
         );
         const data = await res.json();
-        setMovies(data.results);
+        const media = data.results.map((movie: MovieType) => ({
+          ...movie,
+          media_type: "movie",
+        }));
+        setMovies(media);
       } catch (error) {
         console.error(error);
       } finally {

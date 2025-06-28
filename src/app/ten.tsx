@@ -6,7 +6,6 @@ import "swiper/css/pagination";
 import { useState, useEffect } from "react";
 
 import { Film, Tv, LibraryBig } from "lucide-react";
-
 import { MovieType } from "@/lib/getMovieData";
 import ReusableSwiper from "./reusableSwiper";
 

@@ -445,13 +445,7 @@ export default function ReusableCategory({
                 />
               ))
             : data?.map((movie, index) => (
-                <Link
-                  key={`${movie.id}-${index}`}
-                  href={`/${media_type}/${movie.id}`}
-                  prefetch={true}
-                >
-                  <MovieCard movie={movie} />
-                </Link>
+                <MovieCard key={`${movie.id}-${index}`} movie={movie} />
               ))}
           <Button
             variant="outline"
