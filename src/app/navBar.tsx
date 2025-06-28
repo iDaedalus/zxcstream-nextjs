@@ -100,13 +100,14 @@ export default function NavBar() {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState(false);
-  const [savedPath, setSavedPath] = useState("");
+  const [savedPath, setSavedPath] = useState("/");
 
   useEffect(() => {
     if (
       !pathname.startsWith("/search") &&
-      !pathname.startsWith("/movie") &&
-      !pathname.startsWith("/tv")
+      !pathname.startsWith("/movie/") &&
+      !pathname.startsWith("/tv/") &&
+      !pathname.startsWith("/watch/")
     ) {
       setSavedPath(pathname);
     }
@@ -129,7 +130,7 @@ export default function NavBar() {
 
   return (
     <>
-      <header className="absolute z-20 flex   w-full  justify-center items-center lg:py-5 py-3">
+      <header className="absolute z-20 flex   w-full  justify-center items-start lg:py-5 py-3">
         <div className=" lg:absolute lg:left-20 h-8.5 ">
           <img
             className="h-full w-full object-contain z-10"
@@ -138,92 +139,92 @@ export default function NavBar() {
           />
         </div>
 
-        <nav className="hidden lg:flex items-center">
-          <Link href="/" className="px-5 hover:bg-blue-800" prefetch={true}>
-            <HomeIcon size={16} />
-          </Link>
+        <div>
+          <nav className="hidden lg:flex items-center">
+            <Link href="/" className="px-5 hover:bg-blue-800" prefetch={true}>
+              <HomeIcon size={16} />
+            </Link>
 
-          <div className="border-l border-gray-500/50 h-5"></div>
+            <div className="border-l border-gray-500/50 h-5"></div>
 
-          <NavigationMenu className="px-3">
-            <NavigationMenuList>
-              {items.map((item) => (
-                <NavigationMenuItem key={item.name}>
-                  <NavigationMenuTrigger className="flex items-center gap-3 ">
-                    <item.logo size={16} />
-                    {item.name}
-                  </NavigationMenuTrigger>
+            <NavigationMenu className="px-3">
+              <NavigationMenuList>
+                {items.map((item) => (
+                  <NavigationMenuItem key={item.name}>
+                    <NavigationMenuTrigger className="flex items-center gap-3 ">
+                      <item.logo size={16} />
+                      {item.name}
+                    </NavigationMenuTrigger>
 
-                  {item.tags && (
-                    <NavigationMenuContent>
-                      <div className="grid grid-cols-2 w-[480px] gap-2 p-2">
-                        {item.tags.map((tag, index) => (
-                          <Link
-                            key={tag.title}
-                            href={`/${tag.link}`}
-                            prefetch={true}
-                            className={`group relative rounded-md border bg-muted p-3 flex flex-col justify-between transition hover:shadow-md hover:border-primary ${
-                              index === 0 ? "row-span-2" : ""
-                            }`}
-                          >
-                            <div className="flex items-center gap-2 mb-1">
-                              <tag.icon
-                                className="text-primary group-hover:scale-110 transition-transform"
-                                size={18}
-                              />
-                              <span className="text-sm font-semibold text-foreground">
-                                {tag.title}
-                              </span>
-                            </div>
-                            <p className="text-xs text-muted-foreground leading-snug">
-                              {tag.details}
-                            </p>
-                          </Link>
-                        ))}
-                      </div>
-                    </NavigationMenuContent>
-                  )}
+                    {item.tags && (
+                      <NavigationMenuContent>
+                        <div className="grid grid-cols-2 w-[480px] gap-2 p-2">
+                          {item.tags.map((tag, index) => (
+                            <Link
+                              key={tag.title}
+                              href={`/${tag.link}`}
+                              prefetch={true}
+                              className={`group relative rounded-md border bg-muted p-3 flex flex-col justify-between transition hover:shadow-md hover:border-primary ${
+                                index === 0 ? "row-span-2" : ""
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 mb-1">
+                                <tag.icon
+                                  className="text-primary group-hover:scale-110 transition-transform"
+                                  size={18}
+                                />
+                                <span className="text-sm font-semibold text-foreground">
+                                  {tag.title}
+                                </span>
+                              </div>
+                              <p className="text-xs text-muted-foreground leading-snug">
+                                {tag.details}
+                              </p>
+                            </Link>
+                          ))}
+                        </div>
+                      </NavigationMenuContent>
+                    )}
+                  </NavigationMenuItem>
+                ))}
+
+                <NavigationMenuItem>
+                  <Link
+                    href={`/watchlist`}
+                    prefetch={true}
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    <span className="flex items-center gap-3">
+                      <LayoutGrid size={16} /> Watchlist
+                    </span>
+                  </Link>
                 </NavigationMenuItem>
-              ))}
+                <NavigationMenuItem>
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    onClick={() => setShowSearch(!showSearch)}
+                  >
+                    <span className="flex items-center gap-3 cursor-pointer">
+                      <Search size={16} /> Search
+                    </span>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
 
-              <NavigationMenuItem>
-                <Link
-                  href={`/watchlist`}
-                  prefetch={true}
-                  className={navigationMenuTriggerStyle()}
-                >
-                  <span className="flex items-center gap-3">
-                    <LayoutGrid size={16} /> Watchlist
-                  </span>
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle()}
-                  onClick={() => setShowSearch(!showSearch)}
-                >
-                  <span className="flex items-center gap-3 cursor-pointer">
-                    <Search size={16} /> Search
-                  </span>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+            <div className="border-l border-gray-500/50 h-5"></div>
+            <div className="px-5">
+              <Settings size={16} />
+            </div>
+          </nav>
 
-          <div className="border-l border-gray-500/50 h-5"></div>
-          <div className="px-5">
-            <Settings size={16} />
-          </div>
-        </nav>
-
-        <div className="absolute lg:right-20 right-3 flex items-center gap-3">
           {showSearch && (
             <div className=" hidden lg:block mt-1">
               <div className="relative">
                 <SpotlightBorderWrapper>
                   <div className="border rounded-lg p-1">
                     <Input
-                      className="peer ps-9 pe-9 h-9 backdrop-blur-xl w-84 border-0"
+                      className="peer ps-9 pe-9 h-9 backdrop-blur-xl w-full border-0"
                       placeholder="Search movies, TV shows..."
                       type="search"
                       value={inputValue}
@@ -255,6 +256,9 @@ export default function NavBar() {
               </div>
             </div>
           )}
+        </div>
+
+        <div className="absolute lg:right-20 right-3 flex items-center gap-3">
           <div>
             <ModeToggle />
           </div>

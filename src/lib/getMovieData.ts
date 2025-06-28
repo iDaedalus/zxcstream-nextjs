@@ -127,6 +127,7 @@ export interface MovieType {
   first_air_date: string;
   number_of_seasons: string;
   number_of_episodes: string;
+  vote_count: number;
   genres: GenreType[];
   seasons: SeasonsType[];
   production_companies: CompanyTypes[];

@@ -26,7 +26,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
   modal: React.ReactNode;
-  searchModal: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -45,7 +44,8 @@ export default function RootLayout({
           {children}
 
           {modal}
-          <Footer />
+
+          {/* <Footer /> */}
           <Toaster position="top-right" expand={false} duration={3000} />
         </ThemeProvider>
       </body>
