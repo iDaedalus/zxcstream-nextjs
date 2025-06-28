@@ -14,15 +14,8 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  ChevronsUpDown,
-  Clock,
-  Eye,
-  EyeClosed,
-  Play,
-} from "lucide-react";
+import { ChevronsUpDown, Clock, Eye, EyeClosed, Play } from "lucide-react";
 import useEpisode from "@/lib/fetch-episodes";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 export default function TmdbEpisode({
@@ -39,7 +32,7 @@ export default function TmdbEpisode({
   console.log(episode);
 
   return (
-    <div>
+    <div className="mt-5">
       <div className="flex justify-between w-full items-center">
         <p className="text-foreground relative font-semibold text-[1.1rem] lg:text-xl  lg:border-l-4 border-l-2 border-blue-800 lg:pl-6 pl-3 flex items-center gap-2">
           Episodes
@@ -98,57 +91,72 @@ export default function TmdbEpisode({
       <div className="flex flex-col py-5 gap-3">
         {episode.length > 0 ? (
           loading ? (
-            <div className="grid lg:grid-cols-3 grid-cols-2 gap-3">
+            <div className="grid  grid-cols-1 gap-3">
               {Array.from({ length: 6 }).map((_, index) => (
-                <div
-                  className="aspect-square w-full gap-2 flex flex-col p-2 border rounded-md"
-                  key={index}
-                >
-                  <Skeleton className=" flex-1" />
+                <div className="relative flex justify-end items-center border rounded-md group">
+                  <div className=" absolute flex flex-col left-0 w-[70%] h-full z-10 justify-end lg:p-5 p-3 lg:gap-3 gap-2">
+                    <h3 className="font-semibold text-sm lg:text-base  line-clamp-1 group-hover:text-primary transition-colors">
+                      Episode {index + 1}
+                    </h3>
 
-                  <div className="flex gap-2">
-                    <p className="flex-1">Episode {index + 1}</p>
-                    <Skeleton className=" w-10" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-5 bg-zinc-700 rounded-md " />
+
+                      <Skeleton className="h-5 bg-zinc-700 rounded-md " />
+                    </div>
+
+                    <span className="flex items-center gap-1 text-xs ">
+                      ⭐ 0
+                    </span>
                   </div>
-                  <Skeleton className="h-4" />
-                  <Skeleton className="h-4" />
+                  <div className="relative w-[60%] lg:w-[50%] aspect-[14/9] lg:aspect-[22/9]  overflow-hidden rounded-tr-md rounded-br-md">
+                    <div className="w-full h-full transition-transform duration-200 group-hover:scale-105 [mask-image:linear-gradient(to_right,transparent_5%,black_100%)] bg-zinc-700">
+                      1
+                    </div>
+                    <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                      <Play className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="grid lg:grid-cols-3 grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               {antiSpoiler
                 ? episode
                     .filter((f) => f.still_path !== null)
                     .map((meow) => (
                       <Link
-                        className="aspect-square w-full gap-2 flex flex-col p-2 border rounded-md"
-                        key={meow.episode_number}
                         href={`/watch/tv/${id}/${season}/${meow.episode_number}`}
                         prefetch={true}
+                        className="relative flex justify-end items-center border rounded-md group"
                       >
-                        <div className="relative flex-1 flex justify-center items-center">
-                          <Skeleton className="h-full w-full" />
-                          <div className="absolute flex justify-center items-center  gap-2">
-                            <EyeClosed strokeWidth={1.5} className="h-6 w-6" />
-                            <p className="text-sm">Anti Spoiler</p>
-                          </div>
-                          {meow.runtime && (
-                            <Badge className="absolute bottom-2 right-2 bg-black/80 text-white border-0 text-xs px-2 py-1">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {meow.runtime}m
-                            </Badge>
+                        <div className=" absolute flex flex-col left-0 w-[70%] h-full z-10 justify-end lg:p-5 p-3 lg:gap-3 gap-2">
+                          <h3 className="font-semibold text-sm lg:text-base  line-clamp-1 group-hover:text-primary transition-colors">
+                            {meow.episode_number}. Disable anti-spoiler to view
+                          </h3>
+
+                          {meow.overview && (
+                            <div className="space-y-2">
+                              <Skeleton className="h-5 bg-zinc-700 rounded-md " />
+
+                              <Skeleton className="h-5 bg-zinc-700 rounded-md " />
+                            </div>
+                          )}
+                          {meow.vote_average > 0 && (
+                            <span className="flex items-center gap-1 text-xs ">
+                              ⭐ {meow.vote_average.toFixed(1)}
+                            </span>
                           )}
                         </div>
-
-                        <div className="flex gap-2">
-                          <h3 className="font-semibold text-sm lg:text-sm  line-clamp-1  flex-1">
-                            {meow.episode_number}. {meow.name}
-                          </h3>
-                          <Skeleton className=" w-10" />
+                        <div className="relative w-[60%] lg:w-[50%] aspect-[14/9] lg:aspect-[22/9]  overflow-hidden rounded-tr-md rounded-br-md">
+                          <div className="w-full h-full transition-transform duration-200 group-hover:scale-105 [mask-image:linear-gradient(to_right,transparent_5%,black_100%)] bg-zinc-700">
+                            1
+                          </div>
+                          <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                            <Play className="w-6 h-6 text-white" />
+                          </div>
                         </div>
-                        <Skeleton className="h-4" />
-                        <Skeleton className="h-4" />
                       </Link>
                     ))
                 : episode
@@ -157,12 +165,27 @@ export default function TmdbEpisode({
                       <Link
                         href={`/watch/tv/${id}/${season}/${meow.episode_number}`}
                         prefetch={true}
-                        className="group p-2 border rounded-md flex flex-col"
-                        key={meow.episode_number}
+                        className="relative flex justify-end items-center border rounded-md group"
                       >
-                        <div className="relative overflow-hidden rounded-md flex-1">
+                        <div className=" absolute flex flex-col left-0 w-[70%] h-full z-10 justify-end lg:p-5 p-3 lg:gap-3 gap-2">
+                          <h3 className="font-semibold text-sm lg:text-base  line-clamp-1 group-hover:text-primary transition-colors">
+                            {meow.episode_number}. {meow.name}
+                          </h3>
+
+                          {meow.overview && (
+                            <p className="text-muted-foreground text-xs lg:text-sm  line-clamp-2 lg:line-clamp-3 leading-relaxed ">
+                              {meow.overview}
+                            </p>
+                          )}
+                          {meow.vote_average > 0 && (
+                            <span className="flex items-center gap-1 text-xs ">
+                              ⭐ {meow.vote_average.toFixed(1)}
+                            </span>
+                          )}
+                        </div>
+                        <div className="relative w-[60%] lg:w-[50%] aspect-[14/9] lg:aspect-[22/9]  overflow-hidden rounded-tr-md rounded-br-md">
                           <img
-                            className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                            className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105 [mask-image:linear-gradient(to_right,transparent_5%,black_100%)]"
                             src={
                               meow.still_path
                                 ? `https://image.tmdb.org/t/p/w500${meow.still_path}`
@@ -170,33 +193,9 @@ export default function TmdbEpisode({
                             }
                             alt={meow.name}
                           />
-
-                          {meow.runtime && (
-                            <Badge className="absolute bottom-2 right-2 bg-black/80 text-white border-0 text-xs px-2 py-1">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {meow.runtime}m
-                            </Badge>
-                          )}
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                          <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                             <Play className="w-6 h-6 text-white" />
                           </div>
-                        </div>
-                        <div>
-                          <div className="flex justify-between items-center gap-2 mt-2">
-                            <h3 className="font-semibold text-sm lg:text-sm  line-clamp-1 group-hover:text-primary transition-colors flex-1">
-                              {meow.episode_number}. {meow.name}
-                            </h3>
-                            {meow.vote_average > 0 && (
-                              <span className="flex items-center gap-1 text-sm">
-                                ⭐ {meow.vote_average.toFixed(1)}
-                              </span>
-                            )}
-                          </div>
-                          {meow.overview && (
-                            <p className="text-muted-foreground text-xs lg:text-sm line-clamp-2 lg:line-clamp-3 leading-relaxed mt-1">
-                              {meow.overview}
-                            </p>
-                          )}
                         </div>
                       </Link>
                     ))}
@@ -209,3 +208,44 @@ export default function TmdbEpisode({
     </div>
   );
 }
+
+// <Link
+// href={`/watch/tv/${id}/${season}/${meow.episode_number}`}
+// prefetch={true}
+// className="group p-1 border rounded-md flex gap-1.5"
+// key={meow.episode_number}
+// >
+// <div className="relative overflow-hidden rounded-md w-[120px]  ">
+//   <img
+//     className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+//     src={
+//       meow.still_path
+//         ? `https://image.tmdb.org/t/p/w500${meow.still_path}`
+//         : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOxgXTO4Kc4XORUFvZembSzymC7B6RYupJLQ&s"
+//     }
+//     alt={meow.name}
+//   />
+
+//   {meow.runtime && (
+//     <Badge className="absolute bottom-2 right-2 bg-black/80 text-white border-0 text-xs px-2 py-1">
+//       <Clock className="w-3 h-3 mr-1" />
+//       {meow.runtime}m
+//     </Badge>
+//   )}
+
+// </div>
+
+// <div className="w-[calc(100%-120px)]">
+//   <div className="flex w-full justify-between items-center gap-0.5 mt-2">
+//     <h3 className="font-semibold text-sm lg:text-sm  line-clamp-1 group-hover:text-primary transition-colors flex-1">
+//       {meow.episode_number}. {meow.name}
+//     </h3>
+//     {meow.vote_average > 0 && (
+//       <span className="flex items-center gap-1 text-xs mr-2">
+//         ⭐ {meow.vote_average.toFixed(1)}
+//       </span>
+//     )}
+//   </div>
+
+// </div>
+// </Link>
