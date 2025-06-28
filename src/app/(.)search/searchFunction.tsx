@@ -121,7 +121,7 @@ export default function SimpleStaggerSearch() {
           variants={item}
         >
           <p>{totalPages} pages results for</p>
-          <p className="text-blue-800">'{query}'</p>
+          <p className="text-blue-800">&apos;{query}&apos;</p>
         </motion.span>
 
         {loading
