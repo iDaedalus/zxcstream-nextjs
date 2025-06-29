@@ -189,12 +189,7 @@ export default function WatchPage() {
     return <div>Error: Missing media ID or type.</div>;
   }
 
-  const backdrop = show?.images?.backdrops?.find(
-    (meow) => meow.iso_639_1 === "en"
-  )?.file_path;
 
-  const releaseDate = show?.first_air_date || show?.release_date;
-  const title = show?.title || show?.name || "N/A";
 
   console.log(show);
 
