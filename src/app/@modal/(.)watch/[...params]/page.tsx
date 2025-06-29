@@ -42,7 +42,7 @@ export default function WatchPage() {
   const season = params?.[2];
   const episode = params?.[3];
 
-  const [selected, setSelected] = useState("Alpha");
+  const [selected, setSelected] = useState("Delta");
   const [sandboxEnabled, setSandboxEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -71,10 +71,10 @@ export default function WatchPage() {
     {
       name: "Delta",
       sublabel: "Sandbox required",
-      isRecommended: false,
+      isRecommended: true,
       description: "Reliable streaming with autoplay and next episode support.",
-      movieLink: `https://vidora.su/movie/${id}?colour=fb1533&autoplay=true&autonextepisode=true&backbutton=&pausescreen=true`,
-      tvLink: `https://vidora.su/tv/${id}/${season}/${episode}?colour=fb1533&autoplay=true&autonextepisode=true&backbutton=&pausescreen=true`,
+      movieLink: `https://vidlink.pro/movie/${id}?primaryColor=0008ff&secondaryColor=000000&iconColor=ffffff&icons=default&player=jw&title=true&poster=false&autoplay=true&nextbutton=true`,
+      tvLink: `https://vidlink.pro/tv/${id}/${season}/${episode}?primaryColor=0008ff&secondaryColor=000000&iconColor=ffffff&icons=default&player=jw&title=true&poster=false&autoplay=true&nextbutton=true`,
     },
     {
       name: "Gamma",
@@ -153,29 +153,31 @@ export default function WatchPage() {
   ]);
 
   useEffect(() => {
-    if (selected !== "Alpha") return;
+    if (selected !== "Alpha" && selected !== "Delta") return;
 
     const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== "https://vidsrc.cc") return;
+      const allowedOrigins = ["https://vidsrc.cc", "https://vidlink.pro"];
+      if (!allowedOrigins.includes(event.origin)) return;
 
       const { data } = event;
+      if (data?.type !== "PLAYER_EVENT") return;
 
-      if (data?.type === "PLAYER_EVENT") {
-        const eventType = data.data?.event;
+      const { event: eventType, currentTime, duration } = data.data;
 
-        if (eventType === "time") {
-          setCurrentTime(data.data.currentTime);
-          setDuration(data.data.duration);
-        }
-
-        if (eventType === "complete") {
-          setIsComplete(true);
-        }
+      // Update states
+      if (["play", "pause", "seeked", "timeupdate"].includes(eventType)) {
+        setCurrentTime(currentTime);
+        setDuration(duration);
       }
+
+      if (eventType === "ended") {
+        setIsComplete(true);
+      }
+
+      console.log(`Player ${eventType} at ${currentTime}s / ${duration}s`);
     };
 
     window.addEventListener("message", handleMessage);
-
     return () => window.removeEventListener("message", handleMessage);
   }, [selected]);
 
@@ -188,8 +190,6 @@ export default function WatchPage() {
   if (!id || !media_type) {
     return <div>Error: Missing media ID or type.</div>;
   }
-
-
 
   console.log(show);
 
