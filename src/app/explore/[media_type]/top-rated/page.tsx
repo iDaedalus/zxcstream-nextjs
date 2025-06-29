@@ -10,6 +10,7 @@ export default function TopRatedMovies() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -55,6 +56,7 @@ export default function TopRatedMovies() {
         }`;
         const res = await fetch(endpoint);
         const data = await res.json();
+        setTotalPages(data.total_pages);
         const media = data.results.map((movie: MovieType) => ({
           ...movie,
           media_type,
@@ -78,6 +80,7 @@ export default function TopRatedMovies() {
     <ReusableCategory
       data={movies}
       loading={loading}
+      totalPages={totalPages}
       loadingMore={loadingMore}
       category="Top-Rated"
       page={page}

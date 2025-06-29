@@ -22,6 +22,7 @@ export default function ComingSoon() {
   const genreParam = selectedGenres.join(",");
   const companyParam = selectedCompanies.join(",");
   const networkParam = selectedNetworks.join(",");
+  const [totalPages, setTotalPages] = useState(0);
   const today = new Date().toISOString().split("T")[0];
   useEffect(() => {
     setMovies([]);
@@ -60,6 +61,7 @@ export default function ComingSoon() {
         }`;
         const res = await fetch(endpoint);
         const data = await res.json();
+        setTotalPages(data.total_pages);
         const media = data.results.map((movie: MovieType) => ({
           ...movie,
           media_type,
@@ -83,6 +85,7 @@ export default function ComingSoon() {
     <ReusableCategory
       data={movies}
       loading={loading}
+      totalPages={totalPages}
       loadingMore={loadingMore}
       category="Coming-Soon"
       page={page}
