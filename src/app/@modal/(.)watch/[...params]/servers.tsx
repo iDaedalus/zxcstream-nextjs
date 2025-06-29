@@ -1,3 +1,62 @@
+// lib/servers.ts
+import { Tally1, Tally2, Tally3, Tally4, Tally5 } from "lucide-react";
+
+export function getServers(id: string, season?: string, episode?: string) {
+  return [
+    {
+      name: "Server 1",
+      isRecommended: true,
+      sublabel: "No Ads",
+      description: "Fast and clean experience, but limited to movies only.",
+      movieLink: `https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=true`,
+      tvLink: `https://vidsrc.cc/v2/embed/tv/${id}/${season}/${episode}?autoPlay=true`,
+      icon: <Tally1 />,
+      value: "server1",
+    },
+    {
+      name: "Server 2",
+      sublabel: "Sandbox required",
+      isRecommended: true,
+      description:
+        "Extensive movie collection with fast streaming, but contains ads.",
+      movieLink: `https://vidsrc.xyz/embed/movie/${id}`,
+      tvLink: `https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${season}&episode=${episode}`,
+      icon: <Tally2 />,
+      value: "server2",
+    },
+    {
+      name: "Server 3",
+      sublabel: "Sandbox required",
+      isRecommended: true,
+      description: "Reliable streaming with autoplay and next episode support.",
+      movieLink: `https://vidlink.pro/movie/${id}?primaryColor=0008ff&secondaryColor=000000&iconColor=ffffff&icons=default&player=jw&title=true&poster=false&autoplay=true&nextbutton=true`,
+      tvLink: `https://vidlink.pro/tv/${id}/${season}/${episode}?primaryColor=0008ff&secondaryColor=000000&iconColor=ffffff&icons=default&player=jw&title=true&poster=false&autoplay=true&nextbutton=true`,
+      icon: <Tally3 />,
+      value: "server3",
+    },
+    {
+      name: "Server 4",
+      sublabel: "Sandbox required",
+      isRecommended: false,
+      description: "Smooth playback with autoplay enabled by default.",
+      movieLink: `https://vidsrc.su/embed/movie/${id}?serverselector=false`,
+      tvLink: `https://vidsrc.su/embed/tv/${id}/${season}/${episode}?serverselector=false`,
+      icon: <Tally4 />,
+      value: "server4",
+    },
+    {
+      name: "Server 5",
+      sublabel: "Sandbox required",
+      isRecommended: false,
+      description: "Stylized player with autoplay and customizable theme.",
+      movieLink: `https://vidfast.pro/movie/${id}?autoPlay=true&theme=FF0000`,
+      tvLink: `https://vidfast.pro/tv/${id}/${season}/${episode}?autoPlay=true&theme=FF0000`,
+      icon: <Tally5 />,
+      value: "server5",
+    },
+  ];
+}
+
 // "use client";
 // import { useParams } from "next/navigation";
 // import {

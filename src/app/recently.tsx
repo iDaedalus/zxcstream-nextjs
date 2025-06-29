@@ -5,11 +5,11 @@ import { localWatchlist } from "./@modal/(.)watch/[...params]/page";
 import ReusableBackdropSwiper from "./reusableBackdropSwiper";
 
 const allServers = [
-  { label: "Alpha", value: "Alpha", icon: <Tally1 /> },
-  { label: "Beta", value: "Beta", icon: <Tally2 /> },
-  { label: "Delta", value: "Delta", icon: <Tally3 /> },
-  { label: "Gamma", value: "Gamma", icon: <Tally4 /> },
-  { label: "Epsilon", value: "Epsilon", icon: <Tally5 /> },
+  { label: "Server 1", value: "Server 1", icon: <Tally1 /> },
+  { label: "Server 2", value: "Server 2", icon: <Tally2 /> },
+  { label: "Server 3", value: "Server 3", icon: <Tally3 /> },
+  { label: "Server 4", value: "Server 4", icon: <Tally4 /> },
+  { label: "Server 5", value: "Server 5", icon: <Tally5 /> },
 ];
 
 export default function RecentlyWatched() {
