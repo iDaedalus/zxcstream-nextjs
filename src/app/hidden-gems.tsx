@@ -5,7 +5,7 @@ import "swiper/css/pagination";
 import { useState, useEffect } from "react";
 import { Clock, Zap, Coffee, Hourglass } from "lucide-react";
 import type { MovieType } from "@/lib/getMovieData";
-import ReusableSwiper from "./reusableSwiper";
+import ReusableSwiper from "./reusablePosterSwiper";
 
 export default function RuntimeMovies() {
   const [movies, setMovies] = useState<MovieType[]>([]);

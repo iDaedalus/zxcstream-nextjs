@@ -5,7 +5,7 @@ import "swiper/css/pagination";
 import { useState, useEffect } from "react";
 import { Zap, Heart, Laugh, Skull } from "lucide-react";
 import type { MovieType } from "@/lib/getMovieData";
-import ReusableSwiper from "./reusableSwiper";
+import ReusableSwiper from "./reusablePosterSwiper";
 export default function GenreMovies() {
   const [movies, setMovies] = useState<MovieType[]>([]);
   const [loading, setLoading] = useState(true);

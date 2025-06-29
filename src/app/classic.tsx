@@ -5,7 +5,7 @@ import "swiper/css/pagination";
 import { useState, useEffect } from "react";
 import { Clock, Calendar, Star } from "lucide-react";
 import { MovieType } from "@/lib/getMovieData";
-import ReusableSwiper from "./reusableSwiper";
+import ReusableSwiper from "./reusablePosterSwiper";
 export default function ClassicMovies() {
   const [movies, setMovies] = useState<MovieType[]>([]);
   const [loading, setLoading] = useState(true);

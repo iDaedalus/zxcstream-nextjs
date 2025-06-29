@@ -74,6 +74,7 @@ export interface SeasonsType {
 }
 interface LogoTypes {
   logos: ImageTypes[];
+  backdrops: ImageTypes[];
 }
 interface ImageTypes {
   file_path: string;

@@ -14,6 +14,7 @@ export default function PopularMovies() {
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [yearSelected, setYearSelected] = useState<number | null>(null);
+  const [totalPages, setTotalPages] = useState(0);
 
   const path = usePathname();
 
@@ -55,6 +56,7 @@ export default function PopularMovies() {
         }`;
         const res = await fetch(endpoint);
         const data = await res.json();
+        setTotalPages(data.total_pages);
         const media = data.results.map((movie: MovieType) => ({
           ...movie,
           media_type,
@@ -78,6 +80,7 @@ export default function PopularMovies() {
     <ReusableCategory
       data={movies}
       loading={loading}
+      totalPages={totalPages}
       loadingMore={loadingMore}
       category="Popular"
       page={page}

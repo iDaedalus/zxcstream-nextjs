@@ -36,6 +36,7 @@ import Image from "next/image";
 interface ReusableCategoryProps {
   data: MovieType[];
   loading: boolean;
+  totalPages: number;
   loadingMore: boolean;
   category: string;
   page: number;
@@ -61,6 +62,7 @@ interface ReusableCategoryProps {
 export default function ReusableCategory({
   data,
   loading,
+  totalPages,
   loadingMore,
   category,
   page,
@@ -450,7 +452,7 @@ export default function ReusableCategory({
           <Button
             variant="outline"
             onClick={() => setPage((prev) => prev + 1)}
-            disabled={loadingMore}
+            disabled={loadingMore || page >= totalPages}
             className="h-full w-full aspect-[2/3] flex-col "
           >
             <Plus />
@@ -462,8 +464,15 @@ export default function ReusableCategory({
                   aria-hidden="true"
                 />
               ) : null}
-              {loadingMore ? "Loading..." : "Load More"}
+              {page >= totalPages
+                ? "No more results."
+                : loadingMore
+                ? "Loading..."
+                : "Load More"}
             </div>
+            <p>
+              {page} / {totalPages}
+            </p>
           </Button>
           {loadingMore && (
             <>
