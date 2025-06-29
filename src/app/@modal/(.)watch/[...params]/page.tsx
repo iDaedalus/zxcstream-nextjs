@@ -1,4 +1,5 @@
 "use client";
+
 import { useParams } from "next/navigation";
 import {
   Drawer,
@@ -18,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Power, TriangleAlert } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+
 export interface localWatchlist {
   id: string;
   media_type: string;
@@ -31,6 +33,7 @@ export interface localWatchlist {
   season: number;
   episode: number;
 }
+
 export default function WatchPage() {
   const router = useRouter();
   const { params } = useParams() as { params?: string[] };
@@ -46,6 +49,7 @@ export default function WatchPage() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+
   const servers = [
     {
       name: "Alpha",
@@ -90,27 +94,27 @@ export default function WatchPage() {
     },
   ];
 
-  if (!id || !media_type) {
-    return <div>Error: Missing media ID or type.</div>;
-  }
-  const { show } = GetMovieData({ id, media_type });
+  // Get movie data - this hook should always be called
+  const { show } = GetMovieData({ id: id || "", media_type: media_type || "" });
 
-  const backdrop = show?.images.backdrops.find(
-    (meow) => meow.iso_639_1 === "en"
-  )?.file_path;
-  const releaseDate = show?.first_air_date || show?.release_date;
-  const title = show?.title || show?.name || "N/A";
-  console.log(show);
+  // All useEffect hooks must be called before any conditional returns
   useEffect(() => {
     if (
       !id ||
       !media_type ||
-      !title ||
-      title === "N/A" ||
+      (!show?.title && !show?.name) ||
       currentTime === 0 ||
       duration === 0
     )
       return;
+
+    const backdrop = show?.images?.backdrops?.find(
+      (meow) => meow.iso_639_1 === "en"
+    )?.file_path;
+
+    const releaseDate = show?.first_air_date || show?.release_date;
+    const title = show?.title || show?.name || "N/A";
+
     const watchingData = {
       id,
       media_type,
@@ -132,17 +136,30 @@ export default function WatchPage() {
     const filteredId = insertLocal.filter(
       (item: localWatchlist) => item.id !== id
     );
+
     const combineUpdate = [watchingData, ...filteredId];
 
     localStorage.setItem("recentlyWatch", JSON.stringify(combineUpdate));
-  }, [currentTime, isComplete]);
+  }, [
+    currentTime,
+    isComplete,
+    id,
+    media_type,
+    show,
+    selected,
+    season,
+    episode,
+    duration,
+  ]);
 
   useEffect(() => {
     if (selected !== "Alpha") return;
+
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== "https://vidsrc.cc") return;
 
       const { data } = event;
+
       if (data?.type === "PLAYER_EVENT") {
         const eventType = data.data?.event;
 
@@ -158,21 +175,28 @@ export default function WatchPage() {
     };
 
     window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, []);
 
-  const current = servers.find((server) => server.name === selected);
-  const src =
-    media_type === "movie"
-      ? current?.movieLink
-      : media_type === "tv"
-      ? current?.tvLink
-      : "";
+    return () => window.removeEventListener("message", handleMessage);
+  }, [selected]);
 
   // Set loading to true when server changes or sandbox setting changes
   useEffect(() => {
     setIsLoading(true);
   }, [selected, sandboxEnabled]);
+
+  // Now we can do conditional returns after all hooks are called
+  if (!id || !media_type) {
+    return <div>Error: Missing media ID or type.</div>;
+  }
+
+  const backdrop = show?.images?.backdrops?.find(
+    (meow) => meow.iso_639_1 === "en"
+  )?.file_path;
+
+  const releaseDate = show?.first_air_date || show?.release_date;
+  const title = show?.title || show?.name || "N/A";
+
+  console.log(show);
 
   const handleIframeLoad = () => {
     setIsLoading(false);
@@ -182,6 +206,15 @@ export default function WatchPage() {
     setSelected(serverName);
     setIsLoading(true);
   };
+
+  const current = servers.find((server) => server.name === selected);
+
+  const src =
+    media_type === "movie"
+      ? current?.movieLink
+      : media_type === "tv"
+      ? current?.tvLink
+      : "";
 
   return (
     <motion.div
@@ -199,6 +232,7 @@ export default function WatchPage() {
             </div>
           </div>
         )}
+
         {src && (
           <iframe
             key={`${src}-${sandboxEnabled}`}
@@ -215,7 +249,7 @@ export default function WatchPage() {
         )}
 
         <span
-          className="absolute transform translate-y-[70%] top-[70%] translate-x-[50%] right-[50%] bg-black/50 p-4 rounded-full z-20"
+          className="absolute transform translate-y-[70%] top-[70%] translate-x-[50%] right-[50%] bg-black/50 p-4 rounded-full z-20 cursor-pointer"
           onClick={() => router.back()}
         >
           <Power strokeWidth={3} />
@@ -259,6 +293,7 @@ export default function WatchPage() {
                 </Label>
               </div>
             </div>
+
             <div className="p-4 grid lg:grid-cols-2 grid-cols-1 gap-2 overflow-auto">
               <div className="lg:col-span-2 col-span-1">Select Servers</div>
               {servers.map((server) => (
@@ -268,7 +303,7 @@ export default function WatchPage() {
                     handleServerChange(server.name);
                     setOpen(false);
                   }}
-                  className={`border-input relative flex items-center gap-2 rounded-md border p-4 shadow-xs outline-none ${
+                  className={`border-input relative flex items-center gap-2 rounded-md border p-4 shadow-xs outline-none cursor-pointer ${
                     server.name === selected
                       ? "!border-blue-500 text-blue-400"
                       : "hover:border-gray-400 text-white"
@@ -290,6 +325,7 @@ export default function WatchPage() {
                         clipRule="evenodd"
                       />
                     </svg>
+
                     <div className="grid grow gap-2">
                       <Label>
                         {server.name}
@@ -305,6 +341,7 @@ export default function WatchPage() {
                 </div>
               ))}
             </div>
+
             <DrawerFooter>
               <DrawerClose asChild>
                 <Button variant="outline">Close</Button>
@@ -313,6 +350,7 @@ export default function WatchPage() {
           </DrawerContent>
         </Drawer>
       </div>
+
       <div className="w-full flex justify-between items-center px-2 py-3 text-xs bg-black bord truncate gap-5">
         <p>Server {selected}</p>{" "}
         {sandboxEnabled ? (
@@ -329,7 +367,6 @@ export default function WatchPage() {
         ) : (
           <div className="flex items-center gap-3">
             <p>TV Show</p>
-
             <p>
               S{season}E{episode}
             </p>
