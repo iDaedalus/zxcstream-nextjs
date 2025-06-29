@@ -1,9 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import {
-  Clock,
-  Calendar,
-  Star,
   Tally1,
   Tally2,
   Tally3,

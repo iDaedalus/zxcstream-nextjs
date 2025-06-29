@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { localWatchlist } from "./@modal/(.)watch/[...params]/page";
 import Image from "next/image";
-import { useState } from "react";
 import { Progress } from "@/components/ui/progress";
 
 export default function BackdropCard({ movie }: { movie: localWatchlist }) {

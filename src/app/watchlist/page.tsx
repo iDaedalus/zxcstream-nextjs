@@ -3,7 +3,7 @@
 import { useWatchlist } from "@/lib/watchlist";
 import { MovieCard } from "../card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Film, Trash, Trash2, X } from "lucide-react";
+import { ArrowRight, Trash } from "lucide-react";
 export default function Watchlist() {
   const { watchlist, removeFromWatchlist, clearWatchlist, count } =
     useWatchlist();

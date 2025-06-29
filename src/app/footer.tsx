@@ -1,20 +1,12 @@
 "use client";
 
 import { Twitter, Facebook, Youtube, Send } from "lucide-react";
-
-import logo from "@/assets/zxzx.png";
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className=" text-gray-300 py-8 px-4 w-full text-xs lg:text-base lg:mb-0 mb-15">
-      {/* <div className=" lg:h-10 h-8 mb-8">
-        <img
-          className="h-full w-full object-contain z-10"
-          src={logo.src}
-          alt=""
-        />
-      </div> */}
+    
       <div className=" text-center flex flex-col items-center justify-center mt-8 ">
         <div className="mb-6 flex gap-8">
           <a

@@ -117,8 +117,8 @@ export default function ReusableBackdropSwiper({
         ) : data.length === 0 ? (
           <div className=" flex items-center justify-center w-full h-35">
             <p className="text-center">
-              No movies added yet, or Server {media} currently doesn't support
-              playback tracking.
+              No movies added yet, or Server {media} currently doesn&apos;t
+              support playback tracking.
             </p>
           </div>
         ) : (

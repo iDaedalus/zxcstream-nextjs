@@ -38,20 +38,14 @@ export default function WatchPage() {
   const id = params?.[1];
   const season = params?.[2];
   const episode = params?.[3];
-  if (!id || !media_type) {
-    return <div>Error: Missing media ID or type.</div>;
-  }
-  const { show } = GetMovieData({ id, media_type });
+
   const [selected, setSelected] = useState("Alpha");
   const [sandboxEnabled, setSandboxEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
-
-  const backdrop = show?.images.backdrops.find(
-    (meow) => meow.iso_639_1 === "en"
-  )?.file_path;
-  const releaseDate = show?.first_air_date || show?.release_date;
-  const title = show?.title || show?.name || "N/A";
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
   const servers = [
     {
       name: "Alpha",
@@ -95,9 +89,17 @@ export default function WatchPage() {
       tvLink: `https://vidfast.pro/tv/${id}/${season}/${episode}?autoPlay=true&theme=FF0000`,
     },
   ];
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [isComplete, setIsComplete] = useState(false);
+
+  if (!id || !media_type) {
+    return <div>Error: Missing media ID or type.</div>;
+  }
+  const { show } = GetMovieData({ id, media_type });
+
+  const backdrop = show?.images.backdrops.find(
+    (meow) => meow.iso_639_1 === "en"
+  )?.file_path;
+  const releaseDate = show?.first_air_date || show?.release_date;
+  const title = show?.title || show?.name || "N/A";
   console.log(show);
   useEffect(() => {
     if (
