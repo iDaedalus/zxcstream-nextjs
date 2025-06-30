@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { localWatchlist } from "./@modal/(.)watch/[...params]/page";
+import { SaveProgressType } from "./@modal/(.)watch/save-progress";
 import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
 
-export default function BackdropCard({ movie }: { movie: localWatchlist }) {
+export default function BackdropCard({ movie }: { movie: SaveProgressType }) {
   const releaseDate = new Date(movie.releaseDate).getFullYear() || "N/A";
   const progress =
     movie.duration && movie.duration > 0
