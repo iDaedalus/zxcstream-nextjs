@@ -27,12 +27,12 @@ export default function DrawerMetadata({
   id,
   media_type,
   setOpen,
-  setNavigate,
+  // setNavigate,
 }: {
   id: string;
   media_type: string;
   setOpen: (open: boolean) => void;
-  setNavigate: (navigate: boolean) => void;
+  // setNavigate: (navigate: boolean) => void;
 }) {
   const { show, loading } = GetMovieData({ id, media_type });
 
@@ -115,7 +115,7 @@ export default function DrawerMetadata({
                       scroll={false}
                       onClick={() => {
                         setOpen(false);
-                        setNavigate(true);
+                        // setNavigate(true);
 
                         toast("Now Playing", {
                           description: (

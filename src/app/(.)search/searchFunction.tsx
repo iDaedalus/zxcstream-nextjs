@@ -109,9 +109,9 @@ export default function SimpleStaggerSearch() {
   };
 
   return (
-    <div className="overflow-auto h-screen w-full">
+    <div className="min-h-screen lg:pt-30 pt-15 pb-15 w-full">
       <motion.div
-        className="grid lg:grid-cols-6 grid-cols-3 lg:w-[90%] w-[95%] mx-auto lg:gap-5 gap-2 lg:mt-30 mt-15 mb-15"
+        className="grid lg:grid-cols-6 grid-cols-3 lg:w-[90%] w-[95%] mx-auto lg:gap-5 gap-2 "
         variants={container}
         initial="hidden"
         animate="show"

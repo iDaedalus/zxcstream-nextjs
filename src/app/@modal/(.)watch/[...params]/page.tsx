@@ -11,11 +11,11 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import GetMovieData from "@/lib/getMovieData";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, Power } from "lucide-react";
+import { ArrowUpDown, Loader, Power, X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { getServers } from "./servers";
@@ -26,28 +26,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-export interface localWatchlist {
-  id: string;
-  media_type: string;
-  backdrop: string;
-  serverName: string;
-  title: string;
-  releaseDate: number;
-  duration: number;
-  currentTime: number;
-  isComplete: boolean;
-  season: number;
-  episode: number;
-}
+import { SaveProgress } from "../save-progress";
 
 export default function WatchPage() {
   const router = useRouter();
   const { params } = useParams() as { params?: string[] };
+
   const media_type = params?.[0];
   const id = params?.[1];
   const season = params?.[2];
   const episode = params?.[3];
+
   const [openDialog, setOpenDialog] = useState(true);
   const [selected, setSelected] = useState("Server 1");
   const [sandboxEnabled, setSandboxEnabled] = useState(true);
@@ -56,63 +45,66 @@ export default function WatchPage() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+
+  // Use refs to store the latest values for cleanup
+  const currentTimeRef = useRef(0);
+  const durationRef = useRef(0);
+  const isCompleteRef = useRef(false);
+
   const servers = useMemo(
     () => getServers(id || "", season, episode),
     [id, season, episode]
   );
-  const { show } = GetMovieData({ id: id || "", media_type: media_type || "" });
-  console.log(open);
-  useEffect(() => {
-    if (
-      !id ||
-      !media_type ||
-      (!show?.title && !show?.name) ||
-      currentTime === 0 ||
-      duration === 0
-    )
-      return;
 
-    const backdrop = show?.images?.backdrops?.find(
-      (meow) => meow.iso_639_1 === "en"
-    )?.file_path;
-    const releaseDate = show?.first_air_date || show?.release_date;
-    const title = show?.title || show?.name || "N/A";
-    const watchingData = {
+  const { show } = GetMovieData({ id: id || "", media_type: media_type || "" });
+
+  // Load sandbox preference from localStorage on mount
+  useEffect(() => {
+    const savedSandbox = localStorage.getItem("sandboxEnabled");
+    if (savedSandbox !== null) {
+      setSandboxEnabled(savedSandbox === "true");
+    }
+  }, []);
+
+  // Update refs whenever state changes
+  useEffect(() => {
+    currentTimeRef.current = currentTime;
+  }, [currentTime]);
+
+  useEffect(() => {
+    durationRef.current = duration;
+  }, [duration]);
+
+  useEffect(() => {
+    isCompleteRef.current = isComplete;
+  }, [isComplete]);
+
+  // Save progress function that uses current refs
+  const saveCurrentProgress = useCallback(() => {
+    if (!id || !media_type || !show) return;
+
+    SaveProgress({
       id,
       media_type,
-      backdrop,
+      title: show?.title || show?.name || "N/A",
+      currentTime: currentTimeRef.current,
+      duration: durationRef.current,
+      backdrop:
+        show?.images?.backdrops?.find((b) => b.iso_639_1 === "en")?.file_path ||
+        "",
+      isComplete: isCompleteRef.current,
+      season: season || "",
+      episode: episode || "",
+      releaseDate: show?.release_date || show?.first_air_date || "",
       serverName: selected,
-      releaseDate,
-      title,
-      duration,
-      currentTime,
-      isComplete,
-      season: season || null,
-      episode: episode || null,
-    };
+    });
 
-    const insertLocal = JSON.parse(
-      localStorage.getItem("recentlyWatch") || "[]"
-    );
-
-    const filteredId = insertLocal.filter(
-      (item: localWatchlist) => item.id !== id
-    );
-
-    const combineUpdate = [watchingData, ...filteredId];
-
-    localStorage.setItem("recentlyWatch", JSON.stringify(combineUpdate));
-  }, [
-    currentTime,
-    isComplete,
-    id,
-    media_type,
-    show,
-    selected,
-    season,
-    episode,
-    duration,
-  ]);
+    console.log("Progress saved:", {
+      currentTime: currentTimeRef.current,
+      duration: durationRef.current,
+      isComplete: isCompleteRef.current,
+    });
+  }, [id, media_type, show, season, episode, selected]);
 
   useEffect(() => {
     if (selected !== "Server 1" && selected !== "Server 3") return;
@@ -142,45 +134,82 @@ export default function WatchPage() {
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, [selected]);
+
+  // Auto-save progress periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (currentTimeRef.current > 0 && durationRef.current > 0) {
+        saveCurrentProgress();
+      }
+    }, 30000); // Save every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [saveCurrentProgress]);
+
+  // Save progress when component unmounts
+  useEffect(() => {
+    return () => {
+      saveCurrentProgress();
+    };
+  }, [saveCurrentProgress]);
+
+  // Save sandbox preference to localStorage on change
+  useEffect(() => {
+    localStorage.setItem("sandboxEnabled", sandboxEnabled.toString());
+  }, [sandboxEnabled]);
+
   useEffect(() => {
     setIsLoading(true);
   }, [selected, sandboxEnabled]);
-  if (!id || !media_type) {
-    return <div>Error: Missing media ID or type.</div>;
-  }
 
   const current = servers.find((server) => server.name === selected);
-
   const src =
     media_type === "movie"
       ? current?.movieLink
       : media_type === "tv"
       ? current?.tvLink
       : "";
-  if (!openDialog) {
-    router.back();
+
+  const handleDialogClose = (openD: boolean) => {
+    if (!openD) {
+      // Save progress before closing
+      saveCurrentProgress();
+
+      // Small delay to ensure save completes
+      setTimeout(() => {
+        setOpenDialog(false);
+        router.back();
+      }, 100);
+    } else {
+      setOpenDialog(openD);
+    }
+  };
+
+  if (!id || !media_type) {
+    return <div>Error: Missing media ID or type.</div>;
   }
+
   return (
     <>
-      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      <Dialog open={openDialog} onOpenChange={handleDialogClose}>
         <DialogContent
           className="h-full w-full min-w-full p-0"
           showCloseButton={false}
         >
           <div className="sr-only">
             <DialogHeader>
-              <DialogTitle>Edit profile</DialogTitle>
+              <DialogTitle>Video Player</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you&apos;re
-                done.
+                Watch your selected media content
               </DialogDescription>
             </DialogHeader>
           </div>
+
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="  w-full h-full overflow-auto flex flex-col bg-background"
+            className="w-full h-full overflow-auto flex flex-col bg-background"
           >
             <div className="relative flex-1">
               {isLoading && (
@@ -194,7 +223,7 @@ export default function WatchPage() {
 
               <Button
                 variant="outline"
-                className="absolute z-40 top-3 right-3"
+                className="absolute z-40 top-3 right-3 bg-transparent"
                 onClick={() => setOpen(true)}
               >
                 Switch Server <ArrowUpDown />
@@ -217,38 +246,48 @@ export default function WatchPage() {
 
               <span
                 className="absolute transform translate-y-[70%] top-[70%] translate-x-[50%] right-[50%] bg-black/50 p-4 rounded-full z-20 cursor-pointer"
-                onClick={() => router.back()}
+                onClick={() => {
+                  saveCurrentProgress();
+                  setTimeout(() => router.back(), 100);
+                }}
               >
                 <Power strokeWidth={3} />
               </span>
             </div>
 
-            <div className="w-full flex justify-between items-center px-2 py-3 text-xs bg-black bord truncate gap-5">
-              <p className="flex-1 text-left">Server {selected}</p>
-
+            <div className="w-full flex justify-between items-center px-2 py-3 text-xs bg-black border truncate gap-5">
+              <p className="flex-1 text-left">{selected}</p>
               <p className="flex-1 text-center">
                 {sandboxEnabled ? "Sandbox Enabled" : "Sandbox Disabled"}
               </p>
-              {/* {currentTime ? <>1313</> : <>1212</>} */}
-              {media_type === "movie" ? (
-                <p className="flex-1 text-right">Movie</p>
-              ) : (
-                <div className="flex items-center gap-3 flex-1 text-right">
-                  <p>TV Show</p>
-                  <p>
-                    S{season}E{episode}
-                  </p>
-                </div>
-              )}
+              <div
+                className={`flex justify-end gap-1 items-center flex-1 text-right ${
+                  currentTime ? "text-green-500" : "text-red-500 animate-pulse"
+                }`}
+              >
+                {currentTime ? (
+                  <>
+                    Syncing
+                    <Loader size={15} className="animate-spin" />
+                  </>
+                ) : (
+                  <>
+                    Not Synced <X size={15} />
+                  </>
+                )}
+              </div>
             </div>
           </motion.div>
         </DialogContent>
       </Dialog>
+
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerContent>
           <DrawerHeader className="sr-only">
-            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
+            <DrawerTitle>Server Selection</DrawerTitle>
+            <DrawerDescription>
+              Choose a server to stream from
+            </DrawerDescription>
           </DrawerHeader>
 
           <div className="w-full p-4 flex justify-between items-start gap-3">
@@ -260,18 +299,18 @@ export default function WatchPage() {
                 </span>
               </p>
               <p className="text-muted-foreground text-xs">
-                Some server do not support by sandbox, you must turn it off
-                before they work
+                Some servers do not support sandbox, you must turn it off before
+                they work
               </p>
             </span>
-            <div className="inline-flex items-center gap-2 [--primary:var(--color-indigo-500)] [--ring:var(--color-indigo-300)] in-[.dark]:[--primary:var(--color-indigo-500)] in-[.dark]:[--ring:var(--color-indigo-900)]">
+            <div className="inline-flex items-center gap-2">
               <Switch
                 id="sandbox"
                 checked={sandboxEnabled}
                 onCheckedChange={setSandboxEnabled}
               />
               <Label htmlFor="sandbox" className="sr-only">
-                Colored switch
+                Sandbox toggle
               </Label>
             </div>
           </div>
@@ -282,11 +321,9 @@ export default function WatchPage() {
               <div
                 key={server.name}
                 onClick={() => {
-                  {
-                    setSelected(server.name);
-                    setIsLoading(true);
-                    setOpen(false);
-                  }
+                  setSelected(server.name);
+                  setIsLoading(true);
+                  setOpen(false);
                 }}
                 className={`border-input relative flex items-center gap-2 rounded-md border p-4 shadow-xs outline-none cursor-pointer ${
                   server.name === selected
@@ -310,12 +347,11 @@ export default function WatchPage() {
                       clipRule="evenodd"
                     />
                   </svg>
-
                   <div className="grid grow gap-2">
                     <Label>
                       {server.name}
-                      <span className=" text-xs leading-[inherit] font-normal text-green-500">
-                        {server.isRecommended ? "(Recommended)" : ""}
+                      <span className="text-xs leading-[inherit] font-normal text-green-500">
+                        {server.isRecommended ? " (Recommended)" : ""}
                       </span>
                     </Label>
                     <p className="text-muted-foreground text-xs">

@@ -90,7 +90,9 @@ export default function SwiperBackdrops() {
                 </p>
                 <div className="mt-5 space-x-2">
                   <Link
-                    href={`watch/${meow.media_type}/${meow.id}`}
+                    href={`watch/${meow.media_type}/${meow.id}${
+                      meow.media_type === "tv" ? "/1/1" : ""
+                    }`}
                     prefetch={true}
                     scroll={false}
                   >

@@ -1,7 +1,8 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { Tally1, Tally2, Tally3, Tally4, Tally5 } from "lucide-react";
-import { localWatchlist } from "./@modal/(.)watch/[...params]/page";
+import type { SaveProgressType } from "./@modal/(.)watch/save-progress";
 import ReusableBackdropSwiper from "./reusableBackdropSwiper";
 
 const allServers = [
@@ -13,12 +14,11 @@ const allServers = [
 ];
 
 export default function RecentlyWatched() {
-  const [recentData, setRecentData] = useState<localWatchlist[]>([]);
+  const [recentData, setRecentData] = useState<SaveProgressType[]>([]);
   const [decade, setDecade] = useState("Alpha");
   const [loading, setLoading] = useState(true);
 
-  // Load watch history once
-  useEffect(() => {
+  const loadRecentData = () => {
     setLoading(true);
     try {
       const raw = JSON.parse(localStorage.getItem("recentlyWatch") || "[]");
@@ -28,6 +28,21 @@ export default function RecentlyWatched() {
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    loadRecentData();
+
+    // Listen for custom storage events
+    const handleStorageChange = () => {
+      loadRecentData();
+    };
+
+    window.addEventListener("storage-update", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage-update", handleStorageChange);
+    };
   }, []);
 
   // Dynamically find servers with unfinished data

@@ -4,7 +4,7 @@ import { Navigation, Pagination, Keyboard } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { localWatchlist } from "./@modal/(.)watch/[...params]/page";
+import { SaveProgressType } from "./@modal/(.)watch/save-progress";
 import { motion } from "framer-motion";
 
 
@@ -26,7 +26,7 @@ export default function ReusableBackdropSwiper({
   numbering,
 }: {
   title: string;
-  data: localWatchlist[];
+  data: SaveProgressType[];
   loading: boolean;
   media: string;
   setMedia: React.Dispatch<React.SetStateAction<string>>;
@@ -120,7 +120,7 @@ export default function ReusableBackdropSwiper({
               </div>
             </SwiperSlide>
           ) : data.length === 0 ? (
-            <div className=" flex items-center justify-center w-full h-35">
+            <div className=" flex items-center justify-center w-full">
               <p className="text-center text-sm">
                 No movies added yet, or Server {media} currently doesn&apos;t
                 support playback tracking.

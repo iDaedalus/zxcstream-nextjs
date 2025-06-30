@@ -28,6 +28,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/app/category/[media_type]/popular"
-  ],
+, "src/lib/useRecentlyWatch"  ],
   "exclude": ["node_modules"]
 }

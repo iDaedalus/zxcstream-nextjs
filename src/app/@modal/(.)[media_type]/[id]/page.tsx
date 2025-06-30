@@ -17,14 +17,20 @@ interface PageProps {
 export default function InterceptModal({ params }: PageProps) {
   const { media_type, id } = use(params);
   const [open, setOpen] = useState(true);
-  const [navigate, setNavigate] = useState(false);
+  // const [navigate, setNavigate] = useState(false);
   const router = useRouter();
-  if (!open && !navigate) {
-    router.back();
-  }
+  // if (!open && !navigate) {
+  //   router.back();
+  // }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open);
+        if (!open) router.back();
+      }}
+    >
       <DrawerContent className=" outline-none focus-visible:outline-none">
         <DrawerHeader className="sr-only">
           <DrawerTitle></DrawerTitle>
@@ -37,7 +43,7 @@ export default function InterceptModal({ params }: PageProps) {
           id={id}
           media_type={media_type}
           setOpen={setOpen}
-          setNavigate={setNavigate}
+          // setNavigate={setNavigate}
         />
       </DrawerContent>
     </Drawer>
