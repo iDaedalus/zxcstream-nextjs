@@ -15,7 +15,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import GetMovieData from "@/lib/getMovieData";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, Loader, Power, X } from "lucide-react";
+import { ArrowLeft, ArrowUpDown, Loader, X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { getServers } from "./servers";
@@ -39,7 +39,7 @@ export default function WatchPage() {
   const defaultServer = searchParams.get("server") || "Server 1";
 
   const [openDialog, setOpenDialog] = useState(true);
-  const [selected, setSelected] = useState(defaultServer);
+  const [selected, setSelected] = useState("Server 1");
   const [sandboxEnabled, setSandboxEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -108,10 +108,19 @@ export default function WatchPage() {
   }, [id, media_type, show, season, episode, selected]);
 
   useEffect(() => {
-    if (selected !== "Server 1" && selected !== "Server 3") return;
+    if (
+      selected !== "Server 1" &&
+      selected !== "Server 2" &&
+      selected !== "Server 3"
+    )
+      return;
 
     const handleMessage = (event: MessageEvent) => {
-      const allowedOrigins = ["https://vidsrc.cc", "https://vidlink.pro"];
+      const allowedOrigins = [
+        "https://vidsrc.cc",
+        "https://vidlink.pro",
+        "https://vidfast.pro",
+      ];
       if (!allowedOrigins.includes(event.origin)) return;
 
       const { data } = event;
@@ -246,13 +255,14 @@ export default function WatchPage() {
               )}
 
               <span
-                className="absolute transform translate-y-[70%] top-[70%] translate-x-[50%] right-[50%] bg-black/50 p-4 rounded-full z-20 cursor-pointer"
+                className="absolute top-3 left-3 bg-black/50 p-4 rounded-full z-20 cursor-pointer flex items-center gap-1 zxczxc"
                 onClick={() => {
                   saveCurrentProgress();
                   setTimeout(() => router.back(), 100);
                 }}
               >
-                <Power strokeWidth={3} />
+                <ArrowLeft strokeWidth={3} />
+                BACK
               </span>
             </div>
 
@@ -325,6 +335,7 @@ export default function WatchPage() {
                   setSelected(server.name);
                   setIsLoading(true);
                   setOpen(false);
+                  setSandboxEnabled(server.sandboxSupport);
                 }}
                 className={`border-input relative flex items-center gap-2 rounded-md border p-4 shadow-xs outline-none cursor-pointer ${
                   server.name === selected

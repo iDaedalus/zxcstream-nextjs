@@ -44,6 +44,7 @@ const items = [
   {
     name: "Movie",
     logo: Film,
+    link: "/explore/movie/popular",
     tags: [
       {
         title: "Popular",
@@ -68,6 +69,7 @@ const items = [
   {
     name: "TV Show",
     logo: Tv,
+    link: "/explore/tv/top-rated",
     tags: [
       {
         title: "Popular",
@@ -151,11 +153,12 @@ export default function NavBar() {
               <NavigationMenuList>
                 {items.map((item) => (
                   <NavigationMenuItem key={item.name}>
-                    <NavigationMenuTrigger className="flex items-center gap-3 ">
-                      <item.logo size={16} />
-                      {item.name}
-                    </NavigationMenuTrigger>
-
+                    <Link href={item.link}>
+                      <NavigationMenuTrigger className="flex items-center gap-3 ">
+                        <item.logo size={16} />
+                        {item.name}
+                      </NavigationMenuTrigger>
+                    </Link>
                     {item.tags && (
                       <NavigationMenuContent>
                         <div className="grid grid-cols-2 w-[480px] gap-2 p-2">
