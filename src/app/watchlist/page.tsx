@@ -1,10 +1,10 @@
 // components/WatchlistButton.tsx
 "use client";
 import { useWatchlist } from "@/lib/watchlist";
-import { MovieCard } from "../card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Trash } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 export default function Watchlist() {
   const { watchlist, removeFromWatchlist, clearWatchlist, count } =
     useWatchlist();
@@ -27,7 +27,7 @@ export default function Watchlist() {
           <h3 className="text-xl font-semibold text-foreground mb-2 mt-3">
             Your watchlist is empty
           </h3>
-        
+
           <Button className="mt-6" variant="outline">
             Browse Movies <ArrowRight />
           </Button>
@@ -36,17 +36,19 @@ export default function Watchlist() {
         <div className="grid lg:grid-cols-5 grid-cols-2 lg:gap-5 gap-3 h-full w-full">
           {watchlist.map((meow) => (
             <div key={meow.id} className="relative">
-              <div>
-                <div className="relative h-full w-full  overflow-hidden flex justify-center items-center  rounded-md">
-                  <Image
-                    src={`https://image.tmdb.org/t/p/w1280/${meow.backdrop}`}
-                    alt={meow.title || "poster"}
-                    width={300}
-                    height={417}
-                    className=" object-cover"
-                  />
-                </div>
-              </div>
+              <Link
+                href={`${meow.media_type}/${meow.id}`}
+                className="relative h-full w-full  overflow-hidden flex justify-center items-center  rounded-md"
+              >
+                <Image
+                  src={`https://image.tmdb.org/t/p/w1280/${meow.backdrop}`}
+                  alt={meow.title || "poster"}
+                  width={300}
+                  height={417}
+                  className=" object-cover"
+                />
+              </Link>
+
               <Button
                 variant="outline"
                 size="sm"
