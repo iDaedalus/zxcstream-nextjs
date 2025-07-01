@@ -20,7 +20,7 @@ export default function BackdropCard({ movie }: { movie: SaveProgressType }) {
     <Link
       href={`watch/${movie.media_type}/${movie.id}${
         movie.media_type === "tv" ? `/${movie.season}/${movie.episode}` : ""
-      }`}
+      }?server=${movie.serverName}`}
       prefetch={true}
       scroll={false}
       className="relative h-full w-full flex flex-col gap-1"

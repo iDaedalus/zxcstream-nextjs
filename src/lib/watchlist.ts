@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
-import { MovieType } from "./getMovieData";
+import { SaveWatchlistType } from "@/app/watchlist/watchlist-button";
 
 export function useWatchlist() {
-  const [watchlist, setWatchlist] = useState<MovieType[]>([]);
+  const [watchlist, setWatchlist] = useState<SaveWatchlistType[]>([]);
 
   // Helper function to get current watchlist from localStorage
-  const getCurrentWatchlist = (): MovieType[] => {
+  const getCurrentWatchlist = (): SaveWatchlistType[] => {
     try {
       const saved = localStorage.getItem("watchlist");
       return saved ? JSON.parse(saved) : [];
@@ -19,8 +19,8 @@ export function useWatchlist() {
   };
 
   // Helper function to get display name
-  const getDisplayName = (item: MovieType) => {
-    return item.title || item.name || "Unknown";
+  const getDisplayName = (item: SaveWatchlistType) => {
+    return item.title  || "Unknown";
   };
 
   // Load from localStorage on mount
@@ -28,7 +28,7 @@ export function useWatchlist() {
     setWatchlist(getCurrentWatchlist());
   }, []);
 
-  const addToWatchlist = (item: MovieType) => {
+  const addToWatchlist = (item: SaveWatchlistType) => {
     // Always read current data from localStorage first
     const currentWatchlist = getCurrentWatchlist();
 
@@ -83,7 +83,7 @@ export function useWatchlist() {
     );
   };
 
-  const toggleWatchlist = (item: MovieType) => {
+  const toggleWatchlist = (item: SaveWatchlistType) => {
     if (isInWatchlist(item.id, item.media_type)) {
       removeFromWatchlist(item.id, item.media_type);
     } else {

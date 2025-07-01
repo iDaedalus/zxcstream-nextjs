@@ -265,7 +265,7 @@ export default function NavBar() {
         </div>
       </header>
 
-      <div className="lg:hidden fixed bottom-[1px] left-1 w-[calc(100%-8px)] z-20 bg-background/80 backdrop-blur-sm border-t border-background rounded-md">
+      <div className="lg:hidden fixed bottom-0 left-0 w-full z-20 bg-background/80 backdrop-blur-sm border-t border-background rounded-md">
         {showSearch && (
           <div className=" block lg:hidden p-2">
             <div className="relative">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import {
   Drawer,
   DrawerClose,
@@ -31,14 +31,15 @@ import { SaveProgress } from "../save-progress";
 export default function WatchPage() {
   const router = useRouter();
   const { params } = useParams() as { params?: string[] };
-
+  const searchParams = useSearchParams();
   const media_type = params?.[0];
   const id = params?.[1];
   const season = params?.[2];
   const episode = params?.[3];
+  const defaultServer = searchParams.get("server") || "Server 1";
 
   const [openDialog, setOpenDialog] = useState(true);
-  const [selected, setSelected] = useState("Server 1");
+  const [selected, setSelected] = useState(defaultServer);
   const [sandboxEnabled, setSandboxEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
