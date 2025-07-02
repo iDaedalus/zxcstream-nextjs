@@ -8,7 +8,6 @@ export default function ClientOnlyGuard({
 }: {
   children: React.ReactNode;
 }) {
-  const [isAllowed, setIsAllowed] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
@@ -22,7 +21,6 @@ export default function ClientOnlyGuard({
         hostname.endsWith(".zxcstream-nextjs.vercel.app");
 
       if (isLocal || isProd) {
-        setIsAllowed(true);
       } else {
         window.location.href = "https://zxcstream.site";
       }

@@ -40,7 +40,6 @@ import {
   Info,
   ListFilter,
   LoaderCircleIcon,
-  LucideIcon,
   Play,
   Plus,
   RotateCcw,
