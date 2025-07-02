@@ -34,7 +34,7 @@ export default function useEnglishBackdrop({
       }
     }
     fetchImage();
-  }, []);
+  }, [id, media_type]);
 
   return { image, loading };
 }

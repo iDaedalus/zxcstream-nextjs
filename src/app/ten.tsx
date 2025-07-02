@@ -36,7 +36,7 @@ export default function Ten() {
       }
     }
     fetchWeekly();
-  }, [media]);
+  }, [media, apiKey]);
   return (
     <ReusableSwiper
       title="TOP 20"
