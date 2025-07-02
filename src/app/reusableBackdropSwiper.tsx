@@ -22,7 +22,7 @@ export default function ReusableBackdropSwiper({
   media,
   setMedia,
   mediaOptions,
-  numbering,
+
 }: {
   title: string;
   data: SaveProgressType[];
@@ -30,7 +30,7 @@ export default function ReusableBackdropSwiper({
   media: string;
   setMedia: React.Dispatch<React.SetStateAction<string>>;
   mediaOptions: Media[];
-  numbering: boolean;
+
 }) {
   return (
     data.length !== 0 && (

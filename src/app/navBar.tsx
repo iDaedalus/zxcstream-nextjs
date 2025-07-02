@@ -72,16 +72,16 @@ const items = [
     link: "/explore/tv/top-rated",
     tags: [
       {
-        title: "Popular",
-        link: "explore/tv/popular",
-        icon: Flame,
-        details: "Most watched TV shows right now",
-      },
-      {
         title: "Top Rated",
         link: "explore/tv/top-rated",
         icon: Star,
         details: "Highest rated TV shows by viewers",
+      },
+      {
+        title: "Popular",
+        link: "explore/tv/popular",
+        icon: Flame,
+        details: "Most watched TV shows right now",
       },
       {
         title: "Coming Soon",
