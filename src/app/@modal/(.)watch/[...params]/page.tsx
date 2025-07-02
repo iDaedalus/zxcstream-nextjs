@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/drawer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
+import { m, motion } from "framer-motion";
 import GetMovieData from "@/lib/getMovieData";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowUpDown, Loader, X } from "lucide-react";
@@ -40,14 +40,13 @@ export default function WatchPage() {
 
   const [openDialog, setOpenDialog] = useState(true);
   const [selected, setSelected] = useState(defaultServer);
-  const [sandboxEnabled, setSandboxEnabled] = useState(true);
+
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
-  // Use refs to store the latest values for cleanup
   const currentTimeRef = useRef(0);
   const durationRef = useRef(0);
   const isCompleteRef = useRef(false);
@@ -56,7 +55,9 @@ export default function WatchPage() {
     () => getServers(id || "", season, episode),
     [id, season, episode]
   );
-
+  const ser = servers.find((m) => m.name === defaultServer)?.sandboxSupport;
+  console.log(ser);
+  const [sandboxEnabled, setSandboxEnabled] = useState(ser);
   const { show } = GetMovieData({ id: id || "", media_type: media_type || "" });
 
   // Update refs whenever state changes
@@ -155,10 +156,6 @@ export default function WatchPage() {
     };
   }, [saveCurrentProgress]);
 
-  // Save sandbox preference to localStorage on change
-  useEffect(() => {
-    localStorage.setItem("sandboxEnabled", sandboxEnabled.toString());
-  }, [sandboxEnabled]);
 
   useEffect(() => {
     setIsLoading(true);
