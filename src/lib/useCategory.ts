@@ -2,6 +2,10 @@
 import { useEffect, useState } from "react";
 import { MovieType } from "@/lib/getMovieData";
 const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+export type StateSetter<T> = T | ((prev: T) => T);
+
+
+
 
 export function useCategory({
   media_type,
@@ -116,31 +120,35 @@ export function useCategory({
     voteMin,
     voteMax,
   ]);
-  console.log(page);
+
   return {
     movies,
     loading,
     loadingMore,
-    totalPages,
-    page,
-    setPage,
-    selectedGenres,
-    setSelectedGenres,
-    selectedCompanies,
-    setSelectedCompanies,
-    selectedNetworks,
-    setSelectedNetworks,
-    keywordId,
-    setKeywordId,
-    selectedRegion,
-    setSelectedRegion,
-    fromYear,
-    setFromYear,
-    toYear,
-    setToYear,
-    voteMin,
-    setVoteMin,
-    voteMax,
-    setVoteMax,
+    pagination: {
+      totalPages,
+      page,
+      setPage,
+    },
+    filters: {
+      selectedGenres,
+      setSelectedGenres,
+      selectedCompanies,
+      setSelectedCompanies,
+      selectedNetworks,
+      setSelectedNetworks,
+      keywordId,
+      setKeywordId,
+      selectedRegion,
+      setSelectedRegion,
+      fromYear,
+      setFromYear,
+      toYear,
+      setToYear,
+      voteMin,
+      setVoteMin,
+      voteMax,
+      setVoteMax,
+    },
   };
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCategory } from "@/lib/useCategory";
-import ReusableCategory from "@/app/reusableCategory";
+import ReusableCategory from "@/app/category-main";
 import { usePathname } from "next/navigation";
 export default function PopularData() {
   const path = usePathname();
@@ -11,27 +11,27 @@ export default function PopularData() {
     movies,
     loading,
     loadingMore,
-    totalPages,
-    page,
-    setPage,
-    selectedGenres,
-    setSelectedGenres,
-    selectedCompanies,
-    setSelectedCompanies,
-    selectedNetworks,
-    setSelectedNetworks,
-    keywordId,
-    setKeywordId,
-    selectedRegion,
-    setSelectedRegion,
-    fromYear,
-    setFromYear,
-    toYear,
-    setToYear,
-    voteMin,
-    setVoteMin,
-    voteMax,
-    setVoteMax,
+    pagination: { totalPages, page, setPage },
+    filters: {
+      selectedGenres,
+      setSelectedGenres,
+      selectedCompanies,
+      setSelectedCompanies,
+      selectedNetworks,
+      setSelectedNetworks,
+      keywordId,
+      setKeywordId,
+      selectedRegion,
+      setSelectedRegion,
+      fromYear,
+      setFromYear,
+      toYear,
+      setToYear,
+      voteMin,
+      setVoteMin,
+      voteMax,
+      setVoteMax,
+    },
   } = useCategory({ media_type, category });
 
   return (

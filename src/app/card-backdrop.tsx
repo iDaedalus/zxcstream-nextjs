@@ -23,7 +23,7 @@ export default function BackdropCard({ movie }: { movie: SaveProgressType }) {
       }?server=${movie.serverName}`}
       prefetch={true}
       scroll={false}
-      className="relative h-full w-full flex flex-col gap-1"
+      className="relative h-full w-full flex flex-col gap-1 lg:aspect-[11/8] aspect-[10/8]"
     >
       <div className="relative h-full w-full  overflow-hidden flex justify-center items-center  rounded-md">
         <Image

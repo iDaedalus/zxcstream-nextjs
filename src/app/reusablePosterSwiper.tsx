@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { MovieCard } from "./card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { StateSetter } from "@/lib/useCategory";
 interface Media {
   label: string;
   value: string;
@@ -27,7 +28,7 @@ export default function ReusableSwiper({
   data: MovieType[];
   loading: boolean;
   media: string;
-  setMedia: React.Dispatch<React.SetStateAction<string>>;
+  setMedia: (media: StateSetter<string>) => void;
   mediaOptions: Media[];
   numbering: boolean;
 }) {

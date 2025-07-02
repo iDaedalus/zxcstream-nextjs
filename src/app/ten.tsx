@@ -4,6 +4,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useState, useEffect } from "react";
+import { useMemo } from "react";
 
 import { Film, Tv, LibraryBig } from "lucide-react";
 import { MovieType } from "@/lib/getMovieData";
@@ -15,11 +16,14 @@ export default function Ten() {
 
   const [media, setMedia] = useState<string>("all");
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  const mediaOptions = [
-    { label: "All", value: "all", icon: <LibraryBig /> },
-    { label: "Movie", value: "movie", icon: <Film /> },
-    { label: "TV", value: "tv", icon: <Tv /> },
-  ];
+  const mediaOptions = useMemo(
+    () => [
+      { label: "All", value: "all", icon: <LibraryBig /> },
+      { label: "Movie", value: "movie", icon: <Film /> },
+      { label: "TV", value: "tv", icon: <Tv /> },
+    ],
+    []
+  );
   useEffect(() => {
     async function fetchWeekly() {
       try {

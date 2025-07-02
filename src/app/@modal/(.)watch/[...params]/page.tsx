@@ -221,7 +221,7 @@ export default function WatchPage() {
 
               <Button
                 variant="outline"
-                className="absolute z-40 top-3 right-3 bg-transparent"
+                className="absolute z-40 top-15 right-2 bg-transparent"
                 onClick={() => setOpen(true)}
               >
                 Switch Server <ArrowUpDown />
@@ -242,16 +242,17 @@ export default function WatchPage() {
                 />
               )}
 
-              <span
-                className="absolute top-3 left-3 bg-black/50 p-4 rounded-full z-20 cursor-pointer flex items-center gap-1 zxczxc"
+              <Button
+                className="absolute top-15 z-40 left-2"
+                variant="outline"
                 onClick={() => {
                   saveCurrentProgress();
                   setTimeout(() => router.back(), 100);
                 }}
               >
                 <ArrowLeft strokeWidth={3} />
-                BACK
-              </span>
+                Back
+              </Button>
             </div>
 
             <div className="w-full flex justify-between items-center px-2 py-3 text-xs bg-black border truncate gap-5">

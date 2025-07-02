@@ -2,7 +2,7 @@
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Clock, Zap, Coffee, Hourglass } from "lucide-react";
 import type { MovieType } from "@/lib/getMovieData";
 import ReusableSwiper from "./reusablePosterSwiper";
@@ -12,36 +12,39 @@ export default function RuntimeMovies() {
   const [loading, setLoading] = useState(true);
   const [runtime, setRuntime] = useState<string>("quick");
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  const runtimeOptions = [
-    {
-      label: "Quick Watch",
-      value: "quick",
-      icon: <Zap />,
-      range: "with_runtime.lte=90",
-      description: "Under 90 min",
-    },
-    {
-      label: "Coffee Break",
-      value: "coffee",
-      icon: <Coffee />,
-      range: "with_runtime.gte=90&with_runtime.lte=120",
-      description: "90-120 min",
-    },
-    {
-      label: "Standard",
-      value: "standard",
-      icon: <Clock />,
-      range: "with_runtime.gte=120&with_runtime.lte=150",
-      description: "2-2.5 hours",
-    },
-    {
-      label: "Epic",
-      value: "epic",
-      icon: <Hourglass />,
-      range: "with_runtime.gte=150",
-      description: "2.5+ hours",
-    },
-  ];
+  const runtimeOptions = useMemo(
+    () => [
+      {
+        label: "Quick Watch",
+        value: "quick",
+        icon: <Zap />,
+        range: "with_runtime.lte=90",
+        description: "Under 90 min",
+      },
+      {
+        label: "Coffee Break",
+        value: "coffee",
+        icon: <Coffee />,
+        range: "with_runtime.gte=90&with_runtime.lte=120",
+        description: "90-120 min",
+      },
+      {
+        label: "Standard",
+        value: "standard",
+        icon: <Clock />,
+        range: "with_runtime.gte=120&with_runtime.lte=150",
+        description: "2-2.5 hours",
+      },
+      {
+        label: "Epic",
+        value: "epic",
+        icon: <Hourglass />,
+        range: "with_runtime.gte=150",
+        description: "2.5+ hours",
+      },
+    ],
+    []
+  );
 
   useEffect(() => {
     async function fetchRuntimeMovies() {

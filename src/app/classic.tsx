@@ -2,7 +2,7 @@
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Clock, Calendar, Star } from "lucide-react";
 import { MovieType } from "@/lib/getMovieData";
 import ReusableSwiper from "./reusablePosterSwiper";
@@ -12,11 +12,14 @@ export default function ClassicMovies() {
   const [decade, setDecade] = useState<string>("1980");
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
-  const decadeOptions = [
-    { label: "80s", value: "1980", icon: <Clock /> },
-    { label: "90s", value: "1990", icon: <Calendar /> },
-    { label: "2000s", value: "2000", icon: <Star /> },
-  ];
+  const decadeOptions = useMemo(
+    () => [
+      { label: "80s", value: "1980", icon: <Clock /> },
+      { label: "90s", value: "1990", icon: <Calendar /> },
+      { label: "2000s", value: "2000", icon: <Star /> },
+    ],
+    []
+  );
 
   useEffect(() => {
     async function fetchClassicMovies() {

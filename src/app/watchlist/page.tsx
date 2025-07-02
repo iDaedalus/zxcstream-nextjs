@@ -28,9 +28,11 @@ export default function Watchlist() {
             Your watchlist is empty
           </h3>
 
-          <Button className="mt-6" variant="outline">
-            Browse Movies <ArrowRight />
-          </Button>
+          <Link href="/">
+            <Button className="mt-6" variant="outline">
+              Browse Movies <ArrowRight />
+            </Button>
+          </Link>
         </div>
       ) : (
         <div className="grid lg:grid-cols-5 grid-cols-2 lg:gap-5 gap-3 h-full w-full">

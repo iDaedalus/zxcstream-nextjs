@@ -1,10 +1,23 @@
 import SwiperBackdrops from "./swiper";
+import dynamic from "next/dynamic";
 
-import Ten from "./ten";
-import ClassicMovies from "./classic";
-import GenreMovies from "./genre";
-import RecentlyWatched from "./recently";
-import RuntimeMovies from "./hidden-gems";
+const RecentlyWatched = dynamic(() => import("./recently"), {
+  loading: () => <p>loading recenlty</p>,
+});
+const Ten = dynamic(() => import("./ten"), {
+  loading: () => <p>Loading</p>,
+});
+const ClassicMovies = dynamic(() => import("./classic"), {
+  loading: () => <p>Loading</p>,
+});
+const GenreMovies = dynamic(() => import("./genre"), {
+  loading: () => <p>Loading</p>,
+});
+
+const RuntimeMovies = dynamic(() => import("./hidden-gems"), {
+  loading: () => <p>Loading</p>,
+});
+
 export default function Home() {
   return (
     <main>

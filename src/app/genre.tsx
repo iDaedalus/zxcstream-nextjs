@@ -2,7 +2,7 @@
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Zap, Heart, Laugh, Skull } from "lucide-react";
 import type { MovieType } from "@/lib/getMovieData";
 import ReusableSwiper from "./reusablePosterSwiper";
@@ -11,12 +11,15 @@ export default function GenreMovies() {
   const [loading, setLoading] = useState(true);
   const [genre, setGenre] = useState<string>("28");
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  const genreOptions = [
-    { label: "Action", value: "28", icon: <Zap /> },
-    { label: "Romance", value: "10749", icon: <Heart /> },
-    { label: "Comedy", value: "35", icon: <Laugh /> },
-    { label: "Horror", value: "27", icon: <Skull /> },
-  ];
+  const genreOptions = useMemo(
+    () => [
+      { label: "Action", value: "28", icon: <Zap /> },
+      { label: "Romance", value: "10749", icon: <Heart /> },
+      { label: "Comedy", value: "35", icon: <Laugh /> },
+      { label: "Horror", value: "27", icon: <Skull /> },
+    ],
+    []
+  );
 
   useEffect(() => {
     async function fetchGenreMovies() {

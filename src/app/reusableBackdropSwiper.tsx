@@ -7,7 +7,6 @@ import "swiper/css/pagination";
 import { SaveProgressType } from "./@modal/(.)watch/save-progress";
 import { motion } from "framer-motion";
 
-
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import BackdropCard from "./card-backdrop";
@@ -135,12 +134,7 @@ export default function ReusableBackdropSwiper({
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                 >
-                  <div className="cursor-pointer h-full w-full">
-                    {numbering && (
-                      <p className="numbering lg:block hidden">{index + 1}</p>
-                    )}
-                    <BackdropCard movie={meow} />
-                  </div>
+                  <BackdropCard movie={meow} />
                 </motion.div>
               </SwiperSlide>
             ))

@@ -47,7 +47,7 @@ export default function CircularProgress({
       {/* Rating text */}
       <div className="absolute inset-0 flex items-center justify-center">
         <span className="text-white text-[0.6rem] md:text-xs font-semibold drop-shadow-lg">
-          {value.toFixed(1)}
+          {value?.toFixed(1)}
         </span>
       </div>
     </div>
