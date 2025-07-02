@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/drawer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
-import { m, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import GetMovieData from "@/lib/getMovieData";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowUpDown, Loader, X } from "lucide-react";
@@ -155,7 +155,6 @@ export default function WatchPage() {
       saveCurrentProgress();
     };
   }, [saveCurrentProgress]);
-
 
   useEffect(() => {
     setIsLoading(true);
