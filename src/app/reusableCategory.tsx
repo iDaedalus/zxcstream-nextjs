@@ -1,9 +1,24 @@
+"use client";
 import { MovieType } from "@/lib/getMovieData";
 import { MovieCard } from "./card";
 import { movieGenres } from "./filter";
 import { tvGenres } from "./filter";
 import { productionCompanies } from "./filter";
 import { tvNetworks } from "./filter";
+import { keywordTopics } from "./filter";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Drawer,
   DrawerClose,
@@ -17,24 +32,35 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import {
-  Calendar,
   CalendarIcon,
+  Check,
+  ChevronsUpDown,
   FactoryIcon,
+  Globe,
   Info,
   ListFilter,
   LoaderCircleIcon,
+  LucideIcon,
   Play,
   Plus,
+  RotateCcw,
+  Tag,
   TagsIcon,
+  X,
 } from "lucide-react";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
+import { tmdbRegions } from "./filter";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 interface ReusableCategoryProps {
-  data: MovieType[];
+  movies: MovieType[];
   loading: boolean;
   totalPages: number;
   loadingMore: boolean;
@@ -54,32 +80,75 @@ interface ReusableCategoryProps {
   setSelectedNetworks: (
     networks: string[] | ((prev: string[]) => string[])
   ) => void;
-  yearSelected: number | null;
-  setYearSelected: (
-    year: number | null | ((prev: number | null) => number | null)
-  ) => void;
+  keywordId: string;
+  setKeywordId: (id: string | ((prev: string) => string)) => void;
+
+  selectedRegion: string;
+  setSelectedRegion: (id: string | ((prev: string) => string)) => void;
+  fromYear: number;
+  setFromYear: (fromYear: number | ((prev: number) => number)) => void;
+  toYear: number;
+  setToYear: (toYear: number | ((prev: number) => number)) => void;
+  voteMin: number;
+  setVoteMin: (voteMin: number | ((prev: number) => number)) => void;
+  voteMax: number;
+  setVoteMax: (voteMax: number | ((prev: number) => number)) => void;
 }
 export default function ReusableCategory({
-  data,
+  movies,
+  media_type,
   loading,
-  totalPages,
   loadingMore,
   category,
+  totalPages,
   page,
   setPage,
-  media_type,
   selectedGenres,
   setSelectedGenres,
   selectedCompanies,
   setSelectedCompanies,
   selectedNetworks,
   setSelectedNetworks,
-  yearSelected,
-  setYearSelected,
+  keywordId,
+  setKeywordId,
+  selectedRegion,
+  setSelectedRegion,
+  fromYear,
+  setFromYear,
+  toYear,
+  setToYear,
+  voteMin,
+  setVoteMin,
+  voteMax,
+  setVoteMax,
 }: ReusableCategoryProps) {
+  const [openTag, setOpenTag] = useState(false);
+  const [openRegion, setOpenRegion] = useState(false);
+  const [openRangeA, setOpenRangeA] = useState(false);
+  const [openRangeB, setOpenRangeB] = useState(false);
+  const [openYearA, setOpenYearA] = useState(false);
+  const [openYearB, setOpenYearB] = useState(false);
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 30 }, (_, i) => currentYear - i);
-  console.log(page);
+  const rating = Array.from({ length: 10 }, (_, i) => i + 1);
+  const resetFilter = () => {
+    setPage(1);
+
+    setSelectedGenres([]);
+    setSelectedCompanies([]);
+    setSelectedNetworks([]);
+
+    setKeywordId("");
+
+    setSelectedRegion("");
+
+    setFromYear(0);
+    setToYear(0);
+    setVoteMin(0);
+    setVoteMax(0);
+  };
+
+  console.log(keywordId);
   return (
     <main>
       <div className="relative lg:h-[75vh] h-[50vh] w-full ">
@@ -100,7 +169,7 @@ export default function ReusableCategory({
             </div>
           </div>
         ) : (
-          data?.slice(5, 6).map((meow) => (
+          movies?.slice(0, 1).map((meow) => (
             <div key={meow.id} className=" overflow-hidden bg-amber-300">
               <div className="absolute w-[calc(100%-40px)] lg:w-1/2 bottom-15 right-5 lg:right-25 z-10 text-white   flex-col items-end hidden lg:flex">
                 <span className="lg:text-5xl text-3xl tracking-[-5px] lg:tracking-[-9px] font-bold zxczxc text-right mt-1 mb-2 lg:mt-2 lg:mb-4 drop-shadow-lg drop-shadow-black/50">
@@ -190,7 +259,7 @@ export default function ReusableCategory({
                 <Skeleton className="aspect-[9/13] !w-[170px]   bg-zinc-500" />
               </div>
             ) : (
-              data?.slice(5, 6).map((meow) => (
+              movies?.slice(0, 1).map((meow) => (
                 <div
                   key={meow.id}
                   className="aspect-[9/13] !w-[170px] swiper-slide relative"
@@ -211,26 +280,49 @@ export default function ReusableCategory({
         <div className="flex items-center justify-between w-full ">
           <h1 className="lg:text-2xl text-xl whitespace-nowrap  font-bold flex gap-2">
             <p className="text-foreground relative font-semibold text-[1.1rem] lg:text-2xl  lg:border-l-4 border-l-2 border-blue-800 lg:pl-6 pl-3 flex items-center gap-2">
-              {category}&nbsp;{media_type === "movie" ? "Movies" : "TV Shows"}
+              {category?.charAt(0).toUpperCase() +
+                (keywordId || category)?.slice(1)}
+              &nbsp;
+              {media_type === "movie" ? "Movies" : "TV Shows"}
             </p>
           </h1>
+
           <div>
             <Drawer>
               <DrawerTrigger asChild>
                 <Button variant="outline">
-                  <ListFilter />{" "}
+                  <ListFilter />
                   <span className="">
-                    Filter{" "}
-                    <Badge
-                      className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
-                      variant="secondary"
-                    >
-                      {selectedGenres.length +
-                        (media_type === "movie"
-                          ? selectedCompanies.length
-                          : selectedNetworks.length) +
-                        (yearSelected ? 1 : 0)}
-                    </Badge>
+                    Select Filter
+                    {selectedGenres.length +
+                      (media_type === "movie"
+                        ? selectedCompanies.length
+                        : selectedNetworks.length) +
+                      (selectedRegion ? 1 : 0) +
+                      (keywordId ? 1 : 0) +
+                      (fromYear ? 1 : 0) +
+                      (toYear ? 1 : 0) +
+                      (voteMin ? 1 : 0) +
+                      (voteMax ? 1 : 0) ===
+                    0 ? (
+                      ""
+                    ) : (
+                      <Badge
+                        className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                        variant="secondary"
+                      >
+                        {selectedGenres.length +
+                          (media_type === "movie"
+                            ? selectedCompanies.length
+                            : selectedNetworks.length) +
+                          (selectedRegion ? 1 : 0) +
+                          (keywordId ? 1 : 0) +
+                          (fromYear ? 1 : 0) +
+                          (toYear ? 1 : 0) +
+                          (voteMin ? 1 : 0) +
+                          (voteMax ? 1 : 0)}
+                      </Badge>
+                    )}
                   </span>
                 </Button>
               </DrawerTrigger>
@@ -244,7 +336,7 @@ export default function ReusableCategory({
                   </DrawerHeader>
                 </div>
 
-                <Tabs defaultValue="genre" className="w-full p-3 overflow-auto">
+                <Tabs defaultValue="genre" className="w-full p-3">
                   <TabsList className="before:bg-border relative mb-3 h-auto w-full gap-0.5 bg-transparent p-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px">
                     <TabsTrigger
                       value="genre"
@@ -256,14 +348,17 @@ export default function ReusableCategory({
                         aria-hidden="true"
                       />
                       Genres
-                      <Badge
-                        className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
-                        variant="secondary"
-                      >
-                        {selectedGenres.length}
-                      </Badge>
+                      {selectedGenres.length === 0 ? (
+                        ""
+                      ) : (
+                        <Badge
+                          className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                          variant="secondary"
+                        >
+                          {selectedGenres.length}
+                        </Badge>
+                      )}
                     </TabsTrigger>
-
                     <TabsTrigger
                       value="production"
                       className="bg-muted overflow-hidden rounded-b-none border-x border-t py-2 data-[state=active]:z-10 data-[state=active]:shadow-none"
@@ -274,14 +369,19 @@ export default function ReusableCategory({
                         aria-hidden="true"
                       />
                       {media_type === "movie" ? "Studios" : "Networks"}
-                      <Badge
-                        className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
-                        variant="secondary"
-                      >
-                        {media_type === "movie"
-                          ? selectedCompanies.length
-                          : selectedNetworks.length}
-                      </Badge>
+
+                      {(media_type === "movie"
+                        ? selectedCompanies.length
+                        : selectedNetworks.length) > 0 && (
+                        <Badge
+                          className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                          variant="secondary"
+                        >
+                          {media_type === "movie"
+                            ? selectedCompanies.length
+                            : selectedNetworks.length}
+                        </Badge>
+                      )}
                     </TabsTrigger>
 
                     <TabsTrigger
@@ -293,18 +393,37 @@ export default function ReusableCategory({
                         size={16}
                         aria-hidden="true"
                       />
-                      Year
-                      <Badge
-                        className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
-                        variant="secondary"
-                      >
-                        {yearSelected ? 1 : 0}
-                      </Badge>
+                      More
+                      {(selectedRegion ? 1 : 0) +
+                        (keywordId ? 1 : 0) +
+                        (fromYear ? 1 : 0) +
+                        (toYear ? 1 : 0) +
+                        (voteMin ? 1 : 0) +
+                        (voteMax ? 1 : 0) ===
+                      0 ? (
+                        ""
+                      ) : (
+                        <Badge
+                          className="bg-primary/15 ms-1.5 min-w-5 px-1 transition-opacity group-data-[state=inactive]:opacity-50"
+                          variant="secondary"
+                        >
+                          {(selectedRegion ? 1 : 0) +
+                            (keywordId ? 1 : 0) +
+                            (fromYear ? 1 : 0) +
+                            (toYear ? 1 : 0) +
+                            (voteMin ? 1 : 0) +
+                            (voteMax ? 1 : 0)}
+                        </Badge>
+                      )}
                     </TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="genre" className="mt-3 ">
-                    <div className="grid lg:grid-cols-3 grid-cols-1 gap-2 ">
+                  {/* Genre Tab - Scrollable */}
+                  <TabsContent
+                    value="genre"
+                    className="mt-3 max-h-96 overflow-y-auto pr-2"
+                  >
+                    <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
                       {(media_type === "movie" ? movieGenres : tvGenres).map(
                         (genre) => {
                           const GenreIcon = genre.icon;
@@ -314,27 +433,24 @@ export default function ReusableCategory({
                               className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${genre.color}`}
                             >
                               <Checkbox
-                                key={genre.id}
                                 checked={selectedGenres.includes(
                                   genre.id.toString()
                                 )}
                                 onCheckedChange={() => {
-                                  setSelectedGenres(
-                                    (prev) =>
-                                      prev.includes(genre.id.toString())
-                                        ? prev.filter(
-                                            (g) => g !== genre.id.toString()
-                                          ) // remove
-                                        : [...prev, genre.id.toString()] // add
+                                  setSelectedGenres((prev) =>
+                                    prev.includes(genre.id.toString())
+                                      ? prev.filter(
+                                          (g) => g !== genre.id.toString()
+                                        )
+                                      : [...prev, genre.id.toString()]
                                   );
                                 }}
                                 className="order-1 after:absolute after:inset-0"
                               />
-
                               <div className="flex grow items-center gap-3">
-                                <GenreIcon className={`${genre.iconColor}`} />
+                                <GenreIcon className={genre.iconColor} />
                                 <div className="grid gap-2">
-                                  <Label className="">{genre.name}</Label>
+                                  <Label>{genre.name}</Label>
                                   <p className="text-muted-foreground text-xs truncate">
                                     {genre.description}
                                   </p>
@@ -346,7 +462,12 @@ export default function ReusableCategory({
                       )}
                     </div>
                   </TabsContent>
-                  <TabsContent value="production" className="mt-3">
+
+                  {/* Production Tab - Scrollable */}
+                  <TabsContent
+                    value="production"
+                    className="mt-3 max-h-96 overflow-y-auto pr-2"
+                  >
                     <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
                       {(media_type === "movie"
                         ? productionCompanies
@@ -356,45 +477,45 @@ export default function ReusableCategory({
                         return (
                           <div
                             key={company.id}
-                            className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50 ${company.color}`}
+                            className={`relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none has-data-[state=checked]:border-primary/50`}
                           >
-                            <Checkbox
-                              checked={
-                                media_type === "movie"
-                                  ? selectedCompanies.includes(
-                                      company.id.toString()
-                                    )
-                                  : selectedNetworks.includes(
-                                      company.id.toString()
-                                    )
-                              }
-                              onCheckedChange={() => {
-                                if (media_type === "movie") {
-                                  setSelectedCompanies(
-                                    (prev) =>
-                                      prev.includes(company.id.toString())
-                                        ? prev.filter(
-                                            (g) => g !== company.id.toString()
-                                          ) // remove
-                                        : [...prev, company.id.toString()] // add
+                            {media_type === "movie" ? (
+                              <Checkbox
+                                checked={selectedCompanies.includes(
+                                  company.id.toString()
+                                )}
+                                onCheckedChange={() => {
+                                  setSelectedCompanies((prev) =>
+                                    prev.includes(company.id.toString())
+                                      ? prev.filter(
+                                          (g) => g !== company.id.toString()
+                                        )
+                                      : [...prev, company.id.toString()]
                                   );
-                                } else {
-                                  setSelectedNetworks(
-                                    (prev) =>
-                                      prev.includes(company.id.toString())
-                                        ? prev.filter(
-                                            (g) => g !== company.id.toString()
-                                          ) // remove
-                                        : [...prev, company.id.toString()] // add
+                                }}
+                                className="order-1 after:absolute after:inset-0"
+                              />
+                            ) : (
+                              <Checkbox
+                                checked={selectedNetworks.includes(
+                                  company.id.toString()
+                                )}
+                                onCheckedChange={() => {
+                                  setSelectedNetworks((prev) =>
+                                    prev.includes(company.id.toString())
+                                      ? prev.filter(
+                                          (g) => g !== company.id.toString()
+                                        )
+                                      : [...prev, company.id.toString()]
                                   );
-                                }
-                              }}
-                              className="order-1 after:absolute after:inset-0"
-                            />
+                                }}
+                                className="order-1 after:absolute after:inset-0"
+                              />
+                            )}
                             <div className="flex grow items-center gap-3">
-                              <GenreIcon className={`${company.iconColor}`} />
+                              <GenreIcon />
                               <div className="grid gap-2">
-                                <Label className="">{company.name}</Label>
+                                <Label>{company.name}</Label>
                                 <p className="text-muted-foreground text-xs truncate">
                                   {company.description}
                                 </p>
@@ -405,33 +526,356 @@ export default function ReusableCategory({
                       })}
                     </div>
                   </TabsContent>
-                  <TabsContent value="year">
-                    <div className="grid grid-cols-3 gap-3 p-4">
-                      {years.map((yearOption) => (
-                        <Button
-                          key={yearOption}
-                          onClick={() => {
-                            setYearSelected((prev) =>
-                              prev === yearOption ? null : yearOption
-                            );
-                          }}
-                          variant="outline"
-                          className={`text-center !py-3 ${
-                            yearSelected === yearOption
-                              ? "!border-blue-800 text-blue-800 "
-                              : ""
-                          }`}
-                        >
-                          <Calendar />
-                          {yearOption}
-                        </Button>
-                      ))}
+
+                  {/* More Tab - Scrollable */}
+                  <TabsContent
+                    value="year"
+                    className="mt-3 max-h-96 overflow-y-auto pr-2"
+                  >
+                    <div className="flex flex-col gap-3">
+                      <div className="flex gap-3">
+                        <div className="space-y-1 flex-1">
+                          <p className="text-xs text-muted-foreground">Tags</p>
+                          <Popover open={openTag} onOpenChange={setOpenTag}>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={openTag}
+                                className="w-full justify-between bg-transparent"
+                              >
+                                <Tag />
+                                {keywordId
+                                  ? keywordTopics.find(
+                                      (framework) =>
+                                        framework.value === keywordId
+                                    )?.label
+                                  : "Tag"}
+                                <ChevronsUpDown className="opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="p-0">
+                              <Command>
+                                <CommandInput
+                                  placeholder="Search tag..."
+                                  className="h-9"
+                                />
+                                <CommandList>
+                                  <CommandEmpty>
+                                    No framework found.
+                                  </CommandEmpty>
+                                  <CommandGroup>
+                                    {keywordTopics.map((framework) => (
+                                      <CommandItem
+                                        key={framework.value}
+                                        value={framework.label}
+                                        onSelect={() => {
+                                          setKeywordId(framework.value);
+                                          setOpenTag(false);
+                                        }}
+                                      >
+                                        {framework.label}
+                                        <Check
+                                          className={cn(
+                                            "ml-auto",
+                                            keywordId === framework.value
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+
+                        <div className="space-y-1 flex-1">
+                          <p className="text-xs text-muted-foreground">
+                            Region
+                          </p>
+                          <Popover
+                            open={openRegion}
+                            onOpenChange={setOpenRegion}
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={openRegion}
+                                className="w-full justify-between bg-transparent"
+                              >
+                                <Globe />
+                                {selectedRegion
+                                  ? tmdbRegions.find(
+                                      (framework) =>
+                                        framework.value === selectedRegion
+                                    )?.label
+                                  : "Region"}
+                                <ChevronsUpDown className="opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="p-0">
+                              <Command>
+                                <CommandInput
+                                  placeholder="Search region..."
+                                  className="h-9"
+                                />
+                                <CommandList>
+                                  <CommandEmpty>
+                                    No framework found.
+                                  </CommandEmpty>
+                                  <CommandGroup>
+                                    {tmdbRegions.map((framework) => (
+                                      <CommandItem
+                                        key={framework.value}
+                                        value={framework.label}
+                                        onSelect={() => {
+                                          setSelectedRegion(framework.value);
+                                          setOpenRegion(false);
+                                        }}
+                                      >
+                                        {framework.label}
+                                        <Check
+                                          className={cn(
+                                            "ml-auto",
+                                            selectedRegion === framework.value
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </div>
+                      <Separator className="w-full  mt-3" />
+                      <div className="space-y-1 ">
+                        <p className="text-xs text-muted-foreground">
+                          Year Range
+                        </p>
+                        <div className="flex gap-3 items-center">
+                          <Popover open={openYearA} onOpenChange={setOpenYearA}>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={openYearA}
+                                className="flex-1 justify-between bg-transparent"
+                              >
+                                {fromYear || "From"}
+                                <ChevronsUpDown className="opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="p-0">
+                              <Command>
+                                <CommandInput
+                                  placeholder="Search year..."
+                                  className="h-9"
+                                />
+                                <CommandList>
+                                  <CommandEmpty>No year found.</CommandEmpty>
+                                  <CommandGroup>
+                                    {years.map((year) => (
+                                      <CommandItem
+                                        key={year}
+                                        value={year.toString()}
+                                        onSelect={() => {
+                                          setFromYear(year);
+                                          setOpenYearA(false);
+                                        }}
+                                      >
+                                        {year}
+                                        <Check
+                                          className={cn(
+                                            "ml-auto",
+                                            fromYear === year
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                          —
+                          <Popover open={openYearB} onOpenChange={setOpenYearB}>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={openYearB}
+                                className="flex-1 justify-between bg-transparent"
+                              >
+                                {toYear || "To"}
+                                <ChevronsUpDown className="opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="p-0">
+                              <Command>
+                                <CommandInput
+                                  placeholder="Search year..."
+                                  className="h-9"
+                                />
+                                <CommandList>
+                                  <CommandEmpty>No year found.</CommandEmpty>
+                                  <CommandGroup>
+                                    {years.map((year) => (
+                                      <CommandItem
+                                        key={year}
+                                        value={year.toString()}
+                                        onSelect={() => {
+                                          setToYear(year);
+                                          setOpenYearB(false);
+                                        }}
+                                      >
+                                        {year}
+                                        <Check
+                                          className={cn(
+                                            "ml-auto",
+                                            toYear === year
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </div>
+                      <Separator className="w-full mt-3" />
+                      <div className="space-y-1 ">
+                        <p className="text-xs text-muted-foreground">
+                          Rating Range
+                        </p>
+                        <div className="flex gap-3 items-center">
+                          <Popover
+                            open={openRangeA}
+                            onOpenChange={setOpenRangeA}
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={openRangeA}
+                                className="flex-1 justify-between bg-transparent"
+                              >
+                                {voteMin || "Min."}
+                                <ChevronsUpDown className="opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="p-0">
+                              <Command>
+                                <CommandInput
+                                  placeholder="Search rating..."
+                                  className="h-9"
+                                />
+                                <CommandList>
+                                  <CommandEmpty>No rating found.</CommandEmpty>
+                                  <CommandGroup>
+                                    {rating.map((rate) => (
+                                      <CommandItem
+                                        key={rate}
+                                        value={rate.toString()}
+                                        onSelect={() => {
+                                          setVoteMin(rate);
+                                          setOpenRangeA(false);
+                                        }}
+                                      >
+                                        ⭐ {rate}
+                                        <Check
+                                          className={cn(
+                                            "ml-auto",
+                                            voteMin === rate
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                          —
+                          <Popover
+                            open={openRangeB}
+                            onOpenChange={setOpenRangeB}
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={openRangeB}
+                                className="flex-1 justify-between bg-transparent"
+                              >
+                                {voteMax || "Max."}
+                                <ChevronsUpDown className="opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="p-0">
+                              <Command>
+                                <CommandInput
+                                  placeholder="Search rating..."
+                                  className="h-9"
+                                />
+                                <CommandList>
+                                  <CommandEmpty>No rating found.</CommandEmpty>
+                                  <CommandGroup>
+                                    {rating.map((rate) => (
+                                      <CommandItem
+                                        key={rate}
+                                        value={rate.toString()}
+                                        onSelect={() => {
+                                          setVoteMax(rate);
+                                          setOpenRangeB(false);
+                                        }}
+                                      >
+                                        ⭐ {rate}
+                                        <Check
+                                          className={cn(
+                                            "ml-auto",
+                                            voteMax === rate
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </div>
                     </div>
                   </TabsContent>
                 </Tabs>
                 <DrawerFooter>
                   <DrawerClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                    <div className="w-full flex gap-3">
+                      <Button onClick={resetFilter} className="flex-1">
+                        <RotateCcw /> Reset
+                      </Button>
+                      <Button className="flex-1" variant="outline">
+                        <X /> Close
+                      </Button>
+                    </div>
                   </DrawerClose>
                 </DrawerFooter>
               </DrawerContent>
@@ -446,7 +890,7 @@ export default function ReusableCategory({
                   className="aspect-[2/3] w-full bg-zinc-500"
                 />
               ))
-            : data?.map((movie, index) => (
+            : movies?.map((movie, index) => (
                 <MovieCard key={`${movie.id}-${index}`} movie={movie} />
               ))}
           <Button

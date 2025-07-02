@@ -153,7 +153,7 @@ export default function NavBar() {
               <NavigationMenuList>
                 {items.map((item) => (
                   <NavigationMenuItem key={item.name}>
-                    <Link href={item.link}>
+                    <Link href={item.link} prefetch={true}>
                       <NavigationMenuTrigger className="flex items-center gap-3 ">
                         <item.logo size={16} />
                         {item.name}

@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/app/navBar";
 import Footer from "./footer";
+import ClientOnlyGuard from "./ClientOnlyGuard";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -39,14 +40,14 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="fixed z-[-1] inset-0 bg-background bg-[radial-gradient(ellipse_at_top,_rgba(30,64,175,0.3)_0%,_transparent_70%)] p-10"></div>
+          <ClientOnlyGuard>
+            <NavBar />
+            {children}
+            {modal}
 
-          <NavBar />
-          {children}
-
-          {modal}
-
-          <Footer />
-          <Toaster position="top-right" expand={false} duration={3000} />
+            <Footer />
+            <Toaster position="top-right" expand={false} duration={3000} />
+          </ClientOnlyGuard>
         </ThemeProvider>
       </body>
     </html>
