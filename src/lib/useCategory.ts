@@ -115,8 +115,6 @@ export function useCategory({
     toYear,
     voteMin,
     voteMax,
-    category,
-    media_type,
   ]);
   console.log(page);
   return {
