@@ -59,14 +59,6 @@ export default function WatchPage() {
 
   const { show } = GetMovieData({ id: id || "", media_type: media_type || "" });
 
-  // Load sandbox preference from localStorage on mount
-  useEffect(() => {
-    const savedSandbox = localStorage.getItem("sandboxEnabled");
-    if (savedSandbox !== null) {
-      setSandboxEnabled(savedSandbox === "true");
-    }
-  }, []);
-
   // Update refs whenever state changes
   useEffect(() => {
     currentTimeRef.current = currentTime;
